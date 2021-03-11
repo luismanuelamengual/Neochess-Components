@@ -1,0 +1,20 @@
+{
+    "name": "@neochess/components",
+    "version": "0.0.1",
+    "description": "Neochess components",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "keywords": [],
+    "author": "Luis Manuel Amengual",
+    "license": "ISC",
+    "scripts": {
+        "build": "tsc",
+        "test": "jest"
+    },
+    "dependencies": {
+        "@neochess/engine": "^0.0.1"
+    },
+    "devDependencies": {
+        "typescript": "^4.1.3"
+    }
+}
