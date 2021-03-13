@@ -2,12 +2,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
+    mode: 'production',
     entry: [
-        './src/index.ts'
+        './src/index.js'
     ],
     output: {
         path: __dirname + '/dist',
-        filename: '[name].bundle.js'
+        filename: 'neochess-components.bundle.js'
     },
     module: {
         rules: [
@@ -25,11 +26,11 @@ module.exports = {
                 viewport: 'width=device-width, initial-scale=1'
             }
         })
-    ],
+    ]/*,
     devtool: 'inline-source-map',
     devServer: {
         open: true,
         contentBase: './www'
     },
-    mode: "development"
+    mode: "development"*/
 };
