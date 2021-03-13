@@ -8,7 +8,7 @@ module.exports = {
     ],
     output: {
         path: __dirname + '/dist',
-        filename: 'neochess-components.bundle.js'
+        filename: '[name].bundle.js'
     },
     module: {
         rules: [
@@ -26,7 +26,8 @@ module.exports = {
                 viewport: 'width=device-width, initial-scale=1'
             }
         })
-    ]/*,
+    ]
+    /*,
     devtool: 'inline-source-map',
     devServer: {
         open: true,
