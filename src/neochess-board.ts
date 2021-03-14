@@ -6,38 +6,60 @@ template.innerHTML = `
             box-sizing: border-box;
         }
 
-        .board-wrapper {
+        :host {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
             height: 100%;
+            width: 100%;
+            background: white;
         }
 
         .board {
             position: absolute;
+            padding: 30px;
+            background: blue;
+        }
+
+        .board-content {
+            position: relative;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            max-width: 100vh;
-            max-height: 100vw;
-            left: 50%;
-            top: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-            border: 3px solid red;
+            background: red;
         }
     </style>
-    <div class="board-wrapper">
-        <div class="board"></div>
+    <div class="board">
+        <div class="board-content"></div>
     </div>
 `;
 
 export class NeochessBoardElement extends HTMLElement {
 
+    private boardElement: HTMLDivElement;
+
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
+        this.boardElement = this.shadowRoot.querySelector('.board');
+        this.adjustBoardPosition();
+        window.onresize = () => this.adjustBoardPosition();
+    }
+
+    public adjustBoardPosition() {
+        if (this.offsetWidth >= this.offsetHeight) {
+            this.boardElement.style.top = '0';
+            this.boardElement.style.left = ((this.offsetWidth / 2) - (this.offsetHeight / 2)) + 'px';
+            this.boardElement.style.height = '100%';
+            this.boardElement.style.width = this.offsetHeight + 'px';
+        } else {
+            this.boardElement.style.top = ((this.offsetHeight / 2) - (this.offsetWidth / 2)) + 'px';
+            this.boardElement.style.left = '0';
+            this.boardElement.style.width = '100%';
+            this.boardElement.style.height = this.offsetWidth + 'px';
+        }
     }
 }
 
