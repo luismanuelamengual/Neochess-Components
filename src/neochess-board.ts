@@ -214,6 +214,11 @@ export class NeochessBoardElement extends HTMLElement {
 
     public setFlipped(flipped: boolean) {
         this.flipped = flipped;
+        if (this.flipped) {
+            this.boardElement.classList.add('flipped');
+        } else {
+            this.boardElement.classList.remove('flipped');
+        }
     }
 
     public adjustBoardPosition() {
