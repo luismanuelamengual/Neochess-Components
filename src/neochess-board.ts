@@ -15,4 +15,6 @@ export class NeochessBoardElement extends HTMLElement {
     }
 }
 
-customElements.define('neochess-board', NeochessBoardElement);
+if (!customElements.get('neochess-board')) {
+    customElements.define('neochess-board', NeochessBoardElement);
+}
