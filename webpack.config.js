@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
     mode: 'production',
     entry: [
-        './src/index.js'
+        './src/index.ts'
     ],
     output: {
         path: __dirname + '/dist',
@@ -18,6 +18,9 @@ module.exports = {
             },
         ],
     },
+    resolve: {
+        extensions: ['.ts', '.js', '.json']
+    },
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
@@ -27,11 +30,4 @@ module.exports = {
             }
         })
     ]
-    /*,
-    devtool: 'inline-source-map',
-    devServer: {
-        open: true,
-        contentBase: './www'
-    },
-    mode: "development"*/
 };
