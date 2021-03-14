@@ -8,7 +8,7 @@ module.exports = {
     ],
     output: {
         path: __dirname + '/dist',
-        filename: '[name].bundle.js'
+        filename: 'neochess-components.bundle.js'
     },
     module: {
         rules: [
