@@ -179,8 +179,8 @@ template.innerHTML = `
         .flipped .square-f8 { left: 25%; top: 87.5%; }
         .flipped .square-g8 { left: 12.5%; top: 87.5%; }
         .flipped .square-h8 { left: 0; top: 87.5%; }
-
     </style>
+
     <div class="board">
         <div class="board-content">
             <div class="square square-a1"></div><div class="square square-b1"></div><div class="square square-c1"></div><div class="square square-d1"></div><div class="square square-e1"></div><div class="square square-f1"></div><div class="square square-g1"></div><div class="square square-h1"></div>
