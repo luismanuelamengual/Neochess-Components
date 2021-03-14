@@ -197,7 +197,6 @@ template.innerHTML = `
 
 export class NeochessBoardElement extends HTMLElement {
 
-    private flipped: boolean = true;
     private boardElement: HTMLDivElement;
 
     constructor() {
@@ -212,13 +211,17 @@ export class NeochessBoardElement extends HTMLElement {
         window.onresize = () => this.adjustBoardPosition();
     }
 
-    public setFlipped(flipped: boolean) {
-        this.flipped = flipped;
-        if (this.flipped) {
+    set flipped(flipped: boolean) {
+        this.setAttribute("flipped", flipped ? 'true':'false');
+        if (flipped) {
             this.boardElement.classList.add('flipped');
         } else {
             this.boardElement.classList.remove('flipped');
         }
+    }
+
+    get flipped(): boolean {
+        return this.getAttribute('flipped') === 'true';
     }
 
     public adjustBoardPosition() {
