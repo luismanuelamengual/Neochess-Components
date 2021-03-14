@@ -10,7 +10,7 @@
     "scripts": {
         "build": "webpack --config webpack.config.js",
         "build:watch": "webpack --config webpack.config.js --watch",
-        "serve": "webpack serve --config webpack.config.js"
+        "serve": "webpack serve --config webpack.dev.js"
     },
     "dependencies": {
         "@neochess/engine": "^0.0.1"

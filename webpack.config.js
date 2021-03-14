@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
@@ -22,12 +21,6 @@ module.exports = {
         extensions: ['.ts', '.js', '.json']
     },
     plugins: [
-        new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({
-            title: 'Neochess components',
-            meta: {
-                viewport: 'width=device-width, initial-scale=1'
-            }
-        })
+        new CleanWebpackPlugin()
     ]
 };
