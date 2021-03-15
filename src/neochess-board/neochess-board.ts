@@ -1,3 +1,4 @@
+import {Match} from "@neochess/engine/dist/match";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -31,7 +32,6 @@ template.innerHTML = `
             position: absolute;
             width: 12.5%;
             height: 12.5%;
-            border: 1px solid gray;
         }
 
         .a1 { left: 0; top: 87.5%; }
@@ -195,20 +195,23 @@ template.innerHTML = `
 
 export class NeochessBoardElement extends HTMLElement {
 
-    private boardElement: HTMLDivElement;
+    private match: Match;
     private flipped: boolean = false;
-    private skin: NeochessBoardSkin = {};
+    private skin: NeochessBoardSkin;
+    private boardElement: HTMLDivElement;
 
     constructor() {
         super();
+        this.match = new Match();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this.boardElement = this.shadowRoot.querySelector('.board');
         if (this.getAttribute('flipped') === 'true') {
             this.setFlipped(true);
         }
-        this.updateLookAndFeel();
         this.updatePosition();
+        this.setSkin({});
+        this.updateState();
         window.onresize = () => this.updatePosition();
     }
 
@@ -227,36 +230,26 @@ export class NeochessBoardElement extends HTMLElement {
 
     public setSkin(skin: NeochessBoardSkin): void {
         this.skin = skin;
+        if (!this.skin.backgroundColor) {
+            this.skin.backgroundColor = 'white';
+        }
+        if (!this.skin.lightColor) {
+            this.skin.lightColor = 'white'
+        }
+        if (!this.skin.darkColor) {
+            this.skin.darkColor = 'cornflowerblue'
+        }
+        if (!this.skin.borderColor) {
+            this.skin.borderColor = this.skin.darkColor;
+        }
+        if (!this.skin.borderSize && this.skin.borderSize !== 0) {
+            this.skin.borderSize = 20;
+        }
         this.updateLookAndFeel();
     }
 
     public getSkin(): NeochessBoardSkin {
         return this.skin;
-    }
-
-    private updateLookAndFeel() {
-        const backgroundColor = this.skin.backgroundColor ?? 'white';
-        const lightColor = this.skin.lightColor ?? 'white';
-        const darkColor = this.skin.darkColor ?? 'cornflowerblue';
-        const borderColor = this.skin.borderColor ?? darkColor;
-        const borderSize = this.skin.borderSize ?? 20;
-
-        this.style.background = backgroundColor;
-        if (borderSize > 0) {
-            this.boardElement.style.padding = borderSize + 'px';
-            this.boardElement.style.borderRadius = borderSize + 'px';
-            this.boardElement.style.background = borderColor;
-        } else {
-            this.boardElement.style.padding = '0';
-        }
-        this.shadowRoot.querySelectorAll('.light').forEach(el => {
-            const element = el as HTMLElement;
-            element.style.background = lightColor;
-        });
-        this.shadowRoot.querySelectorAll('.dark').forEach(el => {
-            const element = el as HTMLElement;
-            element.style.background = darkColor;
-        });
     }
 
     private updatePosition() {
@@ -271,6 +264,29 @@ export class NeochessBoardElement extends HTMLElement {
             this.boardElement.style.width = '100%';
             this.boardElement.style.height = this.offsetWidth + 'px';
         }
+    }
+
+    private updateLookAndFeel() {
+        this.style.background = this.skin.backgroundColor;
+        if (this.skin.borderSize > 0) {
+            this.boardElement.style.padding = this.skin.borderSize + 'px';
+            this.boardElement.style.borderRadius = this.skin.borderSize + 'px';
+            this.boardElement.style.background = this.skin.borderColor;
+        } else {
+            this.boardElement.style.padding = '0';
+        }
+        this.shadowRoot.querySelectorAll('.light').forEach(el => {
+            const element = el as HTMLElement;
+            element.style.background = this.skin.lightColor;
+        });
+        this.shadowRoot.querySelectorAll('.dark').forEach(el => {
+            const element = el as HTMLElement;
+            element.style.background = this.skin.darkColor;
+        });
+    }
+
+    private updateState() {
+        console.log(this.match);
     }
 }
 
