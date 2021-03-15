@@ -204,14 +204,14 @@ export class NeochessBoardElement extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this.boardElement = this.shadowRoot.querySelector('.board');
-        if (this.flipped) {
+        if (this.isFlipped()) {
             this.boardElement.classList.add('flipped');
         }
         this.adjustBoardPosition();
         window.onresize = () => this.adjustBoardPosition();
     }
 
-    set flipped(flipped: boolean) {
+    public setFlipped(flipped: boolean): void {
         this.setAttribute("flipped", flipped ? 'true':'false');
         if (flipped) {
             this.boardElement.classList.add('flipped');
@@ -220,7 +220,7 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
-    get flipped(): boolean {
+    public isFlipped(): boolean {
         return this.getAttribute('flipped') === 'true';
     }
 
