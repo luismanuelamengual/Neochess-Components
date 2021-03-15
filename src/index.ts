@@ -1,1 +1,1 @@
-export * from './neochess-board';
+export * from './neochess-board/neochess-board';

@@ -34,6 +34,7 @@ template.innerHTML = `
             position: absolute;
             width: 12.5%;
             height: 12.5%;
+            border: 1px solid gray;
         }
 
         .a1 { left: 0; top: 87.5%; }
@@ -183,14 +184,14 @@ template.innerHTML = `
 
     <div class="board">
         <div class="board-content">
-            <div class="square a1"></div><div class="square b1"></div><div class="square c1"></div><div class="square d1"></div><div class="square e1"></div><div class="square f1"></div><div class="square g1"></div><div class="square h1"></div>
-            <div class="square a2"></div><div class="square b2"></div><div class="square c2"></div><div class="square d2"></div><div class="square e2"></div><div class="square f2"></div><div class="square g2"></div><div class="square h2"></div>
-            <div class="square a3"></div><div class="square b3"></div><div class="square c3"></div><div class="square d3"></div><div class="square e3"></div><div class="square f3"></div><div class="square g3"></div><div class="square h3"></div>
-            <div class="square a4"></div><div class="square b4"></div><div class="square c4"></div><div class="square d4"></div><div class="square e4"></div><div class="square f4"></div><div class="square g4"></div><div class="square h4"></div>
-            <div class="square a5"></div><div class="square b5"></div><div class="square c5"></div><div class="square d5"></div><div class="square e5"></div><div class="square f5"></div><div class="square g5"></div><div class="square h5"></div>
-            <div class="square a6"></div><div class="square b6"></div><div class="square c6"></div><div class="square d6"></div><div class="square e6"></div><div class="square f6"></div><div class="square g6"></div><div class="square h6"></div>
-            <div class="square a7"></div><div class="square b7"></div><div class="square c7"></div><div class="square d7"></div><div class="square e7"></div><div class="square f7"></div><div class="square g7"></div><div class="square h7"></div>
-            <div class="square a8"></div><div class="square b8"></div><div class="square c8"></div><div class="square d8"></div><div class="square e8"></div><div class="square f8"></div><div class="square g8"></div><div class="square h8"></div>
+            <div class="square dark a1"></div><div class="square light b1"></div><div class="square dark c1"></div><div class="square light d1"></div><div class="square dark e1"></div><div class="square light f1"></div><div class="square dark g1"></div><div class="square light h1"></div>
+            <div class="square light a2"></div><div class="square dark b2"></div><div class="square light c2"></div><div class="square dark d2"></div><div class="square light e2"></div><div class="square dark f2"></div><div class="square light g2"></div><div class="square dark h2"></div>
+            <div class="square dark a3"></div><div class="square light b3"></div><div class="square dark c3"></div><div class="square light d3"></div><div class="square dark e3"></div><div class="square light f3"></div><div class="square dark g3"></div><div class="square light h3"></div>
+            <div class="square light a4"></div><div class="square dark b4"></div><div class="square light c4"></div><div class="square dark d4"></div><div class="square light e4"></div><div class="square dark f4"></div><div class="square light g4"></div><div class="square dark h4"></div>
+            <div class="square dark a5"></div><div class="square light b5"></div><div class="square dark c5"></div><div class="square light d5"></div><div class="square dark e5"></div><div class="square light f5"></div><div class="square dark g5"></div><div class="square light h5"></div>
+            <div class="square light a6"></div><div class="square dark b6"></div><div class="square light c6"></div><div class="square dark d6"></div><div class="square light e6"></div><div class="square dark f6"></div><div class="square light g6"></div><div class="square dark h6"></div>
+            <div class="square dark a7"></div><div class="square light b7"></div><div class="square dark c7"></div><div class="square light d7"></div><div class="square dark e7"></div><div class="square light f7"></div><div class="square dark g7"></div><div class="square light h7"></div>
+            <div class="square light a8"></div><div class="square dark b8"></div><div class="square light c8"></div><div class="square dark d8"></div><div class="square light e8"></div><div class="square dark f8"></div><div class="square light g8"></div><div class="square dark h8"></div>
         </div>
     </div>
 `;
@@ -198,21 +199,24 @@ template.innerHTML = `
 export class NeochessBoardElement extends HTMLElement {
 
     private boardElement: HTMLDivElement;
+    private flipped: boolean = false;
+    private skin: NeochessBoardSkin = {};
 
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
         this.boardElement = this.shadowRoot.querySelector('.board');
-        if (this.isFlipped()) {
-            this.boardElement.classList.add('flipped');
+        if (this.getAttribute('flipped') === 'true') {
+            this.setFlipped(true);
         }
-        this.adjustBoardPosition();
-        window.onresize = () => this.adjustBoardPosition();
+        this.updateLookAndFeel();
+        this.updatePosition();
+        window.onresize = () => this.updatePosition();
     }
 
     public setFlipped(flipped: boolean): void {
-        this.setAttribute("flipped", flipped ? 'true':'false');
+        this.flipped = flipped;
         if (flipped) {
             this.boardElement.classList.add('flipped');
         } else {
@@ -221,10 +225,44 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     public isFlipped(): boolean {
-        return this.getAttribute('flipped') === 'true';
+        return this.flipped;
     }
 
-    public adjustBoardPosition() {
+    public setSkin(skin: NeochessBoardSkin): void {
+        this.skin = skin;
+        this.updateLookAndFeel();
+    }
+
+    public getSkin(): NeochessBoardSkin {
+        return this.skin;
+    }
+
+    private updateLookAndFeel() {
+        const backgroundColor = this.skin.backgroundColor ?? 'white';
+        const lightColor = this.skin.lightColor ?? 'white';
+        const darkColor = this.skin.darkColor ?? 'cornflowerblue';
+        const borderColor = this.skin.borderColor ?? darkColor;
+        const borderSize = this.skin.borderSize ?? 20;
+
+        this.style.background = backgroundColor;
+        if (borderSize > 0) {
+            this.boardElement.style.padding = borderSize + 'px';
+            this.boardElement.style.borderRadius = borderSize + 'px';
+            this.boardElement.style.background = borderColor;
+        } else {
+            this.boardElement.style.padding = '0';
+        }
+        this.shadowRoot.querySelectorAll('.light').forEach(el => {
+            const element = el as HTMLElement;
+            element.style.background = lightColor;
+        });
+        this.shadowRoot.querySelectorAll('.dark').forEach(el => {
+            const element = el as HTMLElement;
+            element.style.background = darkColor;
+        });
+    }
+
+    private updatePosition() {
         if (this.offsetWidth >= this.offsetHeight) {
             this.boardElement.style.top = '0';
             this.boardElement.style.left = ((this.offsetWidth / 2) - (this.offsetHeight / 2)) + 'px';
