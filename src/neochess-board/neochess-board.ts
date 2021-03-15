@@ -206,7 +206,7 @@ export class NeochessBoardElement extends HTMLElement {
 
     private match: Match;
     private flipped: boolean = false;
-    private skin: NeochessBoardSkin;
+    private skin: NeochessBoardSkin = {};
     private boardElement: HTMLDivElement;
 
     constructor() {
@@ -219,7 +219,7 @@ export class NeochessBoardElement extends HTMLElement {
             this.setFlipped(true);
         }
         this.updatePosition();
-        this.setSkin({});
+        this.updateLookAndFeel();
         this.updateState();
         window.onresize = () => this.updatePosition();
     }
