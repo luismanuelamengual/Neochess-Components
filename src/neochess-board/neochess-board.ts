@@ -17,8 +17,6 @@ template.innerHTML = `
 
         .board {
             position: absolute;
-            padding: 30px;
-            background: blue;
         }
 
         .board-content {
@@ -27,7 +25,6 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            background: red;
         }
 
         .square {
