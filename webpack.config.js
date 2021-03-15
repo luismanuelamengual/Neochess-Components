@@ -1,4 +1,15 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const yargs = require('yargs');
+const isProductionBuild = yargs.argv.mode === 'production';
+
+const plugins = [];
+plugins.push(new CleanWebpackPlugin());
+if (!isProductionBuild) {
+    plugins.push(new HtmlWebpackPlugin({
+        template: 'www/index.html'
+    }));
+}
 
 module.exports = {
     mode: 'production',
@@ -20,7 +31,15 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js', '.json']
     },
-    plugins: [
-        new CleanWebpackPlugin()
-    ]
+    plugins: plugins
 };
+
+if (!isProductionBuild) {
+    module.exports.mode = 'development';
+    module.exports.devtool = 'inline-source-map';
+    module.exports.devServer = {
+        open: true,
+        contentBase: './dist',
+        port: 8080
+    }
+}

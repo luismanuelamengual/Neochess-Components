@@ -8,9 +8,9 @@
     "author": "Luis Manuel Amengual",
     "license": "ISC",
     "scripts": {
-        "build": "webpack --config webpack.config.js",
-        "build:watch": "webpack --config webpack.config.js --watch",
-        "serve": "webpack serve --config webpack.dev.js"
+        "build": "webpack --config webpack.config.js --mode=production",
+        "build:watch": "webpack --config webpack.config.js --mode=production --watch",
+        "serve": "webpack serve --config webpack.config.js"
     },
     "dependencies": {
         "@neochess/engine": "^0.0.1"
