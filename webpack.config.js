@@ -25,8 +25,12 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: 'ts-loader'
+            },
+            {
+                test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
+                type: 'asset/inline'
             }
-        ],
+        ]
     },
     resolve: {
         extensions: ['.ts', '.js', '.json']
