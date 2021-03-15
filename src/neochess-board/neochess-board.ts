@@ -18,6 +18,7 @@ template.innerHTML = `
 
         .board {
             position: absolute;
+            background: cornflowerblue;
         }
 
         .board-content {
@@ -32,6 +33,14 @@ template.innerHTML = `
             position: absolute;
             width: 12.5%;
             height: 12.5%;
+        }
+
+        .square-light {
+            background: white;
+        }
+
+        .square-dark {
+            background: cornflowerblue;
         }
 
         .square-a1 { left: 0; top: 87.5%; }
@@ -230,21 +239,6 @@ export class NeochessBoardElement extends HTMLElement {
 
     public setSkin(skin: NeochessBoardSkin): void {
         this.skin = skin;
-        if (!this.skin.backgroundColor) {
-            this.skin.backgroundColor = 'white';
-        }
-        if (!this.skin.lightColor) {
-            this.skin.lightColor = 'white'
-        }
-        if (!this.skin.darkColor) {
-            this.skin.darkColor = 'cornflowerblue'
-        }
-        if (!this.skin.borderColor) {
-            this.skin.borderColor = this.skin.darkColor;
-        }
-        if (!this.skin.borderSize && this.skin.borderSize !== 0) {
-            this.skin.borderSize = 20;
-        }
         this.updateLookAndFeel();
     }
 
@@ -267,22 +261,41 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updateLookAndFeel() {
-        this.style.background = this.skin.backgroundColor;
-        if (this.skin.borderSize > 0) {
-            this.boardElement.style.padding = this.skin.borderSize + 'px';
-            this.boardElement.style.borderRadius = this.skin.borderSize + 'px';
+        if (this.skin.backgroundColor) {
+            this.style.background = this.skin.backgroundColor;
+        } else {
+            this.style.background = null;
+        }
+        const borderSize = Number.isInteger(this.skin.borderSize)? this.skin.borderSize : 20;
+        if (borderSize > 0) {
+            this.boardElement.style.padding = borderSize + 'px';
+            this.boardElement.style.borderRadius = borderSize + 'px';
             this.boardElement.style.background = this.skin.borderColor;
         } else {
             this.boardElement.style.padding = '0';
         }
-        this.shadowRoot.querySelectorAll('.square-light').forEach(el => {
-            const element = el as HTMLElement;
-            element.style.background = this.skin.lightColor;
-        });
-        this.shadowRoot.querySelectorAll('.square-dark').forEach(el => {
-            const element = el as HTMLElement;
-            element.style.background = this.skin.darkColor;
-        });
+        if (this.skin.lightColor) {
+            this.shadowRoot.querySelectorAll('.square-light').forEach(el => {
+                const element = el as HTMLElement;
+                element.style.background = this.skin.lightColor;
+            });
+        } else {
+            this.shadowRoot.querySelectorAll('.square-light').forEach(el => {
+                const element = el as HTMLElement;
+                element.style.background = null;
+            });
+        }
+        if (this.skin.darkColor) {
+            this.shadowRoot.querySelectorAll('.square-dark').forEach(el => {
+                const element = el as HTMLElement;
+                element.style.background = this.skin.darkColor;
+            });
+        } else {
+            this.shadowRoot.querySelectorAll('.square-dark').forEach(el => {
+                const element = el as HTMLElement;
+                element.style.background = null;
+            });
+        }
     }
 
     private updateState() {
