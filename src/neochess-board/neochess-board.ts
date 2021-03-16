@@ -1,4 +1,5 @@
 import {Match} from "@neochess/engine/dist/match";
+import {Piece, Square} from "@neochess/engine";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -311,7 +312,42 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updateState() {
-        console.log(this.match);
+        const squareElements = this.querySelectorAll('.square');
+        for (let square = Square.A1; square <= Square.H8; square++) {
+            const squareElement = squareElements[square] as HTMLElement;
+            const piece = this.match.getPiece(square);
+            let pieceElement = squareElement.querySelector('.piece');
+            if (piece >= 0) {
+                let pieceClassName = '';
+                switch (piece) {
+                    case Piece.WHITE_PAWN: pieceClassName = 'piece-white-pawn'; break;
+                    case Piece.WHITE_KNIGHT: pieceClassName = 'piece-white-knight'; break;
+                    case Piece.WHITE_BISHOP: pieceClassName = 'piece-white-bishop'; break;
+                    case Piece.WHITE_ROOK: pieceClassName = 'piece-white-rook'; break;
+                    case Piece.WHITE_QUEEN: pieceClassName = 'piece-white-queen'; break;
+                    case Piece.WHITE_KING: pieceClassName = 'piece-white-king'; break;
+                    case Piece.BLACK_PAWN: pieceClassName = 'piece-black-pawn'; break;
+                    case Piece.BLACK_KNIGHT: pieceClassName = 'piece-black-knight'; break;
+                    case Piece.BLACK_BISHOP: pieceClassName = 'piece-black-bishop'; break;
+                    case Piece.BLACK_ROOK: pieceClassName = 'piece-black-rook'; break;
+                    case Piece.BLACK_QUEEN: pieceClassName = 'piece-black-queen'; break;
+                    case Piece.BLACK_KING: pieceClassName = 'piece-black-king'; break;
+                }
+                if (pieceElement) {
+                    if (!pieceElement.classList.contains(pieceClassName)) {
+                        pieceElement.className = 'piece ' + pieceClassName;
+                    }
+                } else {
+                    pieceElement = document.createElement('div');
+                    pieceElement.classList.add('piece', pieceClassName);
+                    squareElement.appendChild(pieceElement);
+                }
+            } else {
+                if (pieceElement) {
+                    pieceElement.remove();
+                }
+            }
+        }
     }
 }
 
