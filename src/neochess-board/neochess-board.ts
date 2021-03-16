@@ -20,8 +20,8 @@ template.innerHTML = `
         .board {
             position: absolute;
             background: darkseagreen;
-            padding: 20px;
-            border-radius: 20px;
+            padding: 16px;
+            border-radius: 16px;
         }
 
         .board-content {
@@ -31,7 +31,7 @@ template.innerHTML = `
             width: 100%;
             height: 100%;
             overflow: hidden;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
         .square {
@@ -200,6 +200,7 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 100;
         }
 
         .piece-white-pawn {
@@ -249,10 +250,29 @@ template.innerHTML = `
         .piece-black-king {
             background-image: url(` + require('./assets/images/pieces/black_king.svg') + `);
         }
+
+        .coordinates {
+            position: absolute;
+            z-index: 50;
+        }
+
+        .coordinate-dark, .coordinate-light {
+            font-weight: 600;
+        }
+
+        .coordinate-light {
+            fill: darkseagreen;
+        }
+
+        .coordinate-dark {
+            fill: white;
+        }
     </style>
 
     <div class="board">
         <div class="board-content">
+
+            <!-- Cuadrados del tablero -->
             <div class="square square-dark square-a1"></div><div class="square square-light square-b1"></div><div class="square square-dark square-c1"></div><div class="square square-light square-d1"></div><div class="square square-dark square-e1"></div><div class="square square-light square-f1"></div><div class="square square-dark square-g1"></div><div class="square square-light square-h1"></div>
             <div class="square square-light square-a2"></div><div class="square square-dark square-b2"></div><div class="square square-light square-c2"></div><div class="square square-dark square-d2"></div><div class="square square-light square-e2"></div><div class="square square-dark square-f2"></div><div class="square square-light square-g2"></div><div class="square square-dark square-h2"></div>
             <div class="square square-dark square-a3"></div><div class="square square-light square-b3"></div><div class="square square-dark square-c3"></div><div class="square square-light square-d3"></div><div class="square square-dark square-e3"></div><div class="square square-light square-f3"></div><div class="square square-dark square-g3"></div><div class="square square-light square-h3"></div>
@@ -261,6 +281,9 @@ template.innerHTML = `
             <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
             <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
             <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
+
+            <!-- Coordenadas del tablero -->
+            <svg viewBox="0 0 100 100" class="coordinates"><text x="0.75" y="3.5" font-size="2.8" class="coordinate-light">8</text><text x="0.75" y="15.75" font-size="2.8" class="coordinate-dark">7</text><text x="0.75" y="28.25" font-size="2.8" class="coordinate-light">6</text><text x="0.75" y="40.75" font-size="2.8" class="coordinate-dark">5</text><text x="0.75" y="53.25" font-size="2.8" class="coordinate-light">4</text><text x="0.75" y="65.75" font-size="2.8" class="coordinate-dark">3</text><text x="0.75" y="78.25" font-size="2.8" class="coordinate-light">2</text><text x="0.75" y="90.75" font-size="2.8" class="coordinate-dark">1</text><text x="10" y="99" font-size="2.8" class="coordinate-dark">a</text><text x="22.5" y="99" font-size="2.8" class="coordinate-light">b</text><text x="35" y="99" font-size="2.8" class="coordinate-dark">c</text><text x="47.5" y="99" font-size="2.8" class="coordinate-light">d</text><text x="60" y="99" font-size="2.8" class="coordinate-dark">e</text><text x="72.5" y="99" font-size="2.8" class="coordinate-light">f</text><text x="85" y="99" font-size="2.8" class="coordinate-dark">g</text><text x="97.5" y="99" font-size="2.8" class="coordinate-light">h</text></svg>
         </div>
     </div>
 `;
@@ -273,10 +296,8 @@ export class NeochessBoardElement extends HTMLElement {
     constructor() {
         super();
         this.match = new Match();
+        this.flipped = this.getAttribute('flipped') === 'true';
         this.appendChild(template.content.cloneNode(true));
-        if (this.getAttribute('flipped') === 'true') {
-            this.setFlipped(true);
-        }
         this.updatePosition();
         this.updateState();
         window.onresize = () => this.updatePosition();
@@ -284,12 +305,7 @@ export class NeochessBoardElement extends HTMLElement {
 
     public setFlipped(flipped: boolean): void {
         this.flipped = flipped;
-        const boardElement = this.querySelector('.board');
-        if (flipped) {
-            boardElement.classList.add('flipped');
-        } else {
-            boardElement.classList.remove('flipped');
-        }
+        this.updateFlipState();
     }
 
     public isFlipped(): boolean {
@@ -312,6 +328,11 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updateState() {
+        this.updateFlipState();
+        this.updateMatchState();
+    }
+
+    private updateMatchState() {
         const squareElements = this.querySelectorAll('.square');
         for (let square = Square.A1; square <= Square.H8; square++) {
             const squareElement = squareElements[square] as HTMLElement;
@@ -346,6 +367,28 @@ export class NeochessBoardElement extends HTMLElement {
                 if (pieceElement) {
                     pieceElement.remove();
                 }
+            }
+        }
+    }
+
+    private updateFlipState() {
+        const boardElement = this.querySelector('.board');
+        const coordinatesTextElements = this.querySelector('.coordinates').querySelectorAll('text');
+        if (this.flipped) {
+            boardElement.classList.add('flipped');
+            for (let i = 0, j = 1; i < 8; i++, j++) {
+                coordinatesTextElements[i].innerHTML = String(j);
+            }
+            for (let i = 8, j = 104; i < 16; i++, j--) {
+                coordinatesTextElements[i].innerHTML = String.fromCharCode(j);
+            }
+        } else {
+            boardElement.classList.remove('flipped');
+            for (let i = 0, j = 8; i < 8; i++, j--) {
+                coordinatesTextElements[i].innerHTML = String(j);
+            }
+            for (let i = 8, j = 97; i < 16; i++, j++) {
+                coordinatesTextElements[i].innerHTML = String.fromCharCode(j);
             }
         }
     }
