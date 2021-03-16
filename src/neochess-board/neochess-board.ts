@@ -15,6 +15,12 @@ template.innerHTML = `
 
         .board, .board * {
             box-sizing: border-box;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color:transparent;
         }
 
         .board {
@@ -201,6 +207,7 @@ template.innerHTML = `
             width: 100%;
             height: 100%;
             z-index: 100;
+            cursor: pointer;
         }
 
         .piece-white-pawn {
