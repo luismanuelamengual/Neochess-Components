@@ -3,11 +3,7 @@ import {Match} from "@neochess/engine/dist/match";
 const template = document.createElement('template');
 template.innerHTML = `
     <style>
-        *, ::after, ::before {
-            box-sizing: border-box;
-        }
-
-        :host {
+        :host{
             position: absolute;
             top: 0;
             left: 0;
@@ -16,9 +12,15 @@ template.innerHTML = `
             background: white;
         }
 
+        .board, .board * {
+            box-sizing: border-box;
+        }
+
         .board {
             position: absolute;
             background: darkseagreen;
+            padding: 20px;
+            border-radius: 20px;
         }
 
         .board-content {
@@ -28,6 +30,7 @@ template.innerHTML = `
             width: 100%;
             height: 100%;
             overflow: hidden;
+            border-radius: 10px;
         }
 
         .square {
@@ -265,25 +268,22 @@ export class NeochessBoardElement extends HTMLElement {
 
     private match: Match;
     private flipped: boolean = false;
-    private skin: NeochessBoardSkin = {};
 
     constructor() {
         super();
         this.match = new Match();
-        this.attachShadow({ mode: 'open' });
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
+        this.appendChild(template.content.cloneNode(true));
         if (this.getAttribute('flipped') === 'true') {
             this.setFlipped(true);
         }
         this.updatePosition();
-        this.updateLookAndFeel();
         this.updateState();
         window.onresize = () => this.updatePosition();
     }
 
     public setFlipped(flipped: boolean): void {
         this.flipped = flipped;
-        const boardElement = this.shadowRoot.querySelector('.board');
+        const boardElement = this.querySelector('.board');
         if (flipped) {
             boardElement.classList.add('flipped');
         } else {
@@ -295,17 +295,8 @@ export class NeochessBoardElement extends HTMLElement {
         return this.flipped;
     }
 
-    public setSkin(skin: NeochessBoardSkin): void {
-        this.skin = skin;
-        this.updateLookAndFeel();
-    }
-
-    public getSkin(): NeochessBoardSkin {
-        return this.skin;
-    }
-
     private updatePosition() {
-        const boardElement = this.shadowRoot.querySelector('.board') as HTMLElement;
+        const boardElement = this.querySelector('.board') as HTMLElement;
         if (this.offsetWidth >= this.offsetHeight) {
             boardElement.style.top = '0';
             boardElement.style.left = ((this.offsetWidth / 2) - (this.offsetHeight / 2)) + 'px';
@@ -316,47 +307,6 @@ export class NeochessBoardElement extends HTMLElement {
             boardElement.style.left = '0';
             boardElement.style.width = '100%';
             boardElement.style.height = this.offsetWidth + 'px';
-        }
-    }
-
-    private updateLookAndFeel() {
-        if (this.skin.backgroundColor) {
-            this.style.background = this.skin.backgroundColor;
-        } else {
-            this.style.background = null;
-        }
-        const borderSize = Number.isInteger(this.skin.borderSize)? this.skin.borderSize : 20;
-        const boardElement = this.shadowRoot.querySelector('.board') as HTMLElement;
-        if (borderSize > 0) {
-            boardElement.style.padding = borderSize + 'px';
-            boardElement.style.borderRadius = borderSize + 'px';
-            boardElement.style.background = this.skin.borderColor;
-            const boardContentElement = this.shadowRoot.querySelector('.board-content') as HTMLElement;
-            boardContentElement.style.borderRadius = (borderSize / 2) + 'px';
-        } else {
-            boardElement.style.padding = '0';
-        }
-        if (this.skin.lightColor) {
-            this.shadowRoot.querySelectorAll('.square-light').forEach(el => {
-                const element = el as HTMLElement;
-                element.style.background = this.skin.lightColor;
-            });
-        } else {
-            this.shadowRoot.querySelectorAll('.square-light').forEach(el => {
-                const element = el as HTMLElement;
-                element.style.background = null;
-            });
-        }
-        if (this.skin.darkColor) {
-            this.shadowRoot.querySelectorAll('.square-dark').forEach(el => {
-                const element = el as HTMLElement;
-                element.style.background = this.skin.darkColor;
-            });
-        } else {
-            this.shadowRoot.querySelectorAll('.square-dark').forEach(el => {
-                const element = el as HTMLElement;
-                element.style.background = null;
-            });
         }
     }
 
