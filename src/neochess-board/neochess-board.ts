@@ -18,7 +18,7 @@ template.innerHTML = `
 
         .board {
             position: absolute;
-            background: cornflowerblue;
+            background: darkseagreen;
         }
 
         .board-content {
@@ -27,6 +27,7 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
+            overflow: hidden;
         }
 
         .square {
@@ -40,7 +41,7 @@ template.innerHTML = `
         }
 
         .square-dark {
-            background: cornflowerblue;
+            background: darkseagreen;
         }
 
         .square-a1 { left: 0; top: 87.5%; }
@@ -186,6 +187,64 @@ template.innerHTML = `
         .flipped .square-f8 { left: 25%; top: 87.5%; }
         .flipped .square-g8 { left: 12.5%; top: 87.5%; }
         .flipped .square-h8 { left: 0; top: 87.5%; }
+
+        .piece {
+            background-size: contain;
+            background-repeat: no-repeat;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .piece-white-pawn {
+            background-image: url(` + require('./assets/images/pieces/white_pawn.svg') + `);
+        }
+
+        .piece-white-knight {
+            background-image: url(` + require('./assets/images/pieces/white_knight.svg') + `);
+        }
+
+        .piece-white-bishop {
+            background-image: url(` + require('./assets/images/pieces/white_bishop.svg') + `);
+        }
+
+        .piece-white-rook {
+            background-image: url(` + require('./assets/images/pieces/white_rook.svg') + `);
+        }
+
+        .piece-white-queen {
+            background-image: url(` + require('./assets/images/pieces/white_queen.svg') + `);
+        }
+
+        .piece-white-king {
+            background-image: url(` + require('./assets/images/pieces/white_king.svg') + `);
+        }
+
+        .piece-black-pawn {
+            background-image: url(` + require('./assets/images/pieces/black_pawn.svg') + `);
+        }
+
+        .piece-black-knight {
+            background-image: url(` + require('./assets/images/pieces/black_knight.svg') + `);
+        }
+
+        .piece-black-bishop {
+            background-image: url(` + require('./assets/images/pieces/black_bishop.svg') + `);
+        }
+
+        .piece-black-rook {
+            background-image: url(` + require('./assets/images/pieces/black_rook.svg') + `);
+        }
+
+        .piece-black-queen {
+            background-image: url(` + require('./assets/images/pieces/black_queen.svg') + `);
+        }
+
+        .piece-black-king {
+            background-image: url(` + require('./assets/images/pieces/black_king.svg') + `);
+        }
     </style>
 
     <div class="board">
