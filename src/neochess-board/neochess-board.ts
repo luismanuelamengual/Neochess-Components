@@ -1,5 +1,5 @@
 import {Match} from "@neochess/engine/dist/match";
-import {Piece, Square} from "@neochess/engine";
+import {Piece, Square, BoardUtils} from "@neochess/engine";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -52,6 +52,21 @@ template.innerHTML = `
 
         .square-dark {
             background: darkseagreen;
+        }
+
+        .square-move-origin {
+            background: gold;
+        }
+
+        .square-move-destination::after {
+            content: '';
+            top: 33%;
+            left: 33%;
+            bottom: 33%;
+            right: 33%;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,.1);
+            position: absolute;
         }
 
         .square-a1 { left: 0; top: 87.5%; }
@@ -308,6 +323,9 @@ export class NeochessBoardElement extends HTMLElement {
         this.updatePosition();
         this.updateState();
         window.onresize = () => this.updatePosition();
+        this.addEventListener('click', () => {
+            this.clearLegalMoves();
+        });
     }
 
     public setFlipped(flipped: boolean): void {
@@ -368,6 +386,14 @@ export class NeochessBoardElement extends HTMLElement {
                 } else {
                     pieceElement = document.createElement('div');
                     pieceElement.classList.add('piece', pieceClassName);
+                    pieceElement.addEventListener('click', (event) => {
+                        const piece = this.match.getPiece(square);
+                        if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            this.showLegalMoves(square);
+                        }
+                    });
                     squareElement.appendChild(pieceElement);
                 }
             } else {
@@ -398,6 +424,30 @@ export class NeochessBoardElement extends HTMLElement {
                 coordinatesTextElements[i].innerHTML = String.fromCharCode(j);
             }
         }
+    }
+
+    private showLegalMoves(square: Square) {
+        const squareElements = this.querySelectorAll('.square');
+        this.clearLegalMoves();
+        const originSquareElement = squareElements[square] as HTMLElement;
+        const destinationSquares = this.match.getLegalMoves().filter((move) => move.getFromSquare() === square).map((move) => move.getToSquare());
+        originSquareElement.classList.add('square-move-origin');
+        for (const destinationSquare of destinationSquares) {
+            const destinationSquareElement = squareElements[destinationSquare];
+            destinationSquareElement.classList.add('square-move-destination');
+            if (this.match.getPiece(destinationSquare) >= 0) {
+                destinationSquareElement.classList.add('square-move-destination-capture');
+            }
+        }
+    }
+
+    private clearLegalMoves() {
+        this.querySelectorAll('.square-move-origin').forEach((element: HTMLElement) => {
+            element.classList.remove('square-move-origin');
+        });
+        this.querySelectorAll('.square-move-destination').forEach((element: HTMLElement) => {
+            element.classList.remove('square-move-destination', 'square-move-destination-capture');
+        });
     }
 }
 
