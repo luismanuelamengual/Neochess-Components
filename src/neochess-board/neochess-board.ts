@@ -266,14 +266,12 @@ export class NeochessBoardElement extends HTMLElement {
     private match: Match;
     private flipped: boolean = false;
     private skin: NeochessBoardSkin = {};
-    private boardElement: HTMLDivElement;
 
     constructor() {
         super();
         this.match = new Match();
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
-        this.boardElement = this.shadowRoot.querySelector('.board');
         if (this.getAttribute('flipped') === 'true') {
             this.setFlipped(true);
         }
@@ -285,10 +283,11 @@ export class NeochessBoardElement extends HTMLElement {
 
     public setFlipped(flipped: boolean): void {
         this.flipped = flipped;
+        const boardElement = this.shadowRoot.querySelector('.board');
         if (flipped) {
-            this.boardElement.classList.add('flipped');
+            boardElement.classList.add('flipped');
         } else {
-            this.boardElement.classList.remove('flipped');
+            boardElement.classList.remove('flipped');
         }
     }
 
@@ -306,16 +305,17 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updatePosition() {
+        const boardElement = this.shadowRoot.querySelector('.board') as HTMLElement;
         if (this.offsetWidth >= this.offsetHeight) {
-            this.boardElement.style.top = '0';
-            this.boardElement.style.left = ((this.offsetWidth / 2) - (this.offsetHeight / 2)) + 'px';
-            this.boardElement.style.height = '100%';
-            this.boardElement.style.width = this.offsetHeight + 'px';
+            boardElement.style.top = '0';
+            boardElement.style.left = ((this.offsetWidth / 2) - (this.offsetHeight / 2)) + 'px';
+            boardElement.style.height = '100%';
+            boardElement.style.width = this.offsetHeight + 'px';
         } else {
-            this.boardElement.style.top = ((this.offsetHeight / 2) - (this.offsetWidth / 2)) + 'px';
-            this.boardElement.style.left = '0';
-            this.boardElement.style.width = '100%';
-            this.boardElement.style.height = this.offsetWidth + 'px';
+            boardElement.style.top = ((this.offsetHeight / 2) - (this.offsetWidth / 2)) + 'px';
+            boardElement.style.left = '0';
+            boardElement.style.width = '100%';
+            boardElement.style.height = this.offsetWidth + 'px';
         }
     }
 
@@ -326,12 +326,15 @@ export class NeochessBoardElement extends HTMLElement {
             this.style.background = null;
         }
         const borderSize = Number.isInteger(this.skin.borderSize)? this.skin.borderSize : 20;
+        const boardElement = this.shadowRoot.querySelector('.board') as HTMLElement;
         if (borderSize > 0) {
-            this.boardElement.style.padding = borderSize + 'px';
-            this.boardElement.style.borderRadius = borderSize + 'px';
-            this.boardElement.style.background = this.skin.borderColor;
+            boardElement.style.padding = borderSize + 'px';
+            boardElement.style.borderRadius = borderSize + 'px';
+            boardElement.style.background = this.skin.borderColor;
+            const boardContentElement = this.shadowRoot.querySelector('.board-content') as HTMLElement;
+            boardContentElement.style.borderRadius = (borderSize / 2) + 'px';
         } else {
-            this.boardElement.style.padding = '0';
+            boardElement.style.padding = '0';
         }
         if (this.skin.lightColor) {
             this.shadowRoot.querySelectorAll('.square-light').forEach(el => {
