@@ -77,7 +77,6 @@ template.innerHTML = `
         .square-f1 { left: 62.5%; top: 87.5%; }
         .square-g1 { left: 75%; top: 87.5%; }
         .square-h1 { left: 87.5%; top: 87.5%; }
-
         .square-a2 { left: 0; top: 75%; }
         .square-b2 { left: 12.5%; top: 75%; }
         .square-c2 { left: 25%; top: 75%; }
@@ -86,7 +85,6 @@ template.innerHTML = `
         .square-f2 { left: 62.5%; top: 75%; }
         .square-g2 { left: 75%; top: 75%; }
         .square-h2 { left: 87.5%; top: 75%; }
-
         .square-a3 { left: 0; top: 62.5%; }
         .square-b3 { left: 12.5%; top: 62.5%; }
         .square-c3 { left: 25%; top: 62.5%; }
@@ -95,7 +93,6 @@ template.innerHTML = `
         .square-f3 { left: 62.5%; top: 62.5%; }
         .square-g3 { left: 75%; top: 62.5%; }
         .square-h3 { left: 87.5%; top: 62.5%; }
-
         .square-a4 { left: 0; top: 50%; }
         .square-b4 { left: 12.5%; top: 50%; }
         .square-c4 { left: 25%; top: 50%; }
@@ -104,7 +101,6 @@ template.innerHTML = `
         .square-f4 { left: 62.5%; top: 50%; }
         .square-g4 { left: 75%; top: 50%; }
         .square-h4 { left: 87.5%; top: 50%; }
-
         .square-a5 { left: 0; top: 37.5%; }
         .square-b5 { left: 12.5%; top: 37.5%; }
         .square-c5 { left: 25%; top: 37.5%; }
@@ -113,7 +109,6 @@ template.innerHTML = `
         .square-f5 { left: 62.5%; top: 37.5%; }
         .square-g5 { left: 75%; top: 37.5%; }
         .square-h5 { left: 87.5%; top: 37.5%; }
-
         .square-a6 { left: 0; top: 25%; }
         .square-b6 { left: 12.5%; top: 25%; }
         .square-c6 { left: 25%; top: 25%; }
@@ -122,7 +117,6 @@ template.innerHTML = `
         .square-f6 { left: 62.5%; top: 25%; }
         .square-g6 { left: 75%; top: 25%; }
         .square-h6 { left: 87.5%; top: 25%; }
-
         .square-a7 { left: 0; top: 12.5%; }
         .square-b7 { left: 12.5%; top: 12.5%; }
         .square-c7 { left: 25%; top: 12.5%; }
@@ -131,7 +125,6 @@ template.innerHTML = `
         .square-f7 { left: 62.5%; top: 12.5%; }
         .square-g7 { left: 75%; top: 12.5%; }
         .square-h7 { left: 87.5%; top: 12.5%; }
-
         .square-a8 { left: 0; top: 0; }
         .square-b8 { left: 12.5%; top: 0; }
         .square-c8 { left: 25%; top: 0; }
@@ -141,77 +134,70 @@ template.innerHTML = `
         .square-g8 { left: 75%; top: 0; }
         .square-h8 { left: 87.5%; top: 0; }
 
-        .flipped .square-a1 { left: 87.5%; top: 0; }
-        .flipped .square-b1 { left: 75%; top: 0; }
-        .flipped .square-c1 { left: 62.5%; top: 0; }
-        .flipped .square-d1 { left: 50%; top: 0; }
-        .flipped .square-e1 { left: 37.5%; top: 0; }
-        .flipped .square-f1 { left: 25%; top: 0; }
-        .flipped .square-g1 { left: 12.5%; top: 0; }
-        .flipped .square-h1 { left: 0; top: 0; }
-
-        .flipped .square-a2 { left: 87.5%; top: 12.5%; }
-        .flipped .square-b2 { left: 75%; top: 12.5%; }
-        .flipped .square-c2 { left: 62.5%; top: 12.5%; }
-        .flipped .square-d2 { left: 50%; top: 12.5%; }
-        .flipped .square-e2 { left: 37.5%; top: 12.5%; }
-        .flipped .square-f2 { left: 25%; top: 12.5%; }
-        .flipped .square-g2 { left: 12.5%; top: 12.5%; }
-        .flipped .square-h2 { left: 0; top: 12.5%; }
-
-        .flipped .square-a3 { left: 87.5%; top: 25%; }
-        .flipped .square-b3 { left: 75%; top: 25%; }
-        .flipped .square-c3 { left: 62.5%; top: 25%; }
-        .flipped .square-d3 { left: 50%; top: 25%; }
-        .flipped .square-e3 { left: 37.5%; top: 25%; }
-        .flipped .square-f3 { left: 25%; top: 25%; }
-        .flipped .square-g3 { left: 12.5%; top: 25%; }
-        .flipped .square-h3 { left: 0; top: 25%; }
-
-        .flipped .square-a4 { left: 87.5%; top: 37.5%; }
-        .flipped .square-b4 { left: 75%; top: 37.5%; }
-        .flipped .square-c4 { left: 62.5%; top: 37.5%; }
-        .flipped .square-d4 { left: 50%; top: 37.5%; }
-        .flipped .square-e4 { left: 37.5%; top: 37.5%; }
-        .flipped .square-f4 { left: 25%; top: 37.5%; }
-        .flipped .square-g4 { left: 12.5%; top: 37.5%; }
-        .flipped .square-h4 { left: 0; top: 37.5%; }
-
-        .flipped .square-a5 { left: 87.5%; top: 50%; }
-        .flipped .square-b5 { left: 75%; top: 50%; }
-        .flipped .square-c5 { left: 62.5%; top: 50%; }
-        .flipped .square-d5 { left: 50%; top: 50%; }
-        .flipped .square-e5 { left: 37.5%; top: 50%; }
-        .flipped .square-f5 { left: 25%; top: 50%; }
-        .flipped .square-g5 { left: 12.5%; top: 50%; }
-        .flipped .square-h5 { left: 0; top: 50%; }
-
-        .flipped .square-a6 { left: 87.5%; top: 62.5%; }
-        .flipped .square-b6 { left: 75%; top: 62.5%; }
-        .flipped .square-c6 { left: 62.5%; top: 62.5%; }
-        .flipped .square-d6 { left: 50%; top: 62.5%; }
-        .flipped .square-e6 { left: 37.5%; top: 62.5%; }
-        .flipped .square-f6 { left: 25%; top: 62.5%; }
-        .flipped .square-g6 { left: 12.5%; top: 62.5%; }
-        .flipped .square-h6 { left: 0; top: 62.5%; }
-
-        .flipped .square-a7 { left: 87.5%; top: 75%; }
-        .flipped .square-b7 { left: 75%; top: 75%; }
-        .flipped .square-c7 { left: 62.5%; top: 75%; }
-        .flipped .square-d7 { left: 50%; top: 75%; }
-        .flipped .square-e7 { left: 37.5%; top: 75%; }
-        .flipped .square-f7 { left: 25%; top: 75%; }
-        .flipped .square-g7 { left: 12.5%; top: 75%; }
-        .flipped .square-h7 { left: 0; top: 75%; }
-
-        .flipped .square-a8 { left: 87.5%; top: 87.5%; }
-        .flipped .square-b8 { left: 75%; top: 87.5%; }
-        .flipped .square-c8 { left: 62.5%; top: 87.5%; }
-        .flipped .square-d8 { left: 50%; top: 87.5%; }
-        .flipped .square-e8 { left: 37.5%; top: 87.5%; }
-        .flipped .square-f8 { left: 25%; top: 87.5%; }
-        .flipped .square-g8 { left: 12.5%; top: 87.5%; }
-        .flipped .square-h8 { left: 0; top: 87.5%; }
+        .board-flipped .square-a1 { left: 87.5%; top: 0; }
+        .board-flipped .square-b1 { left: 75%; top: 0; }
+        .board-flipped .square-c1 { left: 62.5%; top: 0; }
+        .board-flipped .square-d1 { left: 50%; top: 0; }
+        .board-flipped .square-e1 { left: 37.5%; top: 0; }
+        .board-flipped .square-f1 { left: 25%; top: 0; }
+        .board-flipped .square-g1 { left: 12.5%; top: 0; }
+        .board-flipped .square-h1 { left: 0; top: 0; }
+        .board-flipped .square-a2 { left: 87.5%; top: 12.5%; }
+        .board-flipped .square-b2 { left: 75%; top: 12.5%; }
+        .board-flipped .square-c2 { left: 62.5%; top: 12.5%; }
+        .board-flipped .square-d2 { left: 50%; top: 12.5%; }
+        .board-flipped .square-e2 { left: 37.5%; top: 12.5%; }
+        .board-flipped .square-f2 { left: 25%; top: 12.5%; }
+        .board-flipped .square-g2 { left: 12.5%; top: 12.5%; }
+        .board-flipped .square-h2 { left: 0; top: 12.5%; }
+        .board-flipped .square-a3 { left: 87.5%; top: 25%; }
+        .board-flipped .square-b3 { left: 75%; top: 25%; }
+        .board-flipped .square-c3 { left: 62.5%; top: 25%; }
+        .board-flipped .square-d3 { left: 50%; top: 25%; }
+        .board-flipped .square-e3 { left: 37.5%; top: 25%; }
+        .board-flipped .square-f3 { left: 25%; top: 25%; }
+        .board-flipped .square-g3 { left: 12.5%; top: 25%; }
+        .board-flipped .square-h3 { left: 0; top: 25%; }
+        .board-flipped .square-a4 { left: 87.5%; top: 37.5%; }
+        .board-flipped .square-b4 { left: 75%; top: 37.5%; }
+        .board-flipped .square-c4 { left: 62.5%; top: 37.5%; }
+        .board-flipped .square-d4 { left: 50%; top: 37.5%; }
+        .board-flipped .square-e4 { left: 37.5%; top: 37.5%; }
+        .board-flipped .square-f4 { left: 25%; top: 37.5%; }
+        .board-flipped .square-g4 { left: 12.5%; top: 37.5%; }
+        .board-flipped .square-h4 { left: 0; top: 37.5%; }
+        .board-flipped .square-a5 { left: 87.5%; top: 50%; }
+        .board-flipped .square-b5 { left: 75%; top: 50%; }
+        .board-flipped .square-c5 { left: 62.5%; top: 50%; }
+        .board-flipped .square-d5 { left: 50%; top: 50%; }
+        .board-flipped .square-e5 { left: 37.5%; top: 50%; }
+        .board-flipped .square-f5 { left: 25%; top: 50%; }
+        .board-flipped .square-g5 { left: 12.5%; top: 50%; }
+        .board-flipped .square-h5 { left: 0; top: 50%; }
+        .board-flipped .square-a6 { left: 87.5%; top: 62.5%; }
+        .board-flipped .square-b6 { left: 75%; top: 62.5%; }
+        .board-flipped .square-c6 { left: 62.5%; top: 62.5%; }
+        .board-flipped .square-d6 { left: 50%; top: 62.5%; }
+        .board-flipped .square-e6 { left: 37.5%; top: 62.5%; }
+        .board-flipped .square-f6 { left: 25%; top: 62.5%; }
+        .board-flipped .square-g6 { left: 12.5%; top: 62.5%; }
+        .board-flipped .square-h6 { left: 0; top: 62.5%; }
+        .board-flipped .square-a7 { left: 87.5%; top: 75%; }
+        .board-flipped .square-b7 { left: 75%; top: 75%; }
+        .board-flipped .square-c7 { left: 62.5%; top: 75%; }
+        .board-flipped .square-d7 { left: 50%; top: 75%; }
+        .board-flipped .square-e7 { left: 37.5%; top: 75%; }
+        .board-flipped .square-f7 { left: 25%; top: 75%; }
+        .board-flipped .square-g7 { left: 12.5%; top: 75%; }
+        .board-flipped .square-h7 { left: 0; top: 75%; }
+        .board-flipped .square-a8 { left: 87.5%; top: 87.5%; }
+        .board-flipped .square-b8 { left: 75%; top: 87.5%; }
+        .board-flipped .square-c8 { left: 62.5%; top: 87.5%; }
+        .board-flipped .square-d8 { left: 50%; top: 87.5%; }
+        .board-flipped .square-e8 { left: 37.5%; top: 87.5%; }
+        .board-flipped .square-f8 { left: 25%; top: 87.5%; }
+        .board-flipped .square-g8 { left: 12.5%; top: 87.5%; }
+        .board-flipped .square-h8 { left: 0; top: 87.5%; }
 
         .piece {
             background-size: contain;
@@ -408,7 +394,7 @@ export class NeochessBoardElement extends HTMLElement {
         const boardElement = this.querySelector('.board');
         const coordinatesTextElements = this.querySelector('.coordinates').querySelectorAll('text');
         if (this.flipped) {
-            boardElement.classList.add('flipped');
+            boardElement.classList.add('board-flipped');
             for (let i = 0, j = 1; i < 8; i++, j++) {
                 coordinatesTextElements[i].innerHTML = String(j);
             }
@@ -416,7 +402,7 @@ export class NeochessBoardElement extends HTMLElement {
                 coordinatesTextElements[i].innerHTML = String.fromCharCode(j);
             }
         } else {
-            boardElement.classList.remove('flipped');
+            boardElement.classList.remove('board-flipped');
             for (let i = 0, j = 8; i < 8; i++, j--) {
                 coordinatesTextElements[i].innerHTML = String(j);
             }
