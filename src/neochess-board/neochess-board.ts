@@ -4,16 +4,18 @@ import {BoardUtils, Piece, Square} from "@neochess/engine";
 const template = document.createElement('template');
 template.innerHTML = `
     <style>
-        :host{
+        neochess-board {
             position: absolute;
             top: 0;
             left: 0;
             height: 100%;
             width: 100%;
+            padding: 20px;
             background: white;
+            overflow: auto;
         }
 
-        .board, .board * {
+        neochess-board, neochess-board * {
             box-sizing: border-box;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -23,8 +25,18 @@ template.innerHTML = `
             -webkit-tap-highlight-color:transparent;
         }
 
+        .board-container {
+            width: 100%;
+            padding-bottom: 100%;
+            position: relative;
+        }
+
         .board {
             position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: darkseagreen;
             padding: 16px;
             border-radius: 16px;
@@ -248,16 +260,18 @@ template.innerHTML = `
         .board-flipped .square-h8 { left: 0; top: 87.5%; }
     </style>
 
-    <div class="board">
-        <div class="board-content">
-            <div class="square square-dark square-a1"></div><div class="square square-light square-b1"></div><div class="square square-dark square-c1"></div><div class="square square-light square-d1"></div><div class="square square-dark square-e1"></div><div class="square square-light square-f1"></div><div class="square square-dark square-g1"></div><div class="square square-light square-h1"></div>
-            <div class="square square-light square-a2"></div><div class="square square-dark square-b2"></div><div class="square square-light square-c2"></div><div class="square square-dark square-d2"></div><div class="square square-light square-e2"></div><div class="square square-dark square-f2"></div><div class="square square-light square-g2"></div><div class="square square-dark square-h2"></div>
-            <div class="square square-dark square-a3"></div><div class="square square-light square-b3"></div><div class="square square-dark square-c3"></div><div class="square square-light square-d3"></div><div class="square square-dark square-e3"></div><div class="square square-light square-f3"></div><div class="square square-dark square-g3"></div><div class="square square-light square-h3"></div>
-            <div class="square square-light square-a4"></div><div class="square square-dark square-b4"></div><div class="square square-light square-c4"></div><div class="square square-dark square-d4"></div><div class="square square-light square-e4"></div><div class="square square-dark square-f4"></div><div class="square square-light square-g4"></div><div class="square square-dark square-h4"></div>
-            <div class="square square-dark square-a5"></div><div class="square square-light square-b5"></div><div class="square square-dark square-c5"></div><div class="square square-light square-d5"></div><div class="square square-dark square-e5"></div><div class="square square-light square-f5"></div><div class="square square-dark square-g5"></div><div class="square square-light square-h5"></div>
-            <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
-            <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
-            <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
+    <div class="board-container">
+        <div class="board">
+            <div class="board-content">
+                <div class="square square-dark square-a1"></div><div class="square square-light square-b1"></div><div class="square square-dark square-c1"></div><div class="square square-light square-d1"></div><div class="square square-dark square-e1"></div><div class="square square-light square-f1"></div><div class="square square-dark square-g1"></div><div class="square square-light square-h1"></div>
+                <div class="square square-light square-a2"></div><div class="square square-dark square-b2"></div><div class="square square-light square-c2"></div><div class="square square-dark square-d2"></div><div class="square square-light square-e2"></div><div class="square square-dark square-f2"></div><div class="square square-light square-g2"></div><div class="square square-dark square-h2"></div>
+                <div class="square square-dark square-a3"></div><div class="square square-light square-b3"></div><div class="square square-dark square-c3"></div><div class="square square-light square-d3"></div><div class="square square-dark square-e3"></div><div class="square square-light square-f3"></div><div class="square square-dark square-g3"></div><div class="square square-light square-h3"></div>
+                <div class="square square-light square-a4"></div><div class="square square-dark square-b4"></div><div class="square square-light square-c4"></div><div class="square square-dark square-d4"></div><div class="square square-light square-e4"></div><div class="square square-dark square-f4"></div><div class="square square-light square-g4"></div><div class="square square-dark square-h4"></div>
+                <div class="square square-dark square-a5"></div><div class="square square-light square-b5"></div><div class="square square-dark square-c5"></div><div class="square square-light square-d5"></div><div class="square square-dark square-e5"></div><div class="square square-light square-f5"></div><div class="square square-dark square-g5"></div><div class="square square-light square-h5"></div>
+                <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
+                <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
+                <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
+            </div>
         </div>
     </div>
 `;
@@ -272,7 +286,6 @@ export class NeochessBoardElement extends HTMLElement {
         this.match = new Match();
         this.flipped = this.getAttribute('flipped') === 'true';
         this.appendChild(template.content.cloneNode(true));
-        this.updatePosition();
         this.updateState();
         this.configureEvents();
     }
@@ -287,7 +300,6 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private configureEvents() {
-        window.onresize = () => this.updatePosition();
         this.addEventListener('contextmenu', (event) => {
             event.preventDefault();
         });
@@ -304,21 +316,6 @@ export class NeochessBoardElement extends HTMLElement {
                 }
             });
         });
-    }
-
-    private updatePosition() {
-        const boardElement = this.querySelector('.board') as HTMLElement;
-        if (this.offsetWidth >= this.offsetHeight) {
-            boardElement.style.top = '0';
-            boardElement.style.left = ((this.offsetWidth / 2) - (this.offsetHeight / 2)) + 'px';
-            boardElement.style.height = '100%';
-            boardElement.style.width = this.offsetHeight + 'px';
-        } else {
-            boardElement.style.top = ((this.offsetHeight / 2) - (this.offsetWidth / 2)) + 'px';
-            boardElement.style.left = '0';
-            boardElement.style.width = '100%';
-            boardElement.style.height = this.offsetWidth + 'px';
-        }
     }
 
     private updateState() {
