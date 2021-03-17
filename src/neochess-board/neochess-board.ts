@@ -1,5 +1,5 @@
 import {Match} from "@neochess/engine/dist/match";
-import {Piece, Square, BoardUtils} from "@neochess/engine";
+import {BoardUtils, Piece, Square} from "@neochess/engine";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -46,16 +46,64 @@ template.innerHTML = `
             height: 12.5%;
         }
 
+        .square-white-pawn {
+            background: url(` + require('./assets/images/pieces/white_pawn.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-white-knight {
+            background: url(` + require('./assets/images/pieces/white_knight.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-white-bishop {
+            background: url(` + require('./assets/images/pieces/white_bishop.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-white-rook {
+            background: url(` + require('./assets/images/pieces/white_rook.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-white-queen {
+            background: url(` + require('./assets/images/pieces/white_queen.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-white-king {
+            background: url(` + require('./assets/images/pieces/white_king.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-black-pawn {
+            background: url(` + require('./assets/images/pieces/black_pawn.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-black-knight {
+            background: url(` + require('./assets/images/pieces/black_knight.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-black-bishop {
+            background: url(` + require('./assets/images/pieces/black_bishop.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-black-rook {
+            background: url(` + require('./assets/images/pieces/black_rook.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-black-queen {
+            background: url(` + require('./assets/images/pieces/black_queen.svg') + `) 0/contain no-repeat;
+        }
+
+        .square-black-king {
+            background: url(` + require('./assets/images/pieces/black_king.svg') + `) 0/contain no-repeat;
+        }
+
         .square-light {
-            background: white;
+            background-color: white;
         }
 
         .square-dark {
-            background: darkseagreen;
+            background-color: darkseagreen;
         }
 
         .square-move-origin {
-            background: gold;
+            background-color: gold;
         }
 
         .square-move-destination::after {
@@ -198,89 +246,10 @@ template.innerHTML = `
         .board-flipped .square-f8 { left: 25%; top: 87.5%; }
         .board-flipped .square-g8 { left: 12.5%; top: 87.5%; }
         .board-flipped .square-h8 { left: 0; top: 87.5%; }
-
-        .piece {
-            background-size: contain;
-            background-repeat: no-repeat;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 100;
-            cursor: pointer;
-        }
-
-        .piece-white-pawn {
-            background-image: url(` + require('./assets/images/pieces/white_pawn.svg') + `);
-        }
-
-        .piece-white-knight {
-            background-image: url(` + require('./assets/images/pieces/white_knight.svg') + `);
-        }
-
-        .piece-white-bishop {
-            background-image: url(` + require('./assets/images/pieces/white_bishop.svg') + `);
-        }
-
-        .piece-white-rook {
-            background-image: url(` + require('./assets/images/pieces/white_rook.svg') + `);
-        }
-
-        .piece-white-queen {
-            background-image: url(` + require('./assets/images/pieces/white_queen.svg') + `);
-        }
-
-        .piece-white-king {
-            background-image: url(` + require('./assets/images/pieces/white_king.svg') + `);
-        }
-
-        .piece-black-pawn {
-            background-image: url(` + require('./assets/images/pieces/black_pawn.svg') + `);
-        }
-
-        .piece-black-knight {
-            background-image: url(` + require('./assets/images/pieces/black_knight.svg') + `);
-        }
-
-        .piece-black-bishop {
-            background-image: url(` + require('./assets/images/pieces/black_bishop.svg') + `);
-        }
-
-        .piece-black-rook {
-            background-image: url(` + require('./assets/images/pieces/black_rook.svg') + `);
-        }
-
-        .piece-black-queen {
-            background-image: url(` + require('./assets/images/pieces/black_queen.svg') + `);
-        }
-
-        .piece-black-king {
-            background-image: url(` + require('./assets/images/pieces/black_king.svg') + `);
-        }
-
-        .coordinates {
-            position: absolute;
-            z-index: 50;
-        }
-
-        .coordinate-dark, .coordinate-light {
-            font-weight: 600;
-        }
-
-        .coordinate-light {
-            fill: darkseagreen;
-        }
-
-        .coordinate-dark {
-            fill: white;
-        }
     </style>
 
     <div class="board">
         <div class="board-content">
-
-            <!-- Cuadrados del tablero -->
             <div class="square square-dark square-a1"></div><div class="square square-light square-b1"></div><div class="square square-dark square-c1"></div><div class="square square-light square-d1"></div><div class="square square-dark square-e1"></div><div class="square square-light square-f1"></div><div class="square square-dark square-g1"></div><div class="square square-light square-h1"></div>
             <div class="square square-light square-a2"></div><div class="square square-dark square-b2"></div><div class="square square-light square-c2"></div><div class="square square-dark square-d2"></div><div class="square square-light square-e2"></div><div class="square square-dark square-f2"></div><div class="square square-light square-g2"></div><div class="square square-dark square-h2"></div>
             <div class="square square-dark square-a3"></div><div class="square square-light square-b3"></div><div class="square square-dark square-c3"></div><div class="square square-light square-d3"></div><div class="square square-dark square-e3"></div><div class="square square-light square-f3"></div><div class="square square-dark square-g3"></div><div class="square square-light square-h3"></div>
@@ -289,9 +258,6 @@ template.innerHTML = `
             <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
             <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
             <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
-
-            <!-- Coordenadas del tablero -->
-            <svg viewBox="0 0 100 100" class="coordinates"><text x="0.75" y="3.5" font-size="2.8" class="coordinate-light">8</text><text x="0.75" y="15.75" font-size="2.8" class="coordinate-dark">7</text><text x="0.75" y="28.25" font-size="2.8" class="coordinate-light">6</text><text x="0.75" y="40.75" font-size="2.8" class="coordinate-dark">5</text><text x="0.75" y="53.25" font-size="2.8" class="coordinate-light">4</text><text x="0.75" y="65.75" font-size="2.8" class="coordinate-dark">3</text><text x="0.75" y="78.25" font-size="2.8" class="coordinate-light">2</text><text x="0.75" y="90.75" font-size="2.8" class="coordinate-dark">1</text><text x="10" y="99" font-size="2.8" class="coordinate-dark">a</text><text x="22.5" y="99" font-size="2.8" class="coordinate-light">b</text><text x="35" y="99" font-size="2.8" class="coordinate-dark">c</text><text x="47.5" y="99" font-size="2.8" class="coordinate-light">d</text><text x="60" y="99" font-size="2.8" class="coordinate-dark">e</text><text x="72.5" y="99" font-size="2.8" class="coordinate-light">f</text><text x="85" y="99" font-size="2.8" class="coordinate-dark">g</text><text x="97.5" y="99" font-size="2.8" class="coordinate-light">h</text></svg>
         </div>
     </div>
 `;
@@ -308,10 +274,7 @@ export class NeochessBoardElement extends HTMLElement {
         this.appendChild(template.content.cloneNode(true));
         this.updatePosition();
         this.updateState();
-        window.onresize = () => this.updatePosition();
-        this.addEventListener('click', () => {
-            this.clearLegalMoves();
-        });
+        this.configureEvents();
     }
 
     public setFlipped(flipped: boolean): void {
@@ -321,6 +284,26 @@ export class NeochessBoardElement extends HTMLElement {
 
     public isFlipped(): boolean {
         return this.flipped;
+    }
+
+    private configureEvents() {
+        window.onresize = () => this.updatePosition();
+        this.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+        this.addEventListener('click', () => {
+            this.clearLegalMoves();
+        });
+        this.querySelectorAll('.square').forEach((squareElement: HTMLElement, square: Square) => {
+            squareElement.addEventListener('click', (event) => {
+                const piece = this.match.getPiece(square);
+                if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.showLegalMoves(square);
+                }
+            });
+        });
     }
 
     private updatePosition() {
@@ -347,68 +330,35 @@ export class NeochessBoardElement extends HTMLElement {
         const squareElements = this.querySelectorAll('.square');
         for (let square = Square.A1; square <= Square.H8; square++) {
             const squareElement = squareElements[square] as HTMLElement;
+            let pieceClassName = null;
             const piece = this.match.getPiece(square);
-            let pieceElement = squareElement.querySelector('.piece');
-            if (piece >= 0) {
-                let pieceClassName = '';
-                switch (piece) {
-                    case Piece.WHITE_PAWN: pieceClassName = 'piece-white-pawn'; break;
-                    case Piece.WHITE_KNIGHT: pieceClassName = 'piece-white-knight'; break;
-                    case Piece.WHITE_BISHOP: pieceClassName = 'piece-white-bishop'; break;
-                    case Piece.WHITE_ROOK: pieceClassName = 'piece-white-rook'; break;
-                    case Piece.WHITE_QUEEN: pieceClassName = 'piece-white-queen'; break;
-                    case Piece.WHITE_KING: pieceClassName = 'piece-white-king'; break;
-                    case Piece.BLACK_PAWN: pieceClassName = 'piece-black-pawn'; break;
-                    case Piece.BLACK_KNIGHT: pieceClassName = 'piece-black-knight'; break;
-                    case Piece.BLACK_BISHOP: pieceClassName = 'piece-black-bishop'; break;
-                    case Piece.BLACK_ROOK: pieceClassName = 'piece-black-rook'; break;
-                    case Piece.BLACK_QUEEN: pieceClassName = 'piece-black-queen'; break;
-                    case Piece.BLACK_KING: pieceClassName = 'piece-black-king'; break;
-                }
-                if (pieceElement) {
-                    if (!pieceElement.classList.contains(pieceClassName)) {
-                        pieceElement.className = 'piece ' + pieceClassName;
-                    }
-                } else {
-                    pieceElement = document.createElement('div');
-                    pieceElement.classList.add('piece', pieceClassName);
-                    pieceElement.addEventListener('click', (event) => {
-                        const piece = this.match.getPiece(square);
-                        if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            this.showLegalMoves(square);
-                        }
-                    });
-                    squareElement.appendChild(pieceElement);
-                }
-            } else {
-                if (pieceElement) {
-                    pieceElement.remove();
-                }
+            switch (piece) {
+                case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
+                case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
+                case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
+                case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
+                case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
+                case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
+                case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
+                case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
+                case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
+                case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
+                case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
+                case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
+            }
+            squareElement.classList.remove('square-white-pawn', 'square-white-knight', 'square-white-bishop', 'square-white-rook', 'square-white-queen', 'square-white-king', 'square-black-pawn', 'square-black-knight', 'square-black-bishop', 'square-black-rook', 'square-black-queen', 'square-black-king');
+            if (pieceClassName) {
+                squareElement.classList.add(pieceClassName);
             }
         }
     }
 
     private updateFlipState() {
         const boardElement = this.querySelector('.board');
-        const coordinatesTextElements = this.querySelector('.coordinates').querySelectorAll('text');
         if (this.flipped) {
             boardElement.classList.add('board-flipped');
-            for (let i = 0, j = 1; i < 8; i++, j++) {
-                coordinatesTextElements[i].innerHTML = String(j);
-            }
-            for (let i = 8, j = 104; i < 16; i++, j--) {
-                coordinatesTextElements[i].innerHTML = String.fromCharCode(j);
-            }
         } else {
             boardElement.classList.remove('board-flipped');
-            for (let i = 0, j = 8; i < 8; i++, j--) {
-                coordinatesTextElements[i].innerHTML = String(j);
-            }
-            for (let i = 8, j = 97; i < 16; i++, j++) {
-                coordinatesTextElements[i].innerHTML = String.fromCharCode(j);
-            }
         }
     }
 
