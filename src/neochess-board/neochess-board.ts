@@ -308,7 +308,7 @@ export class NeochessBoardElement extends HTMLElement {
     private flipped: boolean = false;
     private boardElement: HTMLElement;
     private squareElements: Array<HTMLElement>;
-    private pieceDragData?: { grabElement: HTMLElement, grabXOffset: number, grabYOffset: number, originSquare: Square } = null;
+    private pieceDragData?: { grabElement: HTMLElement, grabXOffset: number, grabYOffset: number, fromSquare: Square, toSquare?: Square } = null;
 
     constructor() {
         super();
@@ -322,9 +322,6 @@ export class NeochessBoardElement extends HTMLElement {
         this.configureElements();
         this.configureEvents();
         this.updateState();
-
-        this.makeMove(Square.E2, Square.E4);
-        this.makeMove(Square.A7, Square.A6);
     }
 
     public setFlipped(flipped: boolean): void {
@@ -360,67 +357,76 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragStart(event: MouseEvent|TouchEvent) {
-        this.clearLegalMoves();
         if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
             const squareElement = event.target as HTMLElement;
-            const square = this.squareElements.indexOf(squareElement);
-            const piece = this.match.getPiece(square);
-            if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                squareElement.classList.add('square-piece-moving');
-                this.showLegalMoves(square);
+            if (squareElement.classList.contains('square-legal-destination')) {
+                const fromSquare = this.squareElements.indexOf(this.querySelector('.square-origin'));
+                const toSquare = this.squareElements.indexOf(squareElement);
+                this.clearLegalMoves();
+                this.makeMove(fromSquare, toSquare);
+            } else {
+                this.clearLegalMoves();
+                const square = this.squareElements.indexOf(squareElement);
+                const piece = this.match.getPiece(square);
+                if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+                    squareElement.classList.add('square-piece-moving');
+                    this.showLegalMoves(square);
 
-                let pieceClassName = null;
-                switch (piece) {
-                    case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
-                    case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
-                    case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
-                    case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
-                    case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
-                    case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
-                    case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
-                    case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
-                    case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
-                    case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
-                    case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
-                    case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
-                }
+                    let pieceClassName = null;
+                    switch (piece) {
+                        case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
+                        case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
+                        case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
+                        case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
+                        case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
+                        case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
+                        case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
+                        case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
+                        case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
+                        case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
+                        case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
+                        case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
+                    }
 
-                const squareElementRect = squareElement.getBoundingClientRect();
-                const draggingPieceElement = document.createElement('div');
-                draggingPieceElement.classList.add(pieceClassName);
-                draggingPieceElement.style.position = 'absolute';
-                draggingPieceElement.style.pointerEvents = 'none';
-                draggingPieceElement.style.left = squareElementRect.x + 'px';
-                draggingPieceElement.style.top = squareElementRect.y + 'px';
-                draggingPieceElement.style.width = squareElementRect.width + 'px';
-                draggingPieceElement.style.height = squareElementRect.height + 'px';
-                draggingPieceElement.style.cursor = 'grabbing';
-                document.body.appendChild(draggingPieceElement);
+                    const squareElementRect = squareElement.getBoundingClientRect();
+                    const draggingPieceElement = document.createElement('div');
+                    draggingPieceElement.classList.add(pieceClassName);
+                    draggingPieceElement.style.position = 'absolute';
+                    draggingPieceElement.style.pointerEvents = 'none';
+                    draggingPieceElement.style.left = squareElementRect.x + 'px';
+                    draggingPieceElement.style.top = squareElementRect.y + 'px';
+                    draggingPieceElement.style.width = squareElementRect.width + 'px';
+                    draggingPieceElement.style.height = squareElementRect.height + 'px';
+                    draggingPieceElement.style.cursor = 'grabbing';
+                    document.body.appendChild(draggingPieceElement);
 
-                if (event instanceof MouseEvent) {
-                    this.pieceDragData = {
-                        grabElement: draggingPieceElement,
-                        grabXOffset: event.clientX - squareElementRect.x,
-                        grabYOffset: event.clientY - squareElementRect.y,
-                        originSquare: square
-                    };
-                } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
-                    this.pieceDragData = {
-                        grabElement: draggingPieceElement,
-                        grabXOffset: event.changedTouches[0].clientX - squareElementRect.x,
-                        grabYOffset: event.changedTouches[0].clientY - squareElementRect.y,
-                        originSquare: square
-                    };
-                }
+                    if (event instanceof MouseEvent) {
+                        this.pieceDragData = {
+                            grabElement: draggingPieceElement,
+                            grabXOffset: event.clientX - squareElementRect.x,
+                            grabYOffset: event.clientY - squareElementRect.y,
+                            fromSquare: square
+                        };
+                    } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
+                        this.pieceDragData = {
+                            grabElement: draggingPieceElement,
+                            grabXOffset: event.changedTouches[0].clientX - squareElementRect.x,
+                            grabYOffset: event.changedTouches[0].clientY - squareElementRect.y,
+                            fromSquare: square
+                        };
+                    }
 
-                if (this.isTouchDevice()) {
-                    this.addEventListener('touchmove', this.onDrag);
-                    this.addEventListener('touchend', this.onDragEnd);
-                } else {
-                    this.addEventListener('mousemove', this.onDrag);
-                    this.addEventListener('mouseup', this.onDragEnd);
+                    if (this.isTouchDevice()) {
+                        this.addEventListener('touchmove', this.onDrag);
+                        this.addEventListener('touchend', this.onDragEnd);
+                    } else {
+                        this.addEventListener('mousemove', this.onDrag);
+                        this.addEventListener('mouseup', this.onDragEnd);
+                    }
                 }
             }
+        } else {
+            this.clearLegalMoves();
         }
     }
 
@@ -439,7 +445,8 @@ export class NeochessBoardElement extends HTMLElement {
             this.pieceDragData.grabElement.style.top = y + 'px';
             const elementAtPoint = document.elementFromPoint(x + (this.pieceDragData.grabElement.offsetWidth / 2), y + (this.pieceDragData.grabElement.offsetHeight / 2));
             if (elementAtPoint.classList.contains('square')) {
-                this.setMoveHighlightSquare(this.squareElements.indexOf(elementAtPoint as HTMLElement));
+                this.pieceDragData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
+                this.setMoveHighlightSquare(this.pieceDragData.toSquare);
             } else {
                 this.clearMoveHighlightSquare();
             }
@@ -461,6 +468,12 @@ export class NeochessBoardElement extends HTMLElement {
         }
         if (this.pieceDragData) {
             document.body.removeChild(this.pieceDragData.grabElement);
+
+            if (this.pieceDragData.fromSquare && this.pieceDragData.toSquare) {
+                if (this.makeMove(this.pieceDragData.fromSquare, this.pieceDragData.toSquare)) {
+                    this.clearLegalMoves();
+                }
+            }
         }
         this.pieceDragData = null;
     }
@@ -542,9 +555,12 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
-    private makeMove(sourceSquare: Square, destinationSquare: Square) {
-        this.match.makeMove(new Move(sourceSquare, destinationSquare));
-        this.updateMatchState();
+    private makeMove(sourceSquare: Square, destinationSquare: Square): boolean {
+        const moveDone = this.match.makeMove(new Move(sourceSquare, destinationSquare));
+        if (moveDone) {
+            this.updateMatchState();
+        }
+        return moveDone;
     }
 }
 
