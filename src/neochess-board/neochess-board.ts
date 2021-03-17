@@ -139,6 +139,10 @@ template.innerHTML = `
             position: absolute;
         }
 
+        .square-piece-moving {
+            background-image: none;
+        }
+
         .square-a1 { left: 0; top: 87.5%; }
         .square-b1 { left: 12.5%; top: 87.5%; }
         .square-c1 { left: 25%; top: 87.5%; }
@@ -344,6 +348,7 @@ export class NeochessBoardElement extends HTMLElement {
         this.clearLegalMoves();
         if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
             const squareElement = event.target as HTMLElement;
+            squareElement.classList.add('square-piece-moving');
             const square = this.squareElements.indexOf(squareElement);
             const piece = this.match.getPiece(square);
             if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
@@ -427,6 +432,10 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragEnd() {
+        const movingPieceSquare = this.querySelector('.square-piece-moving');
+        if (movingPieceSquare) {
+            movingPieceSquare.classList.remove('square-piece-moving');
+        }
         this.clearMoveHighlightSquare();
         if (this.isTouchDevice()) {
             this.removeEventListener('touchmove', this.onDrag);
