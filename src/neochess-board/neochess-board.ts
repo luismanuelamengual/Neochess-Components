@@ -1,5 +1,5 @@
 import {Match} from "@neochess/engine/dist/match";
-import {BoardUtils, Piece, Square} from "@neochess/engine";
+import {BoardUtils, Move, Piece, Square} from "@neochess/engine";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -37,9 +37,10 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            background: darkseagreen;
+            background: cornsilk;
             padding: 16px;
             border-radius: 16px;
+            border: 1px solid gray;
         }
 
         .board-content {
@@ -50,6 +51,7 @@ template.innerHTML = `
             height: 100%;
             overflow: hidden;
             border-radius: 8px;
+            border: 1px solid gray;
         }
 
         .square {
@@ -107,7 +109,7 @@ template.innerHTML = `
         }
 
         .square-light {
-            background-color: white;
+            background-color: #FFFFEC;
         }
 
         .square-dark {
@@ -125,7 +127,7 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            border: 4px solid green;
+            border: 4px solid #c2c2c2;
         }
 
         .square-legal-destination::after {
@@ -137,6 +139,16 @@ template.innerHTML = `
             border-radius: 50%;
             background-color: rgba(0,0,0,.1);
             position: absolute;
+        }
+
+        .square-legal-destination-capture::after {
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-color: transparent;
+            border: 11px solid rgba(0,0,0,.1);
+            border-radius: 50%;
         }
 
         .square-piece-moving {
@@ -310,6 +322,9 @@ export class NeochessBoardElement extends HTMLElement {
         this.configureElements();
         this.configureEvents();
         this.updateState();
+
+        this.makeMove(Square.E2, Square.E4);
+        this.makeMove(Square.A7, Square.A6);
     }
 
     public setFlipped(flipped: boolean): void {
@@ -348,10 +363,10 @@ export class NeochessBoardElement extends HTMLElement {
         this.clearLegalMoves();
         if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
             const squareElement = event.target as HTMLElement;
-            squareElement.classList.add('square-piece-moving');
             const square = this.squareElements.indexOf(squareElement);
             const piece = this.match.getPiece(square);
-            if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+            if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+                squareElement.classList.add('square-piece-moving');
                 this.showLegalMoves(square);
 
                 let pieceClassName = null;
@@ -525,6 +540,11 @@ export class NeochessBoardElement extends HTMLElement {
         if (destinationSquareHighlighted) {
             destinationSquareHighlighted.classList.remove('square-destination');
         }
+    }
+
+    private makeMove(sourceSquare: Square, destinationSquare: Square) {
+        this.match.makeMove(new Move(sourceSquare, destinationSquare));
+        this.updateMatchState();
     }
 }
 
