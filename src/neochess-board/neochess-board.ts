@@ -118,7 +118,17 @@ template.innerHTML = `
             background-color: gold;
         }
 
-        .square-destination::after {
+        .square-destination::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 4px solid green;
+        }
+
+        .square-legal-destination::after {
             content: '';
             top: 33%;
             left: 33%;
@@ -127,16 +137,6 @@ template.innerHTML = `
             border-radius: 50%;
             background-color: rgba(0,0,0,.1);
             position: absolute;
-        }
-
-        .square-destination-highlight::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 4px solid green;
         }
 
         .square-a1 { left: 0; top: 87.5%; }
@@ -487,9 +487,9 @@ export class NeochessBoardElement extends HTMLElement {
         originSquareElement.classList.add('square-origin');
         for (const destinationSquare of destinationSquares) {
             const destinationSquareElement = this.squareElements[destinationSquare];
-            destinationSquareElement.classList.add('square-destination');
+            destinationSquareElement.classList.add('square-legal-destination');
             if (this.match.getPiece(destinationSquare) >= 0) {
-                destinationSquareElement.classList.add('square-destination-capture');
+                destinationSquareElement.classList.add('square-legal-destination-capture');
             }
         }
     }
@@ -498,23 +498,23 @@ export class NeochessBoardElement extends HTMLElement {
         this.querySelectorAll('.square-origin').forEach((element: HTMLElement) => {
             element.classList.remove('square-origin');
         });
-        this.querySelectorAll('.square-destination').forEach((element: HTMLElement) => {
-            element.classList.remove('square-destination', 'square-destination-capture');
+        this.querySelectorAll('.square-legal-destination').forEach((element: HTMLElement) => {
+            element.classList.remove('square-legal-destination', 'square-legal-destination-capture');
         });
     }
 
     private setMoveHighlightSquare(square: Square) {
         const squareElement = this.squareElements[square] as HTMLElement;
-        if (!squareElement.classList.contains('square-destination-highlight')) {
+        if (!squareElement.classList.contains('square-destination')) {
             this.clearMoveHighlightSquare();
-            squareElement.classList.add('square-destination-highlight');
+            squareElement.classList.add('square-destination');
         }
     }
 
     private clearMoveHighlightSquare() {
-        const destinationSquareHighlighted = this.querySelector('.square-destination-highlight');
+        const destinationSquareHighlighted = this.querySelector('.square-destination');
         if (destinationSquareHighlighted) {
-            destinationSquareHighlighted.classList.remove('square-destination-highlight');
+            destinationSquareHighlighted.classList.remove('square-destination');
         }
     }
 }
