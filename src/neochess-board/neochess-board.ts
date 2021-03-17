@@ -280,12 +280,21 @@ export class NeochessBoardElement extends HTMLElement {
 
     private match: Match;
     private flipped: boolean = false;
+    private boardElement: HTMLElement;
+    private squareElements: Array<HTMLElement>;
 
     constructor() {
         super();
         this.match = new Match();
         this.flipped = this.getAttribute('flipped') === 'true';
+        this.onContextMenu = this.onContextMenu.bind(this);
+        this.onDragStart = this.onDragStart.bind(this);
+        this.onDrag = this.onDrag.bind(this);
+        this.onDragEnd = this.onDragEnd.bind(this);
         this.appendChild(template.content.cloneNode(true));
+        this.boardElement = this.querySelector('.board');
+        this.squareElements = [];
+        this.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
         this.updateState();
         this.configureEvents();
     }
@@ -300,22 +309,42 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private configureEvents() {
-        this.addEventListener('contextmenu', (event) => {
-            event.preventDefault();
-        });
-        this.addEventListener('click', () => {
-            this.clearLegalMoves();
-        });
-        this.querySelectorAll('.square').forEach((squareElement: HTMLElement, square: Square) => {
-            squareElement.addEventListener('click', (event) => {
-                const piece = this.match.getPiece(square);
-                if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    this.showLegalMoves(square);
-                }
-            });
-        });
+        this.addEventListener('contextmenu', this.onContextMenu);
+        this.addEventListener('mousedown', this.onDragStart);
+        this.addEventListener('touchstart', this.onDragStart);
+    }
+
+    private onContextMenu(event: MouseEvent) {
+        event.preventDefault();
+    }
+
+    private onDragStart(event: MouseEvent) {
+        this.clearLegalMoves();
+        if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
+            const squareElement = event.target as HTMLElement;
+            const square = this.squareElements.indexOf(squareElement);
+            const piece = this.match.getPiece(square);
+            if (BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+                console.log('start dragging !!');
+                this.showLegalMoves(square);
+                this.addEventListener('mousemove', this.onDrag);
+                this.addEventListener('touchmove', this.onDrag);
+                this.addEventListener('mouseup', this.onDragEnd);
+                this.addEventListener('touchend', this.onDragEnd);
+            }
+        }
+    }
+
+    private onDrag() {
+        console.log('move');
+    }
+
+    private onDragEnd() {
+        this.removeEventListener('mousemove', this.onDrag);
+        this.removeEventListener('touchmove', this.onDrag);
+        this.removeEventListener('mouseup', this.onDragEnd);
+        this.removeEventListener('touchend', this.onDragEnd);
+        console.log('listo !!!');
     }
 
     private updateState() {
@@ -324,9 +353,8 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updateMatchState() {
-        const squareElements = this.querySelectorAll('.square');
         for (let square = Square.A1; square <= Square.H8; square++) {
-            const squareElement = squareElements[square] as HTMLElement;
+            const squareElement = this.squareElements[square] as HTMLElement;
             let pieceClassName = null;
             const piece = this.match.getPiece(square);
             switch (piece) {
@@ -351,22 +379,20 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updateFlipState() {
-        const boardElement = this.querySelector('.board');
         if (this.flipped) {
-            boardElement.classList.add('board-flipped');
+            this.boardElement.classList.add('board-flipped');
         } else {
-            boardElement.classList.remove('board-flipped');
+            this.boardElement.classList.remove('board-flipped');
         }
     }
 
     private showLegalMoves(square: Square) {
-        const squareElements = this.querySelectorAll('.square');
         this.clearLegalMoves();
-        const originSquareElement = squareElements[square] as HTMLElement;
+        const originSquareElement = this.squareElements[square] as HTMLElement;
         const destinationSquares = this.match.getLegalMoves().filter((move) => move.getFromSquare() === square).map((move) => move.getToSquare());
         originSquareElement.classList.add('square-move-origin');
         for (const destinationSquare of destinationSquares) {
-            const destinationSquareElement = squareElements[destinationSquare];
+            const destinationSquareElement = this.squareElements[destinationSquare];
             destinationSquareElement.classList.add('square-move-destination');
             if (this.match.getPiece(destinationSquare) >= 0) {
                 destinationSquareElement.classList.add('square-move-destination-capture');
