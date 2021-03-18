@@ -38,7 +38,7 @@ template.innerHTML = `
             width: 100%;
             height: 100%;
             background: azure;
-            padding: 16px;
+            padding: 3%;
             border: 1px solid lightgray;
             -webkit-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
             -moz-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
