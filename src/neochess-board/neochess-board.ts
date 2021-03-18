@@ -11,7 +11,7 @@ template.innerHTML = `
             height: 100%;
             width: 100%;
             padding: 20px;
-            background: white;
+            background: burlywood;
             overflow: auto;
         }
 
@@ -127,7 +127,7 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            border: 4px solid #c2c2c2;
+            border: 4px solid #5c989e;
         }
 
         .square-legal-destination::after {
