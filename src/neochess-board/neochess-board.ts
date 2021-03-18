@@ -37,10 +37,12 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            background: cornsilk;
+            background: azure;
             padding: 16px;
-            border-radius: 16px;
-            border: 1px solid gray;
+            border: 1px solid lightgray;
+            -webkit-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
+            -moz-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
+            box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
         }
 
         .board-content {
@@ -50,8 +52,6 @@ template.innerHTML = `
             width: 100%;
             height: 100%;
             overflow: hidden;
-            border-radius: 8px;
-            border: 1px solid gray;
         }
 
         .square {
@@ -109,11 +109,11 @@ template.innerHTML = `
         }
 
         .square-light {
-            background-color: #FFFFEC;
+            background-color: transparent;
         }
 
         .square-dark {
-            background-color: darkseagreen;
+            background-color: lightblue;
         }
 
         .square-origin {
