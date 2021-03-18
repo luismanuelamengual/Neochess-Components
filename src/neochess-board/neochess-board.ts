@@ -463,15 +463,16 @@ export class NeochessBoardElement extends HTMLElement {
             this.removeEventListener('mouseup', this.onDragEnd);
         }
         if (this.moveData) {
-            document.body.removeChild(this.moveData.grabElement);
-
+            if (this.moveData.grabElement) {
+                document.body.removeChild(this.moveData.grabElement);
+            }
             if (this.moveData.fromSquare && this.moveData.toSquare) {
                 if (this.makeMove(this.moveData.fromSquare, this.moveData.toSquare)) {
                     this.clearLegalMoves();
                 }
             }
+            this.moveData = null;
         }
-        this.moveData = null;
     }
 
     private updateState() {
