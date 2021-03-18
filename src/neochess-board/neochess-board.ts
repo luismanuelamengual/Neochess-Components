@@ -117,7 +117,7 @@ template.innerHTML = `
         }
 
         .square-origin {
-            background-color: gold;
+            background-color: khaki;
         }
 
         .square-destination::before {
