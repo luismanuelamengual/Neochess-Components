@@ -130,7 +130,7 @@ template.innerHTML = `
             border: 4px solid #5c989e;
         }
 
-        .square-legal-destination::after {
+        .square-destination-hint::after {
             content: '';
             top: 33%;
             left: 33%;
@@ -141,7 +141,7 @@ template.innerHTML = `
             position: absolute;
         }
 
-        .square-legal-destination-capture::after {
+        .square-destination-hint-capture::after {
             top: 0;
             left: 0;
             bottom: 0;
@@ -359,7 +359,7 @@ export class NeochessBoardElement extends HTMLElement {
     private onDragStart(event: MouseEvent|TouchEvent) {
         if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
             const squareElement = event.target as HTMLElement;
-            if (squareElement.classList.contains('square-legal-destination')) {
+            if (squareElement.classList.contains('square-destination-hint')) {
                 const fromSquare = this.squareElements.indexOf(this.querySelector('.square-origin'));
                 const toSquare = this.squareElements.indexOf(squareElement);
                 this.clearLegalMoves();
@@ -521,9 +521,9 @@ export class NeochessBoardElement extends HTMLElement {
         originSquareElement.classList.add('square-origin');
         for (const destinationSquare of destinationSquares) {
             const destinationSquareElement = this.squareElements[destinationSquare];
-            destinationSquareElement.classList.add('square-legal-destination');
+            destinationSquareElement.classList.add('square-destination-hint');
             if (this.match.getPiece(destinationSquare) >= 0) {
-                destinationSquareElement.classList.add('square-legal-destination-capture');
+                destinationSquareElement.classList.add('square-destination-hint-capture');
             }
         }
     }
@@ -532,8 +532,8 @@ export class NeochessBoardElement extends HTMLElement {
         this.querySelectorAll('.square-origin').forEach((element: HTMLElement) => {
             element.classList.remove('square-origin');
         });
-        this.querySelectorAll('.square-legal-destination').forEach((element: HTMLElement) => {
-            element.classList.remove('square-legal-destination', 'square-legal-destination-capture');
+        this.querySelectorAll('.square-destination-hint').forEach((element: HTMLElement) => {
+            element.classList.remove('square-destination-hint', 'square-destination-hint-capture');
         });
     }
 
