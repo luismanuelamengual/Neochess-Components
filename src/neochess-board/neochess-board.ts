@@ -308,7 +308,7 @@ export class NeochessBoardElement extends HTMLElement {
     private flipped: boolean = false;
     private boardElement: HTMLElement;
     private squareElements: Array<HTMLElement>;
-    private pieceDragData?: { grabElement: HTMLElement, grabXOffset: number, grabYOffset: number, fromSquare: Square, toSquare?: Square } = null;
+    private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
 
     constructor() {
         super();
@@ -370,8 +370,6 @@ export class NeochessBoardElement extends HTMLElement {
                 const piece = this.match.getPiece(square);
                 if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
                     squareElement.classList.add('square-piece-moving');
-                    this.showLegalMoves(square);
-
                     let pieceClassName = null;
                     switch (piece) {
                         case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
@@ -400,20 +398,16 @@ export class NeochessBoardElement extends HTMLElement {
                     draggingPieceElement.style.cursor = 'grabbing';
                     document.body.appendChild(draggingPieceElement);
 
+                    this.moveData = {
+                        fromSquare: square,
+                        grabElement: draggingPieceElement
+                    };
                     if (event instanceof MouseEvent) {
-                        this.pieceDragData = {
-                            grabElement: draggingPieceElement,
-                            grabXOffset: event.clientX - squareElementRect.x,
-                            grabYOffset: event.clientY - squareElementRect.y,
-                            fromSquare: square
-                        };
+                        this.moveData.grabXOffset = event.clientX - squareElementRect.x;
+                        this.moveData.grabYOffset = event.clientY - squareElementRect.y;
                     } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
-                        this.pieceDragData = {
-                            grabElement: draggingPieceElement,
-                            grabXOffset: event.changedTouches[0].clientX - squareElementRect.x,
-                            grabYOffset: event.changedTouches[0].clientY - squareElementRect.y,
-                            fromSquare: square
-                        };
+                        this.moveData.grabXOffset = event.changedTouches[0].clientX - squareElementRect.x;
+                        this.moveData.grabYOffset = event.changedTouches[0].clientY - squareElementRect.y;
                     }
 
                     if (this.isTouchDevice()) {
@@ -423,6 +417,8 @@ export class NeochessBoardElement extends HTMLElement {
                         this.addEventListener('mousemove', this.onDrag);
                         this.addEventListener('mouseup', this.onDragEnd);
                     }
+
+                    this.showLegalMoves(square);
                 }
             }
         } else {
@@ -431,22 +427,22 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDrag(event: MouseEvent|TouchEvent) {
-        if (this.pieceDragData) {
+        if (this.moveData) {
             let x;
             let y;
             if (event instanceof MouseEvent) {
-                x = event.clientX - this.pieceDragData.grabXOffset;
-                y = event.clientY - this.pieceDragData.grabYOffset;
+                x = event.clientX - this.moveData.grabXOffset;
+                y = event.clientY - this.moveData.grabYOffset;
             } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
-                x = event.changedTouches[0].clientX - this.pieceDragData.grabXOffset;
-                y = event.changedTouches[0].clientY - this.pieceDragData.grabYOffset;
+                x = event.changedTouches[0].clientX - this.moveData.grabXOffset;
+                y = event.changedTouches[0].clientY - this.moveData.grabYOffset;
             }
-            this.pieceDragData.grabElement.style.left = x + 'px';
-            this.pieceDragData.grabElement.style.top = y + 'px';
-            const elementAtPoint = document.elementFromPoint(x + (this.pieceDragData.grabElement.offsetWidth / 2), y + (this.pieceDragData.grabElement.offsetHeight / 2));
+            this.moveData.grabElement.style.left = x + 'px';
+            this.moveData.grabElement.style.top = y + 'px';
+            const elementAtPoint = document.elementFromPoint(x + (this.moveData.grabElement.offsetWidth / 2), y + (this.moveData.grabElement.offsetHeight / 2));
             if (elementAtPoint.classList.contains('square')) {
-                this.pieceDragData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
-                this.setMoveHighlightSquare(this.pieceDragData.toSquare);
+                this.moveData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
+                this.setMoveHighlightSquare(this.moveData.toSquare);
             } else {
                 this.clearMoveHighlightSquare();
             }
@@ -466,16 +462,16 @@ export class NeochessBoardElement extends HTMLElement {
             this.removeEventListener('mousemove', this.onDrag);
             this.removeEventListener('mouseup', this.onDragEnd);
         }
-        if (this.pieceDragData) {
-            document.body.removeChild(this.pieceDragData.grabElement);
+        if (this.moveData) {
+            document.body.removeChild(this.moveData.grabElement);
 
-            if (this.pieceDragData.fromSquare && this.pieceDragData.toSquare) {
-                if (this.makeMove(this.pieceDragData.fromSquare, this.pieceDragData.toSquare)) {
+            if (this.moveData.fromSquare && this.moveData.toSquare) {
+                if (this.makeMove(this.moveData.fromSquare, this.moveData.toSquare)) {
                     this.clearLegalMoves();
                 }
             }
         }
-        this.pieceDragData = null;
+        this.moveData = null;
     }
 
     private updateState() {
