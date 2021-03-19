@@ -60,52 +60,57 @@ template.innerHTML = `
             height: 12.5%;
         }
 
+        .square-white-pawn, .square-white-knight, .square-white-bishop, .square-white-rook, .square-white-queen, .square-white-king, .square-black-pawn, .square-black-knight, .square-black-bishop, .square-black-rook, .square-black-queen, .square-black-king {
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
         .square-white-pawn {
-            background: url(` + require('./assets/images/pieces/white_pawn.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/white_pawn.png') + `);
         }
 
         .square-white-knight {
-            background: url(` + require('./assets/images/pieces/white_knight.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/white_knight.png') + `);
         }
 
         .square-white-bishop {
-            background: url(` + require('./assets/images/pieces/white_bishop.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/white_bishop.png') + `);
         }
 
         .square-white-rook {
-            background: url(` + require('./assets/images/pieces/white_rook.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/white_rook.png') + `);
         }
 
         .square-white-queen {
-            background: url(` + require('./assets/images/pieces/white_queen.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/white_queen.png') + `);
         }
 
         .square-white-king {
-            background: url(` + require('./assets/images/pieces/white_king.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/white_king.png') + `);
         }
 
         .square-black-pawn {
-            background: url(` + require('./assets/images/pieces/black_pawn.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/black_pawn.png') + `);
         }
 
         .square-black-knight {
-            background: url(` + require('./assets/images/pieces/black_knight.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/black_knight.png') + `);
         }
 
         .square-black-bishop {
-            background: url(` + require('./assets/images/pieces/black_bishop.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/black_bishop.png') + `);
         }
 
         .square-black-rook {
-            background: url(` + require('./assets/images/pieces/black_rook.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/black_rook.png') + `);
         }
 
         .square-black-queen {
-            background: url(` + require('./assets/images/pieces/black_queen.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/black_queen.png') + `);
         }
 
         .square-black-king {
-            background: url(` + require('./assets/images/pieces/black_king.png') + `) 0/contain no-repeat;
+            background-image: url(` + require('./assets/images/pieces/black_king.png') + `);
         }
 
         .square-light {
