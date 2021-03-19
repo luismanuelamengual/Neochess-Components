@@ -122,7 +122,7 @@ template.innerHTML = `
         }
 
         .square-last-move-indicator {
-            background-color: lightgoldenrodyellow;
+            background-color: palegoldenrod;
         }
 
         .square-origin {
@@ -293,6 +293,23 @@ template.innerHTML = `
         .board-flipped .square-f8 { left: 25%; top: 87.5%; }
         .board-flipped .square-g8 { left: 12.5%; top: 87.5%; }
         .board-flipped .square-h8 { left: 0; top: 87.5%; }
+
+        .board-overlay {
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .coordinate {
+            font-weight: 600;
+        }
+
+        .coordinate-light {
+            fill: lightblue;
+        }
+
+        .coordinate-dark {
+            fill: azure;
+        }
     </style>
 
     <div class="board-container">
@@ -306,6 +323,7 @@ template.innerHTML = `
                 <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
                 <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
                 <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
+                <svg viewBox="0 0 100 100" class="board-overlay"></svg>
             </div>
         </div>
     </div>
@@ -331,6 +349,7 @@ export class NeochessBoardElement extends HTMLElement {
         this.configureElements();
         this.configureEvents();
         this.updateState();
+        this.drawCoordinates();
     }
 
     public setFlipped(flipped: boolean): void {
@@ -521,6 +540,7 @@ export class NeochessBoardElement extends HTMLElement {
         } else {
             this.boardElement.classList.remove('board-flipped');
         }
+        this.drawCoordinates();
     }
 
     private showLegalMoves(square: Square) {
@@ -572,6 +592,37 @@ export class NeochessBoardElement extends HTMLElement {
             this.squareElements[destinationSquare].classList.add('square-last-move-indicator');
         }
         return moveDone;
+    }
+
+    private drawCoordinates() {
+        const overlayElement = this.querySelector('.board-overlay');
+        overlayElement.querySelectorAll('.coordinate').forEach((element: Element) => element.remove());
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '1' : '8', 0.75, 3.5, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '2' : '7', 0.75, 15.75, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '3' : '6', 0.75, 28.25, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '4' : '5', 0.75, 40.75, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '5' : '4', 0.75, 53.25, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '6' : '3', 0.75, 65.75, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '7' : '2', 0.75, 78.25, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '8' : '1', 0.75, 90.75, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'h' : 'a',10.5, 99, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'g' : 'b',23, 99, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'f' : 'c',35.5, 99, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'e' : 'd',48, 99, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'd' : 'e',60.5, 99, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'c' : 'f',73, 99, true));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'b' : 'g',85.5, 99, false));
+        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'a' : 'h',98, 99, true));
+    }
+
+    private createCoordinateElement(text: string, x: number, y: number, isLight: boolean): Element {
+        const coordinate = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        coordinate.setAttribute('x', String(x));
+        coordinate.setAttribute('y', String(y));
+        coordinate.setAttribute('font-size', '2.8');
+        coordinate.classList.add('coordinate', isLight ? 'coordinate-light' : 'coordinate-dark');
+        coordinate.append(document.createTextNode(text));
+        return coordinate;
     }
 }
 
