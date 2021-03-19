@@ -141,8 +141,15 @@ template.innerHTML = `
             opacity: 0.7;
         }
 
-        .square-origin {
-            background-color: khaki;
+        .square-origin::after {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: palegoldenrod;
+            opacity: 0.7;
         }
 
         .square-destination::before {
@@ -501,7 +508,7 @@ export class NeochessBoardElement extends HTMLElement {
             this.moveData.grabElement.style.left = x + 'px';
             this.moveData.grabElement.style.top = y + 'px';
             const elementAtPoint = document.elementFromPoint(x + (this.moveData.grabElement.offsetWidth / 2), y + (this.moveData.grabElement.offsetHeight / 2));
-            if (elementAtPoint.classList.contains('square')) {
+            if (elementAtPoint && elementAtPoint.classList.contains('square')) {
                 this.moveData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
                 this.setMoveHighlightSquare(this.moveData.toSquare);
             } else {
