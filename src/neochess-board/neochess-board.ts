@@ -130,7 +130,7 @@ template.innerHTML = `
             background-color: lightblue;
         }
 
-        .square-last-move-indicator::after {
+        .square-last-move-indicator::before {
             position: absolute;
             content: '';
             width: 100%;
