@@ -116,6 +116,10 @@ template.innerHTML = `
             background-color: lightblue;
         }
 
+        .square-last-move-indicator {
+            background-color: lightgoldenrodyellow;
+        }
+
         .square-origin {
             background-color: khaki;
         }
@@ -556,6 +560,11 @@ export class NeochessBoardElement extends HTMLElement {
         const moveDone = this.match.makeMove(new Move(sourceSquare, destinationSquare));
         if (moveDone) {
             this.updateMatchState();
+            this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => {
+                element.classList.remove('square-last-move-indicator');
+            });
+            this.squareElements[sourceSquare].classList.add('square-last-move-indicator');
+            this.squareElements[destinationSquare].classList.add('square-last-move-indicator');
         }
         return moveDone;
     }
