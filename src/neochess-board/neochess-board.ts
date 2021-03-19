@@ -60,9 +60,14 @@ template.innerHTML = `
             height: 12.5%;
         }
 
-        .square-white-pawn, .square-white-knight, .square-white-bishop, .square-white-rook, .square-white-queen, .square-white-king, .square-black-pawn, .square-black-knight, .square-black-bishop, .square-black-rook, .square-black-queen, .square-black-king {
+        .square-piece {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             background-repeat: no-repeat;
             background-size: contain;
+            pointer-events: none;
+            z-index: 100;
         }
 
         .square-white-pawn {
@@ -113,6 +118,10 @@ template.innerHTML = `
             background-image: url(` + require('./assets/images/pieces/black_king.png') + `);
         }
 
+        .square-piece-moving {
+            opacity: 0.2;
+        }
+
         .square-light {
             background-color: transparent;
         }
@@ -121,8 +130,15 @@ template.innerHTML = `
             background-color: lightblue;
         }
 
-        .square-last-move-indicator {
+        .square-last-move-indicator::after {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             background-color: palegoldenrod;
+            opacity: 0.7;
         }
 
         .square-origin {
@@ -160,12 +176,15 @@ template.innerHTML = `
             border-radius: 50%;
         }
 
-        .square-piece-moving {
-            background-image: none;
-        }
-
-        .square-highlighted {
+        .square-highlighted::after {
+            position: absolute;
+            content: '';
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
             background-color: coral;
+            opacity: 0.7;
         }
 
         .square-a1 { left: 0; top: 87.5%; }
@@ -319,14 +338,14 @@ template.innerHTML = `
     <div class="board-container">
         <div class="board">
             <div class="board-content">
-                <div class="square square-dark square-a1"></div><div class="square square-light square-b1"></div><div class="square square-dark square-c1"></div><div class="square square-light square-d1"></div><div class="square square-dark square-e1"></div><div class="square square-light square-f1"></div><div class="square square-dark square-g1"></div><div class="square square-light square-h1"></div>
-                <div class="square square-light square-a2"></div><div class="square square-dark square-b2"></div><div class="square square-light square-c2"></div><div class="square square-dark square-d2"></div><div class="square square-light square-e2"></div><div class="square square-dark square-f2"></div><div class="square square-light square-g2"></div><div class="square square-dark square-h2"></div>
-                <div class="square square-dark square-a3"></div><div class="square square-light square-b3"></div><div class="square square-dark square-c3"></div><div class="square square-light square-d3"></div><div class="square square-dark square-e3"></div><div class="square square-light square-f3"></div><div class="square square-dark square-g3"></div><div class="square square-light square-h3"></div>
-                <div class="square square-light square-a4"></div><div class="square square-dark square-b4"></div><div class="square square-light square-c4"></div><div class="square square-dark square-d4"></div><div class="square square-light square-e4"></div><div class="square square-dark square-f4"></div><div class="square square-light square-g4"></div><div class="square square-dark square-h4"></div>
-                <div class="square square-dark square-a5"></div><div class="square square-light square-b5"></div><div class="square square-dark square-c5"></div><div class="square square-light square-d5"></div><div class="square square-dark square-e5"></div><div class="square square-light square-f5"></div><div class="square square-dark square-g5"></div><div class="square square-light square-h5"></div>
-                <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
-                <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
-                <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
+                <div class="square square-dark square-a1"><div class="square-piece"></div></div><div class="square square-light square-b1"><div class="square-piece"></div></div><div class="square square-dark square-c1"><div class="square-piece"></div></div><div class="square square-light square-d1"><div class="square-piece"></div></div><div class="square square-dark square-e1"><div class="square-piece"></div></div><div class="square square-light square-f1"><div class="square-piece"></div></div><div class="square square-dark square-g1"><div class="square-piece"></div></div><div class="square square-light square-h1"><div class="square-piece"></div></div>
+                <div class="square square-light square-a2"><div class="square-piece"></div></div><div class="square square-dark square-b2"><div class="square-piece"></div></div><div class="square square-light square-c2"><div class="square-piece"></div></div><div class="square square-dark square-d2"><div class="square-piece"></div></div><div class="square square-light square-e2"><div class="square-piece"></div></div><div class="square square-dark square-f2"><div class="square-piece"></div></div><div class="square square-light square-g2"><div class="square-piece"></div></div><div class="square square-dark square-h2"><div class="square-piece"></div></div>
+                <div class="square square-dark square-a3"><div class="square-piece"></div></div><div class="square square-light square-b3"><div class="square-piece"></div></div><div class="square square-dark square-c3"><div class="square-piece"></div></div><div class="square square-light square-d3"><div class="square-piece"></div></div><div class="square square-dark square-e3"><div class="square-piece"></div></div><div class="square square-light square-f3"><div class="square-piece"></div></div><div class="square square-dark square-g3"><div class="square-piece"></div></div><div class="square square-light square-h3"><div class="square-piece"></div></div>
+                <div class="square square-light square-a4"><div class="square-piece"></div></div><div class="square square-dark square-b4"><div class="square-piece"></div></div><div class="square square-light square-c4"><div class="square-piece"></div></div><div class="square square-dark square-d4"><div class="square-piece"></div></div><div class="square square-light square-e4"><div class="square-piece"></div></div><div class="square square-dark square-f4"><div class="square-piece"></div></div><div class="square square-light square-g4"><div class="square-piece"></div></div><div class="square square-dark square-h4"><div class="square-piece"></div></div>
+                <div class="square square-dark square-a5"><div class="square-piece"></div></div><div class="square square-light square-b5"><div class="square-piece"></div></div><div class="square square-dark square-c5"><div class="square-piece"></div></div><div class="square square-light square-d5"><div class="square-piece"></div></div><div class="square square-dark square-e5"><div class="square-piece"></div></div><div class="square square-light square-f5"><div class="square-piece"></div></div><div class="square square-dark square-g5"><div class="square-piece"></div></div><div class="square square-light square-h5"><div class="square-piece"></div></div>
+                <div class="square square-light square-a6"><div class="square-piece"></div></div><div class="square square-dark square-b6"><div class="square-piece"></div></div><div class="square square-light square-c6"><div class="square-piece"></div></div><div class="square square-dark square-d6"><div class="square-piece"></div></div><div class="square square-light square-e6"><div class="square-piece"></div></div><div class="square square-dark square-f6"><div class="square-piece"></div></div><div class="square square-light square-g6"><div class="square-piece"></div></div><div class="square square-dark square-h6"><div class="square-piece"></div></div>
+                <div class="square square-dark square-a7"><div class="square-piece"></div></div><div class="square square-light square-b7"><div class="square-piece"></div></div><div class="square square-dark square-c7"><div class="square-piece"></div></div><div class="square square-light square-d7"><div class="square-piece"></div></div><div class="square square-dark square-e7"><div class="square-piece"></div></div><div class="square square-light square-f7"><div class="square-piece"></div></div><div class="square square-dark square-g7"><div class="square-piece"></div></div><div class="square square-light square-h7"><div class="square-piece"></div></div>
+                <div class="square square-light square-a8"><div class="square-piece"></div></div><div class="square square-dark square-b8"><div class="square-piece"></div></div><div class="square square-light square-c8"><div class="square-piece"></div></div><div class="square square-dark square-d8"><div class="square-piece"></div></div><div class="square square-light square-e8"><div class="square-piece"></div></div><div class="square square-dark square-f8"><div class="square-piece"></div></div><div class="square square-light square-g8"><div class="square-piece"></div></div><div class="square square-dark square-h8"><div class="square-piece"></div></div>
                 <svg viewBox="0 0 100 100" class="board-overlay"></svg>
             </div>
         </div>
@@ -410,7 +429,7 @@ export class NeochessBoardElement extends HTMLElement {
                     const square = this.squareElements.indexOf(squareElement);
                     const piece = this.match.getPiece(square);
                     if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                        squareElement.classList.add('square-piece-moving');
+                        squareElement.querySelector('.square-piece').classList.add('square-piece-moving');
                         let pieceClassName = null;
                         switch (piece) {
                             case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
@@ -429,7 +448,7 @@ export class NeochessBoardElement extends HTMLElement {
 
                         const squareElementRect = squareElement.getBoundingClientRect();
                         const draggingPieceElement = document.createElement('div');
-                        draggingPieceElement.classList.add(pieceClassName);
+                        draggingPieceElement.classList.add('square-piece', pieceClassName);
                         draggingPieceElement.style.position = 'absolute';
                         draggingPieceElement.style.pointerEvents = 'none';
                         draggingPieceElement.style.left = squareElementRect.x + 'px';
@@ -525,6 +544,7 @@ export class NeochessBoardElement extends HTMLElement {
     private updateMatchState() {
         for (let square = Square.A1; square <= Square.H8; square++) {
             const squareElement = this.squareElements[square] as HTMLElement;
+            const squarePieceElement = squareElement.querySelector('.square-piece');
             let pieceClassName = null;
             const piece = this.match.getPiece(square);
             switch (piece) {
@@ -541,9 +561,9 @@ export class NeochessBoardElement extends HTMLElement {
                 case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
                 case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
             }
-            squareElement.classList.remove('square-white-pawn', 'square-white-knight', 'square-white-bishop', 'square-white-rook', 'square-white-queen', 'square-white-king', 'square-black-pawn', 'square-black-knight', 'square-black-bishop', 'square-black-rook', 'square-black-queen', 'square-black-king');
+            squarePieceElement.classList.remove('square-white-pawn', 'square-white-knight', 'square-white-bishop', 'square-white-rook', 'square-white-queen', 'square-white-king', 'square-black-pawn', 'square-black-knight', 'square-black-bishop', 'square-black-rook', 'square-black-queen', 'square-black-king');
             if (pieceClassName) {
-                squareElement.classList.add(pieceClassName);
+                squarePieceElement.classList.add(pieceClassName);
             }
         }
     }
