@@ -56,8 +56,8 @@ template.innerHTML = `
 
         .square {
             position: absolute;
-            width: 12.5%;
-            height: 12.5%;
+            width: 12.51%;
+            height: 12.51%;
         }
 
         .square-piece {
