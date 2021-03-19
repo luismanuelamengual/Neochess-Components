@@ -136,7 +136,7 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            border: 4px solid #5c989e;
+            border: 4px solid deepskyblue;
         }
 
         .square-destination-hint::after {
