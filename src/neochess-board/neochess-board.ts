@@ -534,7 +534,7 @@ export class NeochessBoardElement extends HTMLElement {
             if (this.moveData.grabElement) {
                 document.body.removeChild(this.moveData.grabElement);
             }
-            if (this.moveData.fromSquare && this.moveData.toSquare) {
+            if (this.moveData.fromSquare >= 0 && this.moveData.toSquare >= 0) {
                 if (this.makeMove(this.moveData.fromSquare, this.moveData.toSquare)) {
                     this.clearLegalMoves();
                 }
