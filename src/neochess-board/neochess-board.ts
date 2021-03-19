@@ -164,6 +164,10 @@ template.innerHTML = `
             background-image: none;
         }
 
+        .square-highlighted {
+            background-color: coral;
+        }
+
         .square-a1 { left: 0; top: 87.5%; }
         .square-b1 { left: 12.5%; top: 87.5%; }
         .square-c1 { left: 25%; top: 87.5%; }
@@ -385,72 +389,82 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragStart(event: MouseEvent|TouchEvent) {
-        if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
-            const squareElement = event.target as HTMLElement;
-            if (squareElement.classList.contains('square-destination-hint')) {
-                const fromSquare = this.squareElements.indexOf(this.querySelector('.square-origin'));
-                const toSquare = this.squareElements.indexOf(squareElement);
-                this.clearLegalMoves();
-                this.makeMove(fromSquare, toSquare);
-            } else {
-                this.clearLegalMoves();
-                const square = this.squareElements.indexOf(squareElement);
-                const piece = this.match.getPiece(square);
-                if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                    squareElement.classList.add('square-piece-moving');
-                    let pieceClassName = null;
-                    switch (piece) {
-                        case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
-                        case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
-                        case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
-                        case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
-                        case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
-                        case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
-                        case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
-                        case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
-                        case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
-                        case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
-                        case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
-                        case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
-                    }
-
-                    const squareElementRect = squareElement.getBoundingClientRect();
-                    const draggingPieceElement = document.createElement('div');
-                    draggingPieceElement.classList.add(pieceClassName);
-                    draggingPieceElement.style.position = 'absolute';
-                    draggingPieceElement.style.pointerEvents = 'none';
-                    draggingPieceElement.style.left = squareElementRect.x + 'px';
-                    draggingPieceElement.style.top = squareElementRect.y + 'px';
-                    draggingPieceElement.style.width = squareElementRect.width + 'px';
-                    draggingPieceElement.style.height = squareElementRect.height + 'px';
-                    draggingPieceElement.style.cursor = 'grabbing';
-                    document.body.appendChild(draggingPieceElement);
-
-                    this.moveData = {
-                        fromSquare: square,
-                        grabElement: draggingPieceElement
-                    };
-                    if (event instanceof MouseEvent) {
-                        this.moveData.grabXOffset = event.clientX - squareElementRect.x;
-                        this.moveData.grabYOffset = event.clientY - squareElementRect.y;
-                    } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
-                        this.moveData.grabXOffset = event.changedTouches[0].clientX - squareElementRect.x;
-                        this.moveData.grabYOffset = event.changedTouches[0].clientY - squareElementRect.y;
-                    }
-
-                    if (this.isTouchDevice()) {
-                        this.addEventListener('touchmove', this.onDrag);
-                        this.addEventListener('touchend', this.onDragEnd);
-                    } else {
-                        this.addEventListener('mousemove', this.onDrag);
-                        this.addEventListener('mouseup', this.onDragEnd);
-                    }
-
-                    this.showLegalMoves(square);
-                }
+        const isRightButtonPressed = (('which' in event && event.which === 3) || ('button' in event && event.button === 2));
+        if (isRightButtonPressed) {
+            this.clearLegalMoves();
+            if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
+                const squareElement = event.target as HTMLElement;
+                this.toggleHighlightSquare(squareElement);
             }
         } else {
-            this.clearLegalMoves();
+            this.clearHighlightedSquares();
+            if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
+                const squareElement = event.target as HTMLElement;
+                if (squareElement.classList.contains('square-destination-hint')) {
+                    const fromSquare = this.squareElements.indexOf(this.querySelector('.square-origin'));
+                    const toSquare = this.squareElements.indexOf(squareElement);
+                    this.clearLegalMoves();
+                    this.makeMove(fromSquare, toSquare);
+                } else {
+                    this.clearLegalMoves();
+                    const square = this.squareElements.indexOf(squareElement);
+                    const piece = this.match.getPiece(square);
+                    if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
+                        squareElement.classList.add('square-piece-moving');
+                        let pieceClassName = null;
+                        switch (piece) {
+                            case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
+                            case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
+                            case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
+                            case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
+                            case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
+                            case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
+                            case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
+                            case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
+                            case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
+                            case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
+                            case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
+                            case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
+                        }
+
+                        const squareElementRect = squareElement.getBoundingClientRect();
+                        const draggingPieceElement = document.createElement('div');
+                        draggingPieceElement.classList.add(pieceClassName);
+                        draggingPieceElement.style.position = 'absolute';
+                        draggingPieceElement.style.pointerEvents = 'none';
+                        draggingPieceElement.style.left = squareElementRect.x + 'px';
+                        draggingPieceElement.style.top = squareElementRect.y + 'px';
+                        draggingPieceElement.style.width = squareElementRect.width + 'px';
+                        draggingPieceElement.style.height = squareElementRect.height + 'px';
+                        draggingPieceElement.style.cursor = 'grabbing';
+                        document.body.appendChild(draggingPieceElement);
+
+                        this.moveData = {
+                            fromSquare: square,
+                            grabElement: draggingPieceElement
+                        };
+                        if (event instanceof MouseEvent) {
+                            this.moveData.grabXOffset = event.clientX - squareElementRect.x;
+                            this.moveData.grabYOffset = event.clientY - squareElementRect.y;
+                        } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
+                            this.moveData.grabXOffset = event.changedTouches[0].clientX - squareElementRect.x;
+                            this.moveData.grabYOffset = event.changedTouches[0].clientY - squareElementRect.y;
+                        }
+
+                        if (this.isTouchDevice()) {
+                            this.addEventListener('touchmove', this.onDrag);
+                            this.addEventListener('touchend', this.onDragEnd);
+                        } else {
+                            this.addEventListener('mousemove', this.onDrag);
+                            this.addEventListener('mouseup', this.onDragEnd);
+                        }
+
+                        this.showLegalMoves(square);
+                    }
+                }
+            } else {
+                this.clearLegalMoves();
+            }
         }
     }
 
@@ -581,13 +595,20 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
+    private toggleHighlightSquare(squareElement: HTMLElement) {
+        squareElement.classList.toggle('square-highlighted');
+    }
+
+    private clearHighlightedSquares() {
+        this.querySelectorAll('.square-highlighted').forEach((element: HTMLElement) => element.classList.remove('square-highlighted'));
+    }
+
     private makeMove(sourceSquare: Square, destinationSquare: Square): boolean {
         const moveDone = this.match.makeMove(new Move(sourceSquare, destinationSquare));
         if (moveDone) {
             this.updateMatchState();
-            this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => {
-                element.classList.remove('square-last-move-indicator');
-            });
+            this.clearHighlightedSquares();
+            this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
             this.squareElements[sourceSquare].classList.add('square-last-move-indicator');
             this.squareElements[destinationSquare].classList.add('square-last-move-indicator');
         }
