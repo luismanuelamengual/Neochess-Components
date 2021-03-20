@@ -1,6 +1,6 @@
 {
     "name": "@neochess/components",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Neochess components",
     "main": "dist/neochess-components.bundle.js",
     "types": "dist/index.d.ts",
