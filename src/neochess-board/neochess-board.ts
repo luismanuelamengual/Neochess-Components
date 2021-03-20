@@ -374,9 +374,19 @@ export class NeochessBoardElement extends HTMLElement {
         this.onDragStart = this.onDragStart.bind(this);
         this.onDrag = this.onDrag.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+    }
+
+    public connectedCallback() {
         this.appendChild(template.content.cloneNode(true));
-        this.configureElements();
-        this.configureEvents();
+        this.boardElement = this.querySelector('.board');
+        this.squareElements = [];
+        this.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
+        this.addEventListener('contextmenu', this.onContextMenu);
+        if (this.isTouchDevice()) {
+            this.addEventListener('touchstart', this.onDragStart);
+        } else {
+            this.addEventListener('mousedown', this.onDragStart);
+        }
         this.updateState();
         this.drawCoordinates();
     }
@@ -392,21 +402,6 @@ export class NeochessBoardElement extends HTMLElement {
 
     private isTouchDevice() {
         return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
-    }
-
-    private configureElements() {
-        this.boardElement = this.querySelector('.board');
-        this.squareElements = [];
-        this.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
-    }
-
-    private configureEvents() {
-        this.addEventListener('contextmenu', this.onContextMenu);
-        if (this.isTouchDevice()) {
-            this.addEventListener('touchstart', this.onDragStart);
-        } else {
-            this.addEventListener('mousedown', this.onDragStart);
-        }
     }
 
     private onContextMenu(event: MouseEvent) {
