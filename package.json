@@ -2,7 +2,7 @@
     "name": "@neochess/components",
     "version": "0.0.1",
     "description": "Neochess components",
-    "main": "dist/index.js",
+    "main": "dist/neochess-components.bundle.js",
     "types": "dist/index.d.ts",
     "keywords": [],
     "author": "Luis Manuel Amengual",
