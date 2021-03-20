@@ -14,7 +14,7 @@ template.innerHTML = `
             overflow: auto;
         }
 
-        neochess-board, neochess-board * {
+        neochess-board, neochess-board *, neochess-board ::after, neochess-board ::before {
             box-sizing: border-box;
             -webkit-touch-callout: none;
             -webkit-user-select: none;
