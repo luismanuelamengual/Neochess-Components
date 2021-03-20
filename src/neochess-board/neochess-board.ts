@@ -1,5 +1,4 @@
-import {Match} from "@neochess/engine/dist/match";
-import {BoardUtils, Move, Piece, Square} from "@neochess/engine";
+import {BoardUtils, Move, Piece, Square, Match} from "@neochess/core";
 
 const template = document.createElement('template');
 template.innerHTML = `

@@ -13,7 +13,7 @@
         "serve": "webpack serve --config webpack.config.js"
     },
     "dependencies": {
-        "@neochess/engine": "^0.0.2"
+        "@neochess/core": "^0.0.3"
     },
     "devDependencies": {
         "clean-webpack-plugin": "^3.0.0",
