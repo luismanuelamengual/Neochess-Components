@@ -59,68 +59,6 @@ template.innerHTML = `
             height: 12.51%;
         }
 
-        .square-piece {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-repeat: no-repeat;
-            background-size: contain;
-            pointer-events: none;
-            z-index: 100;
-        }
-
-        .square-white-pawn {
-            background-image: url(` + require('./assets/images/pieces/white_pawn.png') + `);
-        }
-
-        .square-white-knight {
-            background-image: url(` + require('./assets/images/pieces/white_knight.png') + `);
-        }
-
-        .square-white-bishop {
-            background-image: url(` + require('./assets/images/pieces/white_bishop.png') + `);
-        }
-
-        .square-white-rook {
-            background-image: url(` + require('./assets/images/pieces/white_rook.png') + `);
-        }
-
-        .square-white-queen {
-            background-image: url(` + require('./assets/images/pieces/white_queen.png') + `);
-        }
-
-        .square-white-king {
-            background-image: url(` + require('./assets/images/pieces/white_king.png') + `);
-        }
-
-        .square-black-pawn {
-            background-image: url(` + require('./assets/images/pieces/black_pawn.png') + `);
-        }
-
-        .square-black-knight {
-            background-image: url(` + require('./assets/images/pieces/black_knight.png') + `);
-        }
-
-        .square-black-bishop {
-            background-image: url(` + require('./assets/images/pieces/black_bishop.png') + `);
-        }
-
-        .square-black-rook {
-            background-image: url(` + require('./assets/images/pieces/black_rook.png') + `);
-        }
-
-        .square-black-queen {
-            background-image: url(` + require('./assets/images/pieces/black_queen.png') + `);
-        }
-
-        .square-black-king {
-            background-image: url(` + require('./assets/images/pieces/black_king.png') + `);
-        }
-
-        .square-piece-moving {
-            opacity: 0.2;
-        }
-
         .square-light {
             background-color: transparent;
         }
@@ -339,19 +277,96 @@ template.innerHTML = `
         .coordinate-dark {
             fill: azure;
         }
+
+        .piece {
+            position: absolute;
+            width: 12.51%;
+            height: 12.51%;
+            background-repeat: no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 100;
+
+            -webkit-transition: top 0.3s ease-out, left 0.3s ease-out;
+            -moz-transition: top 0.3s ease-out, left 0.3s ease-out;
+            -o-transition: top 0.3s ease-out, left 0.3s ease-out;
+            transition: top 0.3s ease-out, left 0.3s ease-out;
+        }
+
+        .piece-white-pawn {
+            background-image: url(` + require('./assets/images/pieces/white_pawn.png') + `);
+        }
+
+        .piece-white-knight {
+            background-image: url(` + require('./assets/images/pieces/white_knight.png') + `);
+        }
+
+        .piece-white-bishop {
+            background-image: url(` + require('./assets/images/pieces/white_bishop.png') + `);
+        }
+
+        .piece-white-rook {
+            background-image: url(` + require('./assets/images/pieces/white_rook.png') + `);
+        }
+
+        .piece-white-queen {
+            background-image: url(` + require('./assets/images/pieces/white_queen.png') + `);
+        }
+
+        .piece-white-king {
+            background-image: url(` + require('./assets/images/pieces/white_king.png') + `);
+        }
+
+        .piece-black-pawn {
+            background-image: url(` + require('./assets/images/pieces/black_pawn.png') + `);
+        }
+
+        .piece-black-knight {
+            background-image: url(` + require('./assets/images/pieces/black_knight.png') + `);
+        }
+
+        .piece-black-bishop {
+            background-image: url(` + require('./assets/images/pieces/black_bishop.png') + `);
+        }
+
+        .piece-black-rook {
+            background-image: url(` + require('./assets/images/pieces/black_rook.png') + `);
+        }
+
+        .piece-black-queen {
+            background-image: url(` + require('./assets/images/pieces/black_queen.png') + `);
+        }
+
+        .piece-black-king {
+            background-image: url(` + require('./assets/images/pieces/black_king.png') + `);
+        }
+
+        .piece-moving {
+            opacity: 0.2;
+        }
+
+        .piece-dragging {
+            position: absolute;
+            pointer-events: none;
+            cursor: grabbing;
+            -webkit-transition: none;
+            -moz-transition: none;
+            -o-transition: none;
+            transition: none;
+        }
     </style>
 
     <div class="board-container">
         <div class="board">
             <div class="board-content">
-                <div class="square square-dark square-a1"><div class="square-piece"></div></div><div class="square square-light square-b1"><div class="square-piece"></div></div><div class="square square-dark square-c1"><div class="square-piece"></div></div><div class="square square-light square-d1"><div class="square-piece"></div></div><div class="square square-dark square-e1"><div class="square-piece"></div></div><div class="square square-light square-f1"><div class="square-piece"></div></div><div class="square square-dark square-g1"><div class="square-piece"></div></div><div class="square square-light square-h1"><div class="square-piece"></div></div>
-                <div class="square square-light square-a2"><div class="square-piece"></div></div><div class="square square-dark square-b2"><div class="square-piece"></div></div><div class="square square-light square-c2"><div class="square-piece"></div></div><div class="square square-dark square-d2"><div class="square-piece"></div></div><div class="square square-light square-e2"><div class="square-piece"></div></div><div class="square square-dark square-f2"><div class="square-piece"></div></div><div class="square square-light square-g2"><div class="square-piece"></div></div><div class="square square-dark square-h2"><div class="square-piece"></div></div>
-                <div class="square square-dark square-a3"><div class="square-piece"></div></div><div class="square square-light square-b3"><div class="square-piece"></div></div><div class="square square-dark square-c3"><div class="square-piece"></div></div><div class="square square-light square-d3"><div class="square-piece"></div></div><div class="square square-dark square-e3"><div class="square-piece"></div></div><div class="square square-light square-f3"><div class="square-piece"></div></div><div class="square square-dark square-g3"><div class="square-piece"></div></div><div class="square square-light square-h3"><div class="square-piece"></div></div>
-                <div class="square square-light square-a4"><div class="square-piece"></div></div><div class="square square-dark square-b4"><div class="square-piece"></div></div><div class="square square-light square-c4"><div class="square-piece"></div></div><div class="square square-dark square-d4"><div class="square-piece"></div></div><div class="square square-light square-e4"><div class="square-piece"></div></div><div class="square square-dark square-f4"><div class="square-piece"></div></div><div class="square square-light square-g4"><div class="square-piece"></div></div><div class="square square-dark square-h4"><div class="square-piece"></div></div>
-                <div class="square square-dark square-a5"><div class="square-piece"></div></div><div class="square square-light square-b5"><div class="square-piece"></div></div><div class="square square-dark square-c5"><div class="square-piece"></div></div><div class="square square-light square-d5"><div class="square-piece"></div></div><div class="square square-dark square-e5"><div class="square-piece"></div></div><div class="square square-light square-f5"><div class="square-piece"></div></div><div class="square square-dark square-g5"><div class="square-piece"></div></div><div class="square square-light square-h5"><div class="square-piece"></div></div>
-                <div class="square square-light square-a6"><div class="square-piece"></div></div><div class="square square-dark square-b6"><div class="square-piece"></div></div><div class="square square-light square-c6"><div class="square-piece"></div></div><div class="square square-dark square-d6"><div class="square-piece"></div></div><div class="square square-light square-e6"><div class="square-piece"></div></div><div class="square square-dark square-f6"><div class="square-piece"></div></div><div class="square square-light square-g6"><div class="square-piece"></div></div><div class="square square-dark square-h6"><div class="square-piece"></div></div>
-                <div class="square square-dark square-a7"><div class="square-piece"></div></div><div class="square square-light square-b7"><div class="square-piece"></div></div><div class="square square-dark square-c7"><div class="square-piece"></div></div><div class="square square-light square-d7"><div class="square-piece"></div></div><div class="square square-dark square-e7"><div class="square-piece"></div></div><div class="square square-light square-f7"><div class="square-piece"></div></div><div class="square square-dark square-g7"><div class="square-piece"></div></div><div class="square square-light square-h7"><div class="square-piece"></div></div>
-                <div class="square square-light square-a8"><div class="square-piece"></div></div><div class="square square-dark square-b8"><div class="square-piece"></div></div><div class="square square-light square-c8"><div class="square-piece"></div></div><div class="square square-dark square-d8"><div class="square-piece"></div></div><div class="square square-light square-e8"><div class="square-piece"></div></div><div class="square square-dark square-f8"><div class="square-piece"></div></div><div class="square square-light square-g8"><div class="square-piece"></div></div><div class="square square-dark square-h8"><div class="square-piece"></div></div>
+                <div class="square square-dark square-a1"></div><div class="square square-light square-b1"></div><div class="square square-dark square-c1"></div><div class="square square-light square-d1"></div><div class="square square-dark square-e1"></div><div class="square square-light square-f1"></div><div class="square square-dark square-g1"></div><div class="square square-light square-h1"></div>
+                <div class="square square-light square-a2"></div><div class="square square-dark square-b2"></div><div class="square square-light square-c2"></div><div class="square square-dark square-d2"></div><div class="square square-light square-e2"></div><div class="square square-dark square-f2"></div><div class="square square-light square-g2"></div><div class="square square-dark square-h2"></div>
+                <div class="square square-dark square-a3"></div><div class="square square-light square-b3"></div><div class="square square-dark square-c3"></div><div class="square square-light square-d3"></div><div class="square square-dark square-e3"></div><div class="square square-light square-f3"></div><div class="square square-dark square-g3"></div><div class="square square-light square-h3"></div>
+                <div class="square square-light square-a4"></div><div class="square square-dark square-b4"></div><div class="square square-light square-c4"></div><div class="square square-dark square-d4"></div><div class="square square-light square-e4"></div><div class="square square-dark square-f4"></div><div class="square square-light square-g4"></div><div class="square square-dark square-h4"></div>
+                <div class="square square-dark square-a5"></div><div class="square square-light square-b5"></div><div class="square square-dark square-c5"></div><div class="square square-light square-d5"></div><div class="square square-dark square-e5"></div><div class="square square-light square-f5"></div><div class="square square-dark square-g5"></div><div class="square square-light square-h5"></div>
+                <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
+                <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
+                <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
                 <svg viewBox="0 0 100 100" class="board-overlay"></svg>
             </div>
         </div>
@@ -359,6 +374,21 @@ template.innerHTML = `
 `;
 
 export class NeochessBoardElement extends HTMLElement {
+
+    private static SQUARE_CLASSES = [
+        'square-a1', 'square-b1', 'square-c1', 'square-d1', 'square-e1', 'square-f1', 'square-g1', 'square-h1',
+        'square-a2', 'square-b2', 'square-c2', 'square-d2', 'square-e2', 'square-f2', 'square-g2', 'square-h2',
+        'square-a3', 'square-b3', 'square-c3', 'square-d3', 'square-e3', 'square-f3', 'square-g3', 'square-h3',
+        'square-a4', 'square-b4', 'square-c4', 'square-d4', 'square-e4', 'square-f4', 'square-g4', 'square-h4',
+        'square-a5', 'square-b5', 'square-c5', 'square-d5', 'square-e5', 'square-f5', 'square-g5', 'square-h5',
+        'square-a6', 'square-b6', 'square-c6', 'square-d6', 'square-e6', 'square-f6', 'square-g6', 'square-h6',
+        'square-a7', 'square-b7', 'square-c7', 'square-d7', 'square-e7', 'square-f7', 'square-g7', 'square-h7',
+        'square-a8', 'square-b8', 'square-c8', 'square-d8', 'square-e8', 'square-f8', 'square-g8', 'square-h8'
+    ];
+    private static PIECE_CLASSES = [
+        'piece-white-pawn', 'piece-white-knight', 'piece-white-bishop', 'piece-white-rook', 'piece-white-queen', 'piece-white-king',
+        'piece-black-pawn', 'piece-black-knight', 'piece-black-bishop', 'piece-black-rook', 'piece-black-queen', 'piece-black-king'
+    ];
 
     private match: Match;
     private flipped: boolean = false;
@@ -442,33 +472,14 @@ export class NeochessBoardElement extends HTMLElement {
                     const square = this.squareElements.indexOf(squareElement);
                     const piece = this.match.getPiece(square);
                     if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                        squareElement.querySelector('.square-piece').classList.add('square-piece-moving');
-                        let pieceClassName = null;
-                        switch (piece) {
-                            case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
-                            case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
-                            case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
-                            case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
-                            case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
-                            case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
-                            case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
-                            case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
-                            case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
-                            case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
-                            case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
-                            case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
-                        }
-
+                        this.querySelector('.piece.' + NeochessBoardElement.SQUARE_CLASSES[square]).classList.add('piece-moving');
                         const squareElementRect = squareElement.getBoundingClientRect();
                         const draggingPieceElement = document.createElement('div');
-                        draggingPieceElement.classList.add('square-piece', pieceClassName);
-                        draggingPieceElement.style.position = 'absolute';
-                        draggingPieceElement.style.pointerEvents = 'none';
+                        draggingPieceElement.classList.add('piece', 'piece-dragging', NeochessBoardElement.PIECE_CLASSES[piece]);
                         draggingPieceElement.style.left = squareElementRect.x + 'px';
                         draggingPieceElement.style.top = squareElementRect.y + 'px';
                         draggingPieceElement.style.width = squareElementRect.width + 'px';
                         draggingPieceElement.style.height = squareElementRect.height + 'px';
-                        draggingPieceElement.style.cursor = 'grabbing';
                         document.body.appendChild(draggingPieceElement);
 
                         this.moveData = {
@@ -524,9 +535,9 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragEnd() {
-        const movingPieceSquare = this.querySelector('.square-piece-moving');
+        const movingPieceSquare = this.querySelector('.piece-moving');
         if (movingPieceSquare) {
-            movingPieceSquare.classList.remove('square-piece-moving');
+            movingPieceSquare.classList.remove('piece-moving');
         }
         this.clearMoveHighlightSquare();
         if (this.isTouchDevice()) {
@@ -553,30 +564,68 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updatePosition() {
+        const currentPieces = [];
+        const currentPieceElements = [];
+        this.querySelectorAll('.piece').forEach((element: HTMLElement) => {
+            const square = Number(element.dataset.square);
+            const piece = Number(element.dataset.piece);
+            currentPieces[square] = piece;
+            currentPieceElements[square] = element;
+        });
+
+        const squaresToRemove = [];
+        const piecesToMove = [];
+        const piecesToCreate = [];
         for (let square = Square.A1; square <= Square.H8; square++) {
-            const squareElement = this.squareElements[square] as HTMLElement;
-            const squarePieceElement = squareElement.querySelector('.square-piece');
-            let pieceClassName = null;
             const piece = this.match.getPiece(square);
-            switch (piece) {
-                case Piece.WHITE_PAWN: pieceClassName = 'square-white-pawn'; break;
-                case Piece.WHITE_KNIGHT: pieceClassName = 'square-white-knight'; break;
-                case Piece.WHITE_BISHOP: pieceClassName = 'square-white-bishop'; break;
-                case Piece.WHITE_ROOK: pieceClassName = 'square-white-rook'; break;
-                case Piece.WHITE_QUEEN: pieceClassName = 'square-white-queen'; break;
-                case Piece.WHITE_KING: pieceClassName = 'square-white-king'; break;
-                case Piece.BLACK_PAWN: pieceClassName = 'square-black-pawn'; break;
-                case Piece.BLACK_KNIGHT: pieceClassName = 'square-black-knight'; break;
-                case Piece.BLACK_BISHOP: pieceClassName = 'square-black-bishop'; break;
-                case Piece.BLACK_ROOK: pieceClassName = 'square-black-rook'; break;
-                case Piece.BLACK_QUEEN: pieceClassName = 'square-black-queen'; break;
-                case Piece.BLACK_KING: pieceClassName = 'square-black-king'; break;
-            }
-            squarePieceElement.classList.remove('square-white-pawn', 'square-white-knight', 'square-white-bishop', 'square-white-rook', 'square-white-queen', 'square-white-king', 'square-black-pawn', 'square-black-knight', 'square-black-bishop', 'square-black-rook', 'square-black-queen', 'square-black-king');
-            if (pieceClassName) {
-                squarePieceElement.classList.add(pieceClassName);
+            const currentPiece = currentPieces[square];
+            if (piece != currentPiece) {
+                if (piece >= 0) {
+                    if (currentPiece >= 0) {
+                        squaresToRemove.push(square);
+                    }
+                    piecesToCreate[square] = piece;
+                } else {
+                    piecesToMove[square] = currentPiece;
+                }
             }
         }
+
+        const boardContentElement = this.querySelector('.board-content');
+        piecesToCreate.forEach((pieceToCreate: Piece, destinationSquare: Square) => {
+            const destinationSquareFile = BoardUtils.getFile(destinationSquare);
+            const destinationSquareRank = BoardUtils.getRank(destinationSquare);
+            let possibleOriginSquares = [];
+            piecesToMove.forEach((piece: Piece, square: Square) => {
+                if (piece == pieceToCreate) {
+                    possibleOriginSquares.push(square);
+                }
+            });
+            possibleOriginSquares.sort((square1: Square, square2: Square) => {
+                const square1Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square1)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square1));
+                const square2Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square2)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square2));
+                return square1Distance - square2Distance;
+            });
+
+            if (!possibleOriginSquares.length) {
+                const pieceElement = document.createElement('div');
+                pieceElement.classList.add('piece', NeochessBoardElement.PIECE_CLASSES[pieceToCreate], NeochessBoardElement.SQUARE_CLASSES[destinationSquare]);
+                pieceElement.dataset.square = String(destinationSquare);
+                pieceElement.dataset.piece = String(pieceToCreate);
+                boardContentElement.appendChild(pieceElement);
+            } else {
+                const originSquare = possibleOriginSquares[0];
+                delete piecesToMove[originSquare];
+                const originSquareElement = currentPieceElements[originSquare];
+                originSquareElement.classList.replace(NeochessBoardElement.SQUARE_CLASSES[originSquare], NeochessBoardElement.SQUARE_CLASSES[destinationSquare]);
+                originSquareElement.dataset.square = String(destinationSquare);
+            }
+        });
+
+        piecesToMove.forEach((_piece: Piece, square: Square) => squaresToRemove.push(square));
+        squaresToRemove.forEach((square: Square) => {
+            currentPieceElements[square].remove();
+        });
     }
 
     private updateFlipState() {
