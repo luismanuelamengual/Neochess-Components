@@ -368,12 +368,13 @@ export class NeochessBoardElement extends HTMLElement {
 
     constructor() {
         super();
-        this.match = new Match();
         this.flipped = this.getAttribute('flipped') === 'true';
+        this.match = new Match(this.getAttribute('fen'));
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDrag = this.onDrag.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.onPositionChange = this.onPositionChange.bind(this);
     }
 
     public connectedCallback() {
@@ -387,15 +388,7 @@ export class NeochessBoardElement extends HTMLElement {
         } else {
             this.addEventListener('mousedown', this.onDragStart);
         }
-        this.match.addEventListener('positionChange', () => {
-            this.updateMatchState();
-            this.clearHighlightedSquares();
-            this.clearLegalMoves();
-            this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
-            const lastMove = this.match.getMove();
-            this.squareElements[lastMove.getFromSquare()].classList.add('square-last-move-indicator');
-            this.squareElements[lastMove.getToSquare()].classList.add('square-last-move-indicator');
-        });
+        this.match.addEventListener('positionChange', this.onPositionChange);
         this.updateState();
         this.drawCoordinates();
     }
@@ -411,6 +404,16 @@ export class NeochessBoardElement extends HTMLElement {
 
     private isTouchDevice() {
         return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
+    }
+
+    private onPositionChange() {
+        this.updateMatchState();
+        this.clearHighlightedSquares();
+        this.clearLegalMoves();
+        this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
+        const lastMove = this.match.getMove();
+        this.squareElements[lastMove.getFromSquare()].classList.add('square-last-move-indicator');
+        this.squareElements[lastMove.getToSquare()].classList.add('square-last-move-indicator');
     }
 
     private onContextMenu(event: MouseEvent) {
