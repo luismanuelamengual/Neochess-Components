@@ -387,6 +387,15 @@ export class NeochessBoardElement extends HTMLElement {
         } else {
             this.addEventListener('mousedown', this.onDragStart);
         }
+        this.match.addEventListener('positionChange', () => {
+            this.updateMatchState();
+            this.clearHighlightedSquares();
+            this.clearLegalMoves();
+            this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
+            const lastMove = this.match.getMove();
+            this.squareElements[lastMove.getFromSquare()].classList.add('square-last-move-indicator');
+            this.squareElements[lastMove.getToSquare()].classList.add('square-last-move-indicator');
+        });
         this.updateState();
         this.drawCoordinates();
     }
@@ -424,7 +433,7 @@ export class NeochessBoardElement extends HTMLElement {
                     const fromSquare = this.squareElements.indexOf(this.querySelector('.square-origin'));
                     const toSquare = this.squareElements.indexOf(squareElement);
                     this.clearLegalMoves();
-                    this.makeMove(fromSquare, toSquare);
+                    this.match.makeMove(new Move(fromSquare, toSquare));
                 } else {
                     this.clearLegalMoves();
                     const square = this.squareElements.indexOf(squareElement);
@@ -529,9 +538,7 @@ export class NeochessBoardElement extends HTMLElement {
                 document.body.removeChild(this.moveData.grabElement);
             }
             if (this.moveData.fromSquare >= 0 && this.moveData.toSquare >= 0) {
-                if (this.makeMove(this.moveData.fromSquare, this.moveData.toSquare)) {
-                    this.clearLegalMoves();
-                }
+                this.match.makeMove(new Move(this.moveData.fromSquare, this.moveData.toSquare));
             }
             this.moveData = null;
         }
@@ -622,18 +629,6 @@ export class NeochessBoardElement extends HTMLElement {
 
     private clearHighlightedSquares() {
         this.querySelectorAll('.square-highlighted').forEach((element: HTMLElement) => element.classList.remove('square-highlighted'));
-    }
-
-    private makeMove(sourceSquare: Square, destinationSquare: Square): boolean {
-        const moveDone = this.match.makeMove(new Move(sourceSquare, destinationSquare));
-        if (moveDone) {
-            this.updateMatchState();
-            this.clearHighlightedSquares();
-            this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
-            this.squareElements[sourceSquare].classList.add('square-last-move-indicator');
-            this.squareElements[destinationSquare].classList.add('square-last-move-indicator');
-        }
-        return moveDone;
     }
 
     private drawCoordinates() {
