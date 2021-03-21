@@ -407,7 +407,7 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onPositionChange() {
-        this.updateMatchState();
+        this.updatePosition();
         this.clearHighlightedSquares();
         this.clearLegalMoves();
         this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
@@ -549,10 +549,10 @@ export class NeochessBoardElement extends HTMLElement {
 
     private updateState() {
         this.updateFlipState();
-        this.updateMatchState();
+        this.updatePosition();
     }
 
-    private updateMatchState() {
+    private updatePosition() {
         for (let square = Square.A1; square <= Square.H8; square++) {
             const squareElement = this.squareElements[square] as HTMLElement;
             const squarePieceElement = squareElement.querySelector('.square-piece');
