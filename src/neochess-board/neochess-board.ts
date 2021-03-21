@@ -286,11 +286,10 @@ template.innerHTML = `
             background-size: contain;
             pointer-events: none;
             z-index: 100;
-
-            -webkit-transition: top 0.3s ease-out, left 0.3s ease-out;
-            -moz-transition: top 0.3s ease-out, left 0.3s ease-out;
-            -o-transition: top 0.3s ease-out, left 0.3s ease-out;
-            transition: top 0.3s ease-out, left 0.3s ease-out;
+            -webkit-transition: top 0.3s, left 0.3s;
+            -moz-transition: top 0.3s, left 0.3s;
+            -o-transition: top 0.3s, left 0.3s;
+            transition: top 0.3s, left 0.3s;
         }
 
         .piece-white-pawn {
@@ -341,13 +340,8 @@ template.innerHTML = `
             background-image: url(` + require('./assets/images/pieces/black_king.png') + `);
         }
 
-        .piece-moving {
-            opacity: 0.2;
-        }
-
         .piece-dragging {
-            position: absolute;
-            pointer-events: none;
+            z-index: 200;
             cursor: grabbing;
             -webkit-transition: none;
             -moz-transition: none;
@@ -472,28 +466,17 @@ export class NeochessBoardElement extends HTMLElement {
                     const square = this.squareElements.indexOf(squareElement);
                     const piece = this.match.getPiece(square);
                     if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                        this.querySelector('.piece.' + NeochessBoardElement.SQUARE_CLASSES[square]).classList.add('piece-moving');
-                        const squareElementRect = squareElement.getBoundingClientRect();
-                        const draggingPieceElement = document.createElement('div');
-                        draggingPieceElement.classList.add('piece', 'piece-dragging', NeochessBoardElement.PIECE_CLASSES[piece]);
-                        draggingPieceElement.style.left = squareElementRect.x + 'px';
-                        draggingPieceElement.style.top = squareElementRect.y + 'px';
-                        draggingPieceElement.style.width = squareElementRect.width + 'px';
-                        draggingPieceElement.style.height = squareElementRect.height + 'px';
-                        document.body.appendChild(draggingPieceElement);
-
+                        const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
+                        const movingPieceElement: HTMLElement = this.querySelector('.piece.' + movingPieceSquareClass);
+                        movingPieceElement.classList.add('piece-dragging');
+                        const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
+                        const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
                         this.moveData = {
                             fromSquare: square,
-                            grabElement: draggingPieceElement
+                            grabElement: movingPieceElement,
+                            grabXOffset: (clientX - movingPieceElement.offsetLeft),
+                            grabYOffset: (clientY - movingPieceElement.offsetTop)
                         };
-                        if (event instanceof MouseEvent) {
-                            this.moveData.grabXOffset = event.clientX - squareElementRect.x;
-                            this.moveData.grabYOffset = event.clientY - squareElementRect.y;
-                        } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
-                            this.moveData.grabXOffset = event.changedTouches[0].clientX - squareElementRect.x;
-                            this.moveData.grabYOffset = event.changedTouches[0].clientY - squareElementRect.y;
-                        }
-
                         if (this.isTouchDevice()) {
                             this.addEventListener('touchmove', this.onDrag);
                             this.addEventListener('touchend', this.onDragEnd);
@@ -513,18 +496,11 @@ export class NeochessBoardElement extends HTMLElement {
 
     private onDrag(event: MouseEvent|TouchEvent) {
         if (this.moveData) {
-            let x;
-            let y;
-            if (event instanceof MouseEvent) {
-                x = event.clientX - this.moveData.grabXOffset;
-                y = event.clientY - this.moveData.grabYOffset;
-            } else if (event instanceof TouchEvent && event.changedTouches.length > 0) {
-                x = event.changedTouches[0].clientX - this.moveData.grabXOffset;
-                y = event.changedTouches[0].clientY - this.moveData.grabYOffset;
-            }
-            this.moveData.grabElement.style.left = x + 'px';
-            this.moveData.grabElement.style.top = y + 'px';
-            const elementAtPoint = document.elementFromPoint(x + (this.moveData.grabElement.offsetWidth / 2), y + (this.moveData.grabElement.offsetHeight / 2));
+            const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
+            const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
+            this.moveData.grabElement.style.left = (clientX - this.moveData.grabXOffset) + 'px';
+            this.moveData.grabElement.style.top = (clientY - this.moveData.grabXOffset) + 'px';
+            const elementAtPoint = document.elementFromPoint(clientX, clientY);
             if (elementAtPoint && elementAtPoint.classList.contains('square')) {
                 this.moveData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
                 this.setMoveHighlightSquare(this.moveData.toSquare);
@@ -535,10 +511,6 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragEnd() {
-        const movingPieceSquare = this.querySelector('.piece-moving');
-        if (movingPieceSquare) {
-            movingPieceSquare.classList.remove('piece-moving');
-        }
         this.clearMoveHighlightSquare();
         if (this.isTouchDevice()) {
             this.removeEventListener('touchmove', this.onDrag);
@@ -549,7 +521,9 @@ export class NeochessBoardElement extends HTMLElement {
         }
         if (this.moveData) {
             if (this.moveData.grabElement) {
-                document.body.removeChild(this.moveData.grabElement);
+                this.moveData.grabElement.classList.remove('piece-dragging');
+                this.moveData.grabElement.style.left = '';
+                this.moveData.grabElement.style.top = '';
             }
             if (this.moveData.fromSquare >= 0 && this.moveData.toSquare >= 0) {
                 this.match.makeMove(new Move(this.moveData.fromSquare, this.moveData.toSquare));
