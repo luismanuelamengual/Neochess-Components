@@ -127,7 +127,7 @@ template.innerHTML = `
             height: 100%;
             top: 0;
             left: 0;
-            background-color: coral;
+            background-color: orangered;
             opacity: 0.7;
         }
 
@@ -264,6 +264,7 @@ template.innerHTML = `
         .board-overlay {
             position: absolute;
             pointer-events: none;
+            z-index: 150;
         }
 
         .coordinate {
@@ -276,6 +277,10 @@ template.innerHTML = `
 
         .coordinate-dark {
             fill: azure;
+        }
+
+        .arrow {
+            fill: rgba(255, 123, 34, 0.6);
         }
 
         .piece {
@@ -389,6 +394,7 @@ export class NeochessBoardElement extends HTMLElement {
     private boardElement: HTMLElement;
     private squareElements: Array<HTMLElement>;
     private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
+    private highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
 
     constructor() {
         super();
@@ -433,6 +439,7 @@ export class NeochessBoardElement extends HTMLElement {
     private onPositionChange() {
         this.updatePosition();
         this.clearHighlightedSquares();
+        this.clearArrows();
         this.clearLegalMoves();
         this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
         const lastMove = this.match.getMove();
@@ -452,10 +459,22 @@ export class NeochessBoardElement extends HTMLElement {
             this.clearLegalMoves();
             if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
                 const squareElement = event.target as HTMLElement;
-                this.toggleHighlightSquare(squareElement);
+                const square = this.squareElements.indexOf(squareElement);
+                this.highlightData = {
+                    fromSquare: square,
+                    toSquare: square
+                };
+                if (this.isTouchDevice()) {
+                    this.addEventListener('touchmove', this.onDrag);
+                    this.addEventListener('touchend', this.onDragEnd);
+                } else {
+                    this.addEventListener('mousemove', this.onDrag);
+                    this.addEventListener('mouseup', this.onDragEnd);
+                }
             }
         } else {
             this.clearHighlightedSquares();
+            this.clearArrows();
             if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
                 const squareElement = event.target as HTMLElement;
                 if (squareElement.classList.contains('square-destination-hint')) {
@@ -486,7 +505,6 @@ export class NeochessBoardElement extends HTMLElement {
                             this.addEventListener('mousemove', this.onDrag);
                             this.addEventListener('mouseup', this.onDragEnd);
                         }
-
                         this.showLegalMoves(square);
                     }
                 }
@@ -497,9 +515,9 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDrag(event: MouseEvent|TouchEvent) {
+        const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
+        const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
         if (this.moveData) {
-            const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
-            const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
             this.moveData.grabElement.style.left = (clientX - this.moveData.grabXOffset) + 'px';
             this.moveData.grabElement.style.top = (clientY - this.moveData.grabYOffset) + 'px';
             const elementAtPoint = document.elementFromPoint(clientX, clientY);
@@ -508,6 +526,21 @@ export class NeochessBoardElement extends HTMLElement {
                 this.setMoveHighlightSquare(this.moveData.toSquare);
             } else {
                 this.clearMoveHighlightSquare();
+            }
+        } else if (this.highlightData) {
+            const elementAtPoint = document.elementFromPoint(clientX, clientY);
+            if (elementAtPoint && elementAtPoint.classList.contains('square')) {
+                const toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
+                if (this.highlightData.toSquare != toSquare) {
+                    this.highlightData.toSquare = toSquare;
+                    if (this.highlightData.element) {
+                        this.highlightData.element.remove();
+                        this.highlightData.element = null;
+                    }
+                    if (this.highlightData.toSquare != this.highlightData.fromSquare) {
+                        this.highlightData.element = this.drawLine(this.highlightData.fromSquare, this.highlightData.toSquare);
+                    }
+                }
             }
         }
     }
@@ -531,6 +564,11 @@ export class NeochessBoardElement extends HTMLElement {
                 this.match.makeMove(new Move(this.moveData.fromSquare, this.moveData.toSquare));
             }
             this.moveData = null;
+        } else if (this.highlightData) {
+            if (this.highlightData.fromSquare == this.highlightData.toSquare) {
+                this.toggleHighlightSquare(this.highlightData.fromSquare);
+            }
+            this.highlightData = null;
         }
     }
 
@@ -653,12 +691,16 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
-    private toggleHighlightSquare(squareElement: HTMLElement) {
-        squareElement.classList.toggle('square-highlighted');
+    private toggleHighlightSquare(square: Square) {
+        this.squareElements[square].classList.toggle('square-highlighted');
     }
 
     private clearHighlightedSquares() {
         this.querySelectorAll('.square-highlighted').forEach((element: HTMLElement) => element.classList.remove('square-highlighted'));
+    }
+
+    private clearArrows() {
+        this.querySelectorAll('.arrow').forEach((element: HTMLElement) => element.remove());
     }
 
     private drawCoordinates() {
@@ -690,6 +732,55 @@ export class NeochessBoardElement extends HTMLElement {
         coordinate.classList.add('coordinate', isLight ? 'coordinate-light' : 'coordinate-dark');
         coordinate.append(document.createTextNode(text));
         return coordinate;
+    }
+
+    private drawLine(fromSquare: Square, toSquare: Square): Element {
+        const arrowOriginOffset = 4;
+        const arrowDestinationOffset = 0;
+        const fromSquareRect = this.getSquareRect(fromSquare);
+        const toSquareRect = this.getSquareRect(toSquare);
+        const arrowAngle = 180 - (Math.atan2(toSquareRect.x - fromSquareRect.x, toSquareRect.y - fromSquareRect.y) * 180 / Math.PI);
+        const fromSquareCenterPoint = new DOMPoint(fromSquareRect.x + (fromSquareRect.width / 2), fromSquareRect.y + (fromSquareRect.height / 2));
+        const toSquareCenterPoint = new DOMPoint(toSquareRect.x + (toSquareRect.width / 2), toSquareRect.y + (toSquareRect.height / 2));
+        const arrowHeadHeight = 4;
+        const arrowHeadWidth = 6;
+        const arrowHeight = Math.sqrt(Math.pow(toSquareCenterPoint.x - fromSquareCenterPoint.x, 2) + Math.pow(toSquareCenterPoint.y - fromSquareCenterPoint.y, 2)) - arrowOriginOffset + arrowDestinationOffset - arrowHeadHeight;
+        const arrowWidth = 3;
+        let x = fromSquareCenterPoint.x - (arrowWidth / 2);
+        let y = fromSquareCenterPoint.y - arrowOriginOffset;
+        const polygonPoints = [];
+        polygonPoints.push(x + ' ' + y);
+        y -= arrowHeight;
+        polygonPoints.push(x + ' ' + y);
+        x = fromSquareCenterPoint.x - (arrowHeadWidth / 2);
+        polygonPoints.push(x + ' ' + y);
+        x = fromSquareCenterPoint.x;
+        y -= arrowHeadHeight;
+        polygonPoints.push(x + ' ' + y);
+        x = fromSquareCenterPoint.x + (arrowHeadWidth / 2);
+        y += arrowHeadHeight;
+        polygonPoints.push(x + ' ' + y);
+        x = fromSquareCenterPoint.x + (arrowWidth / 2);
+        polygonPoints.push(x + ' ' + y);
+        y += arrowHeight;
+        polygonPoints.push(x + ' ' + y);
+        const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        polygon.classList.add('arrow');
+        polygon.setAttribute('points', polygonPoints.join(','));
+        polygon.setAttribute('transform', 'rotate(' + arrowAngle + ' ' + fromSquareCenterPoint.x + ' ' + fromSquareCenterPoint.y + ')');
+        const overlayElement = this.querySelector('.board-overlay');
+        overlayElement.appendChild(polygon);
+        return polygon;
+    }
+
+    private getSquareRect(square: Square): DOMRect {
+        const file = BoardUtils.getFile(square);
+        const rank = BoardUtils.getRank(square);
+        const width = 12.5;
+        const height = 12.5;
+        const x = (this.flipped ? (7 - file) : file) * width;
+        const y = (this.flipped ? rank : (7 - rank)) * height;
+        return new DOMRect(x, y, width, height);
     }
 }
 
