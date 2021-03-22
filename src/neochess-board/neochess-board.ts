@@ -1,4 +1,4 @@
-import {BoardUtils, Move, Piece, Square, Match} from "@neochess/core";
+import {BoardUtils, Figure, Match, Move, Piece, Square} from "@neochess/core";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -575,6 +575,12 @@ export class NeochessBoardElement extends HTMLElement {
                     possibleOriginSquares.push(square);
                 }
             });
+            if (BoardUtils.getFigure(pieceToCreate) == Figure.BISHOP) {
+                possibleOriginSquares = possibleOriginSquares.filter((square: Square) => {
+                    const squareDistance = Math.abs(destinationSquareFile - BoardUtils.getFile(square)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square));
+                    return squareDistance % 2 == 0;
+                });
+            }
             possibleOriginSquares.sort((square1: Square, square2: Square) => {
                 const square1Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square1)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square1));
                 const square2Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square2)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square2));
