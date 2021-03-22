@@ -281,6 +281,8 @@ template.innerHTML = `
 
         .arrow {
             fill: rgba(255, 123, 34, 0.6);
+            stroke: orange;
+            stroke-width: 0.5;
         }
 
         .piece {
