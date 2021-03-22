@@ -436,8 +436,10 @@ export class NeochessBoardElement extends HTMLElement {
         this.clearLegalMoves();
         this.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
         const lastMove = this.match.getMove();
-        this.squareElements[lastMove.getFromSquare()].classList.add('square-last-move-indicator');
-        this.squareElements[lastMove.getToSquare()].classList.add('square-last-move-indicator');
+        if (lastMove) {
+            this.squareElements[lastMove.getFromSquare()].classList.add('square-last-move-indicator');
+            this.squareElements[lastMove.getToSquare()].classList.add('square-last-move-indicator');
+        }
     }
 
     private onContextMenu(event: MouseEvent) {
@@ -546,8 +548,6 @@ export class NeochessBoardElement extends HTMLElement {
             currentPieces[square] = piece;
             currentPieceElements[square] = element;
         });
-
-        const squaresToRemove = [];
         const piecesToMove = [];
         const piecesToCreate = [];
         for (let square = Square.A1; square <= Square.H8; square++) {
@@ -556,7 +556,7 @@ export class NeochessBoardElement extends HTMLElement {
             if (piece != currentPiece) {
                 if (piece >= 0) {
                     if (currentPiece >= 0) {
-                        squaresToRemove.push(square);
+                        piecesToMove[square] = currentPiece;
                     }
                     piecesToCreate[square] = piece;
                 } else {
@@ -595,9 +595,7 @@ export class NeochessBoardElement extends HTMLElement {
                 originSquareElement.dataset.square = String(destinationSquare);
             }
         });
-
-        piecesToMove.forEach((_piece: Piece, square: Square) => squaresToRemove.push(square));
-        squaresToRemove.forEach((square: Square) => {
+        piecesToMove.forEach((_piece: Piece, square: Square) => {
             currentPieceElements[square].remove();
         });
     }
