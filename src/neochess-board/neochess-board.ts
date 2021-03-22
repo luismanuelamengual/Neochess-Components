@@ -499,7 +499,7 @@ export class NeochessBoardElement extends HTMLElement {
             const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
             const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
             this.moveData.grabElement.style.left = (clientX - this.moveData.grabXOffset) + 'px';
-            this.moveData.grabElement.style.top = (clientY - this.moveData.grabXOffset) + 'px';
+            this.moveData.grabElement.style.top = (clientY - this.moveData.grabYOffset) + 'px';
             const elementAtPoint = document.elementFromPoint(clientX, clientY);
             if (elementAtPoint && elementAtPoint.classList.contains('square')) {
                 this.moveData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
