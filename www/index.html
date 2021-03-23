@@ -4,8 +4,44 @@
         <title>Neochess</title>
         <script type="module" src="neochess-components.bundle.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <style>
+            body {
+                box-sizing: border-box;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                background: khaki;
+                overflow: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .board-container {
+                box-sizing: border-box;
+                width: 95vmin;
+                height: 95vmin;
+                position: relative;
+            }
+
+            neochess-board {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                padding: 10px;
+                border: 1px solid lightgray;
+                -webkit-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
+                -moz-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
+                box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
+            }
+        </style>
     </head>
     <body>
-        <neochess-board></neochess-board>
+        <div class="board-container">
+            <neochess-board></neochess-board>
+        </div>
     </body>
 </html>
