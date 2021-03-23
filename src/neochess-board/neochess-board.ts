@@ -291,6 +291,7 @@ template.innerHTML = `
             height: 12.51%;
             background-repeat: no-repeat;
             background-size: contain;
+            background-position: center;
             pointer-events: none;
             z-index: 100;
             -webkit-transition: top 0.3s, left 0.3s;
