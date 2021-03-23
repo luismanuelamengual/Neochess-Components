@@ -100,8 +100,8 @@ template.innerHTML = `
             height: 100%;
             top: 0;
             left: 0;
-            background-color: orangered;
-            opacity: 0.7;
+            background-color: darkorange;
+            opacity: 0.8;
         }
 
         .square-a1 { left: 0; top: 87.5%; }
