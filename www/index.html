@@ -20,10 +20,18 @@
                 align-items: center;
             }
 
+            .board-panel {
+                box-sizing: border-box;
+                max-width: 90vh;
+                width: 100%;
+                margin: auto;
+                padding: 20px;
+            }
+
             .board-container {
                 box-sizing: border-box;
-                width: 95vmin;
-                height: 95vmin;
+                width: 100%;
+                padding-bottom: 100%;
                 position: relative;
             }
 
@@ -40,8 +48,10 @@
         </style>
     </head>
     <body>
-        <div class="board-container">
-            <neochess-board></neochess-board>
+        <div class="board-panel">
+            <div class="board-container">
+                <neochess-board></neochess-board>
+            </div>
         </div>
     </body>
 </html>
