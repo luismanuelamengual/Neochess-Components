@@ -413,6 +413,19 @@ export class NeochessBoardElement extends HTMLElement {
         return this.flipped;
     }
 
+    public setMatch(match: Match): void {
+        if (this.match) {
+            this.match.removeEventListener('positionChange', this.onPositionChange)
+        }
+        this.match = match;
+        this.match.addEventListener('positionChange', this.onPositionChange);
+        this.updatePosition();
+    }
+
+    public getMatch(): Match {
+        return this.match;
+    }
+
     private isTouchDevice() {
         return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
     }
