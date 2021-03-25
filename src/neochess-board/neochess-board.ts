@@ -358,10 +358,10 @@ template.innerHTML = `
         .piece-dragging {
             z-index: 200;
             cursor: grabbing;
-            -webkit-transition: none;
-            -moz-transition: none;
-            -o-transition: none;
-            transition: none;
+            -webkit-transition: none !important;
+            -moz-transition: none !important;
+            -o-transition: none !important;
+            transition: none !important;
         }
     </style>
     <div class="board-container">
@@ -418,19 +418,25 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     public connectedCallback() {
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
-        this.squareElements = [];
-        this.shadowRoot.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
-        this.shadowRoot.addEventListener('contextmenu', this.onContextMenu);
-        if (this.isTouchDevice()) {
-            this.shadowRoot.addEventListener('touchstart', this.onDragStart);
-        } else {
-            this.shadowRoot.addEventListener('mousedown', this.onDragStart);
+        if (!this.shadowRoot) {
+            this.attachShadow({mode: 'open'});
+            this.shadowRoot.appendChild(template.content.cloneNode(true));
+            this.squareElements = [];
+            this.shadowRoot.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
+            this.shadowRoot.addEventListener('contextmenu', this.onContextMenu);
+            if (this.isTouchDevice()) {
+                this.shadowRoot.addEventListener('touchstart', this.onDragStart);
+            } else {
+                this.shadowRoot.addEventListener('mousedown', this.onDragStart);
+            }
         }
         this.match.addEventListener('positionChange', this.onPositionChange);
         this.updateState();
         this.drawCoordinates();
+    }
+
+    public disconnectedCallback() {
+        this.match.removeEventListener('positionChange', this.onPositionChange);
     }
 
     public removeTheme() {
