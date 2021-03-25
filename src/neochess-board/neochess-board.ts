@@ -484,6 +484,16 @@ export class NeochessBoardElement extends HTMLElement {
             }
             styleText += '}';
         }
+        if (theme.lastMoveSquareColor || theme.lastMoveSquareOpacity) {
+            styleText += '.square-last-move-indicator::before {';
+            if (theme.lastMoveSquareColor) {
+                styleText += 'background-color: ' + theme.lastMoveSquareColor + ';';
+            }
+            if (theme.lastMoveSquareOpacity) {
+                styleText += 'opacity: ' + theme.lastMoveSquareOpacity + ';';
+            }
+            styleText += '}';
+        }
         if (theme.pieceSet) {
             styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
             styleText += '.piece-white-knight { background-image: url(' + theme.pieceSet.whiteKnightImageUrl + '); }';

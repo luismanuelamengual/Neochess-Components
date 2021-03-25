@@ -11,4 +11,6 @@ export interface NeochessBoardTheme {
     coordinatesColor?: string;
     selectedSquareColor?: string;
     selectedSquareOpacity?: number;
+    lastMoveSquareColor?: string;
+    lastMoveSquareOpacity?: number;
 }
