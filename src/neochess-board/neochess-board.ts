@@ -92,7 +92,10 @@ template.innerHTML = `
             left: 0;
             width: 100%;
             height: 100%;
-            border: 4px solid deepskyblue;
+            border-width: 4px;
+            border-style: solid;
+            border-color: lightgray;
+            z-index: 120;
         }
 
         .square-destination-hint::after {
@@ -491,6 +494,16 @@ export class NeochessBoardElement extends HTMLElement {
             }
             if (theme.lastMoveSquareOpacity) {
                 styleText += 'opacity: ' + theme.lastMoveSquareOpacity + ';';
+            }
+            styleText += '}';
+        }
+        if (theme.destinationSquareColor || theme.destinationSquareOpacity) {
+            styleText += '.square-destination::before {';
+            if (theme.destinationSquareColor) {
+                styleText += 'border-color: ' + theme.destinationSquareColor + ';';
+            }
+            if (theme.destinationSquareOpacity) {
+                styleText += 'opacity: ' + theme.destinationSquareOpacity + ';';
             }
             styleText += '}';
         }
