@@ -2,11 +2,13 @@ import {NeochessBoardPieceset} from "./neochess-board-pieceset";
 
 export interface NeochessBoardTheme {
     boardImageUrl?: string;
-    boardBackgroundColor?: string;
+    boardColor?: string;
     boardPadding?: number;
-    squareLightColor?: string;
-    squareDarkColor?: string;
+    lightSquareColor?: string;
+    darkSquareColor?: string;
     pieceSet?: NeochessBoardPieceset;
     coordinatesVisible?: boolean;
     coordinatesColor?: string;
+    selectedSquareColor?: string;
+    selectedSquareOpacity?: number;
 }

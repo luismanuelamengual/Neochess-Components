@@ -434,17 +434,17 @@ export class NeochessBoardElement extends HTMLElement {
     public setTheme(theme: NeochessBoardTheme) {
         this.removeTheme();
         let styleText = '';
-        if (theme.boardBackgroundColor || theme.boardPadding) {
+        if (theme.boardColor || theme.boardPadding) {
             styleText += '.board {';
-            if (theme.boardBackgroundColor) {
-                styleText += 'background: ' + theme.boardBackgroundColor + ';';
+            if (theme.boardColor) {
+                styleText += 'background: ' + theme.boardColor + ';';
             }
             if (theme.boardPadding >= 0) {
                 styleText += 'padding: ' + theme.boardPadding + 'px;';
             }
             styleText += '}';
-            if (theme.boardBackgroundColor && !theme.squareLightColor) {
-                styleText += '.coordinate-dark { fill: ' + theme.boardBackgroundColor + '; }';
+            if (theme.boardColor && !theme.lightSquareColor) {
+                styleText += '.coordinate-dark { fill: ' + theme.boardColor + '; }';
             }
         }
         if (theme.boardImageUrl) {
@@ -455,16 +455,16 @@ export class NeochessBoardElement extends HTMLElement {
                 styleText += '.coordinate-dark, .coordinate-light { fill: white; }';
             }
         } else {
-            if (theme.squareLightColor) {
-                styleText += '.square-light { background-color: ' + theme.squareLightColor + '}';
+            if (theme.lightSquareColor) {
+                styleText += '.square-light { background-color: ' + theme.lightSquareColor + '}';
                 if (!theme.coordinatesColor) {
-                    styleText += '.coordinate-dark { fill: ' + theme.squareLightColor + '; }';
+                    styleText += '.coordinate-dark { fill: ' + theme.lightSquareColor + '; }';
                 }
             }
-            if (theme.squareDarkColor) {
-                styleText += '.square-dark { background-color: ' + theme.squareDarkColor + '}';
+            if (theme.darkSquareColor) {
+                styleText += '.square-dark { background-color: ' + theme.darkSquareColor + '}';
                 if (!theme.coordinatesColor) {
-                    styleText += '.coordinate-light { fill: ' + theme.squareDarkColor + '; }';
+                    styleText += '.coordinate-light { fill: ' + theme.darkSquareColor + '; }';
                 }
             }
         }
@@ -473,6 +473,16 @@ export class NeochessBoardElement extends HTMLElement {
         }
         if (theme.coordinatesVisible === false) {
             styleText += '.coordinate { display: none; }';
+        }
+        if (theme.selectedSquareColor || theme.selectedSquareOpacity) {
+            styleText += '.square-origin::after {';
+            if (theme.selectedSquareColor) {
+                styleText += 'background-color: ' + theme.selectedSquareColor + ';';
+            }
+            if (theme.selectedSquareOpacity) {
+                styleText += 'opacity: ' + theme.selectedSquareOpacity + ';';
+            }
+            styleText += '}';
         }
         if (theme.pieceSet) {
             styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
