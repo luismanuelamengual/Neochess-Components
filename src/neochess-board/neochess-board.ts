@@ -1,4 +1,5 @@
 import {BoardUtils, Figure, Match, Move, Piece, Square} from "@neochess/core";
+import {NeochessBoardTheme} from "./neochess-board-theme";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -421,6 +422,73 @@ export class NeochessBoardElement extends HTMLElement {
         this.match.addEventListener('positionChange', this.onPositionChange);
         this.updateState();
         this.drawCoordinates();
+    }
+
+    public removeTheme() {
+        const skinElement = this.shadowRoot.getElementById('skin');
+        if (skinElement) {
+            skinElement.remove();
+        }
+    }
+
+    public setTheme(theme: NeochessBoardTheme) {
+        this.removeTheme();
+        let styleText = '';
+        if (theme.boardBackgroundColor || theme.boardPadding) {
+            styleText += '.board {';
+            if (theme.boardBackgroundColor) {
+                styleText += 'background: ' + theme.boardBackgroundColor + ';';
+            }
+            if (theme.boardPadding >= 0) {
+                styleText += 'padding: ' + theme.boardPadding + 'px;';
+            }
+            styleText += '}';
+            if (theme.boardBackgroundColor && !theme.squareLightColor) {
+                styleText += '.coordinate-dark { fill: ' + theme.boardBackgroundColor + '; }';
+            }
+        }
+        if (theme.boardImageUrl) {
+            styleText += '.board-content { background: url(' + theme.boardImageUrl + ') 0/contain; } ';
+            styleText += '.square-light { background-color: transparent }';
+            styleText += '.square-dark { background-color: transparent }';
+            if (!theme.coordinatesColor) {
+                styleText += '.coordinate-dark, .coordinate-light { fill: white; }';
+            }
+        } else {
+            if (theme.squareLightColor) {
+                styleText += '.square-light { background-color: ' + theme.squareLightColor + '}';
+                if (!theme.coordinatesColor) {
+                    styleText += '.coordinate-dark { fill: ' + theme.squareLightColor + '; }';
+                }
+            }
+            if (theme.squareDarkColor) {
+                styleText += '.square-dark { background-color: ' + theme.squareDarkColor + '}';
+                if (!theme.coordinatesColor) {
+                    styleText += '.coordinate-light { fill: ' + theme.squareDarkColor + '; }';
+                }
+            }
+        }
+        if (theme.coordinatesColor) {
+            styleText += '.coordinate-dark, .coordinate-light { fill: ' + theme.coordinatesColor + '; }';
+        }
+        if (theme.pieceSet) {
+            styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
+            styleText += '.piece-white-knight { background-image: url(' + theme.pieceSet.whiteKnightImageUrl + '); }';
+            styleText += '.piece-white-bishop { background-image: url(' + theme.pieceSet.whiteBishopImageUrl + '); }';
+            styleText += '.piece-white-rook { background-image: url(' + theme.pieceSet.whiteRookImageUrl + '); }';
+            styleText += '.piece-white-queen { background-image: url(' + theme.pieceSet.whiteQueenImageUrl + '); }';
+            styleText += '.piece-white-king { background-image: url(' + theme.pieceSet.whiteKingImageUrl + '); }';
+            styleText += '.piece-black-pawn { background-image: url(' + theme.pieceSet.blackPawnImageUrl + '); }';
+            styleText += '.piece-black-knight { background-image: url(' + theme.pieceSet.blackKnightImageUrl + '); }';
+            styleText += '.piece-black-bishop { background-image: url(' + theme.pieceSet.blackBishopImageUrl + '); }';
+            styleText += '.piece-black-rook { background-image: url(' + theme.pieceSet.blackRookImageUrl + '); }';
+            styleText += '.piece-black-queen { background-image: url(' + theme.pieceSet.blackQueenImageUrl + '); }';
+            styleText += '.piece-black-king { background-image: url(' + theme.pieceSet.blackKingImageUrl + '); }';
+        }
+        const styleElement = document.createElement('style');
+        styleElement.setAttribute('id', 'skin');
+        styleElement.appendChild(document.createTextNode(styleText));
+        this.shadowRoot.appendChild(styleElement);
     }
 
     public setFlipped(flipped: boolean): void {
