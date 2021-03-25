@@ -428,7 +428,7 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     public removeTheme() {
-        const skinElement = this.shadowRoot.getElementById('skin');
+        const skinElement = this.shadowRoot.getElementById('theme');
         if (skinElement) {
             skinElement.remove();
         }
@@ -437,7 +437,7 @@ export class NeochessBoardElement extends HTMLElement {
     public setTheme(theme: NeochessBoardTheme) {
         this.removeTheme();
         let styleText = '';
-        if (theme.boardColor || theme.boardPadding) {
+        if (theme.boardColor || theme.boardPadding >= 0) {
             styleText += '.board {';
             if (theme.boardColor) {
                 styleText += 'background: ' + theme.boardColor + ';';
@@ -522,7 +522,7 @@ export class NeochessBoardElement extends HTMLElement {
             styleText += '.piece-black-king { background-image: url(' + theme.pieceSet.blackKingImageUrl + '); }';
         }
         const styleElement = document.createElement('style');
-        styleElement.setAttribute('id', 'skin');
+        styleElement.setAttribute('id', 'theme');
         styleElement.appendChild(document.createTextNode(styleText));
         this.shadowRoot.appendChild(styleElement);
     }
