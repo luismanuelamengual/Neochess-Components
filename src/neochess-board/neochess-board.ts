@@ -298,6 +298,9 @@ template.innerHTML = `
             background-position: center;
             pointer-events: none;
             z-index: 100;
+        }
+
+        .board-animated .piece {
             -webkit-transition: top 0.3s, left 0.3s;
             -moz-transition: top 0.3s, left 0.3s;
             -o-transition: top 0.3s, left 0.3s;
@@ -397,6 +400,7 @@ export class NeochessBoardElement extends HTMLElement {
 
     private match: Match;
     private flipped: boolean = false;
+    private animated: boolean = true;
     private squareElements: Array<HTMLElement>;
     private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
     private highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
@@ -404,6 +408,7 @@ export class NeochessBoardElement extends HTMLElement {
     constructor() {
         super();
         this.flipped = this.getAttribute('flipped') === 'true';
+        this.animated = !(this.getAttribute('animated') === 'false');
         this.match = new Match(this.getAttribute('fen'));
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
@@ -558,6 +563,15 @@ export class NeochessBoardElement extends HTMLElement {
 
     public isFlipped(): boolean {
         return this.flipped;
+    }
+
+    public setAnimated(animated: boolean): void {
+        this.animated = animated;
+        this.updateAnimationState();
+    }
+
+    public isAnimated(): boolean {
+        return this.animated;
     }
 
     public setMatch(match: Match): void {
@@ -715,6 +729,7 @@ export class NeochessBoardElement extends HTMLElement {
 
     private updateState() {
         this.updateFlipState();
+        this.updateAnimationState();
         this.updatePosition();
     }
 
@@ -787,11 +802,19 @@ export class NeochessBoardElement extends HTMLElement {
 
     private updateFlipState() {
         if (this.flipped) {
-            this.shadowRoot.querySelector('.board-content').classList.add('board-flipped');
+            this.shadowRoot.querySelector('.board').classList.add('board-flipped');
         } else {
-            this.shadowRoot.querySelector('.board-content').classList.remove('board-flipped');
+            this.shadowRoot.querySelector('.board').classList.remove('board-flipped');
         }
         this.drawCoordinates();
+    }
+
+    private updateAnimationState() {
+        if (this.animated) {
+            this.shadowRoot.querySelector('.board').classList.add('board-animated');
+        } else {
+            this.shadowRoot.querySelector('.board').classList.remove('board-animated');
+        }
     }
 
     private showLegalMoves(square: Square) {
