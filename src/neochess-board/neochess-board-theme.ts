@@ -15,4 +15,6 @@ export interface NeochessBoardTheme {
     lastMoveSquareOpacity?: number;
     destinationSquareColor?: string;
     destinationSquareOpacity?: number;
+    highlightedSquareColor?: string;
+    highlightedSquareOpacity?: number;
 }
