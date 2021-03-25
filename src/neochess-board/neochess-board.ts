@@ -51,8 +51,8 @@ template.innerHTML = `
 
         .square {
             position: absolute;
-            width: 12.51%;
-            height: 12.51%;
+            width: 12.5%;
+            height: 12.5%;
         }
 
         .square-light {
@@ -287,8 +287,8 @@ template.innerHTML = `
 
         .piece {
             position: absolute;
-            width: 12.51%;
-            height: 12.51%;
+            width: 12.5%;
+            height: 12.5%;
             background-repeat: no-repeat;
             background-size: contain;
             background-position: center;
