@@ -126,7 +126,7 @@ template.innerHTML = `
             height: 100%;
             top: 0;
             left: 0;
-            background-color: darkorange;
+            background-color: gold;
             opacity: 0.8;
         }
 
@@ -283,9 +283,10 @@ template.innerHTML = `
         }
 
         .arrow {
-            fill: rgba(255, 123, 34, 0.6);
-            stroke: orange;
-            stroke-width: 0.5;
+            stroke: darkgoldenrod;
+            fill: darkgoldenrod;
+            stroke-width: 0.3;
+            fill-opacity: 0.4;
         }
 
         .piece {
@@ -517,6 +518,19 @@ export class NeochessBoardElement extends HTMLElement {
             }
             styleText += '}';
         }
+
+        if (theme.arrowsColor || theme.arrowsOpacity) {
+            styleText += '.arrow {';
+            if (theme.arrowsColor) {
+                styleText += 'fill: ' + theme.arrowsColor + ';';
+                styleText += 'stroke: ' + theme.arrowsColor + ';';
+            }
+            if (theme.arrowsOpacity) {
+                styleText += 'fill-opacity: ' + theme.arrowsOpacity + ';';
+            }
+            styleText += '}';
+        }
+
         if (theme.pieceSet) {
             styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
             styleText += '.piece-white-knight { background-image: url(' + theme.pieceSet.whiteKnightImageUrl + '); }';
