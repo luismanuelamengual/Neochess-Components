@@ -7,5 +7,6 @@ export interface NeochessBoardTheme {
     squareLightColor?: string;
     squareDarkColor?: string;
     pieceSet?: NeochessBoardPieceset;
+    coordinatesVisible?: boolean;
     coordinatesColor?: string;
 }

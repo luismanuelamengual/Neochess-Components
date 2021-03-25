@@ -471,6 +471,9 @@ export class NeochessBoardElement extends HTMLElement {
         if (theme.coordinatesColor) {
             styleText += '.coordinate-dark, .coordinate-light { fill: ' + theme.coordinatesColor + '; }';
         }
+        if (theme.coordinatesVisible === false) {
+            styleText += '.coordinate { display: none; }';
+        }
         if (theme.pieceSet) {
             styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
             styleText += '.piece-white-knight { background-image: url(' + theme.pieceSet.whiteKnightImageUrl + '); }';
