@@ -282,7 +282,7 @@ template.innerHTML = `
             fill: azure;
         }
 
-        .arrow {
+        .arrow-hint {
             stroke: darkgoldenrod;
             fill: darkgoldenrod;
             stroke-width: 0.3;
@@ -531,7 +531,7 @@ export class NeochessBoardElement extends HTMLElement {
         }
 
         if (theme.arrowsColor || theme.arrowsOpacity) {
-            styleText += '.arrow {';
+            styleText += '.arrow-hint {';
             if (theme.arrowsColor) {
                 styleText += 'fill: ' + theme.arrowsColor + ';';
                 styleText += 'stroke: ' + theme.arrowsColor + ';';
@@ -876,25 +876,25 @@ export class NeochessBoardElement extends HTMLElement {
     private drawCoordinates() {
         const overlayElement = this.shadowRoot.querySelector('.board-overlay');
         overlayElement.querySelectorAll('.coordinate').forEach((element: Element) => element.remove());
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '1' : '8', 0.75, 3.5, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '2' : '7', 0.75, 15.75, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '3' : '6', 0.75, 28.25, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '4' : '5', 0.75, 40.75, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '5' : '4', 0.75, 53.25, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '6' : '3', 0.75, 65.75, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '7' : '2', 0.75, 78.25, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? '8' : '1', 0.75, 90.75, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'h' : 'a',10.5, 99, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'g' : 'b',23, 99, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'f' : 'c',35.5, 99, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'e' : 'd',48, 99, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'd' : 'e',60.5, 99, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'c' : 'f',73, 99, true));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'b' : 'g',85.5, 99, false));
-        overlayElement.appendChild(this.createCoordinateElement(this.flipped ? 'a' : 'h',98, 99, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '1' : '8', 0.75, 3.5, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '2' : '7', 0.75, 15.75, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '3' : '6', 0.75, 28.25, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '4' : '5', 0.75, 40.75, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '5' : '4', 0.75, 53.25, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '6' : '3', 0.75, 65.75, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '7' : '2', 0.75, 78.25, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '8' : '1', 0.75, 90.75, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'h' : 'a',10.5, 99, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'g' : 'b',23, 99, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'f' : 'c',35.5, 99, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'e' : 'd',48, 99, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'd' : 'e',60.5, 99, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'c' : 'f',73, 99, true));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'b' : 'g',85.5, 99, false));
+        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'a' : 'h',98, 99, true));
     }
 
-    private createCoordinateElement(text: string, x: number, y: number, isLight: boolean): Element {
+    private drawCoordinate(text: string, x: number, y: number, isLight: boolean): Element {
         const coordinate = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         coordinate.setAttribute('x', String(x));
         coordinate.setAttribute('y', String(y));
@@ -904,7 +904,7 @@ export class NeochessBoardElement extends HTMLElement {
         return coordinate;
     }
 
-    private drawLine(fromSquare: Square, toSquare: Square): Element {
+    private drawLine(fromSquare: Square, toSquare: Square, arrowWidth = 2.5, className = 'arrow-hint'): Element {
         const arrowOriginOffset = 4;
         const arrowDestinationOffset = 0;
         const fromSquareRect = this.getSquareRect(fromSquare);
@@ -912,10 +912,9 @@ export class NeochessBoardElement extends HTMLElement {
         const arrowAngle = 180 - (Math.atan2(toSquareRect.x - fromSquareRect.x, toSquareRect.y - fromSquareRect.y) * 180 / Math.PI);
         const fromSquareCenterPoint = new DOMPoint(fromSquareRect.x + (fromSquareRect.width / 2), fromSquareRect.y + (fromSquareRect.height / 2));
         const toSquareCenterPoint = new DOMPoint(toSquareRect.x + (toSquareRect.width / 2), toSquareRect.y + (toSquareRect.height / 2));
-        const arrowHeadHeight = 4;
-        const arrowHeadWidth = 6;
+        const arrowHeadHeight = arrowWidth * 1.3;
+        const arrowHeadWidth = arrowWidth * 2;
         const arrowHeight = Math.sqrt(Math.pow(toSquareCenterPoint.x - fromSquareCenterPoint.x, 2) + Math.pow(toSquareCenterPoint.y - fromSquareCenterPoint.y, 2)) - arrowOriginOffset + arrowDestinationOffset - arrowHeadHeight;
-        const arrowWidth = 3;
         let x = fromSquareCenterPoint.x - (arrowWidth / 2);
         let y = fromSquareCenterPoint.y - arrowOriginOffset;
         const polygonPoints = [];
@@ -935,7 +934,7 @@ export class NeochessBoardElement extends HTMLElement {
         y += arrowHeight;
         polygonPoints.push(x + ' ' + y);
         const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        polygon.classList.add('arrow');
+        polygon.classList.add('arrow', className);
         polygon.setAttribute('points', polygonPoints.join(','));
         polygon.setAttribute('transform', 'rotate(' + arrowAngle + ' ' + fromSquareCenterPoint.x + ' ' + fromSquareCenterPoint.y + ')');
         const overlayElement = this.shadowRoot.querySelector('.board-overlay');
