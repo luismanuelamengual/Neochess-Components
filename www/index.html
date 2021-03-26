@@ -4,49 +4,61 @@
         <title>Neochess</title>
         <script type="module" src="neochess-components.bundle.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
         <style>
             body {
                 box-sizing: border-box;
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                width: 100%;
                 margin: 0;
-                background: beige;
-                overflow: auto;
-                display: flex;
+                padding: 15px;
+            }
+
+            .control-panel {
+                margin-bottom: 15px;
+            }
+
+            button {
+                display: inline-block;
+                width: 40px;
+                height: 28px;
+                box-sizing: border-box;
                 justify-content: center;
                 align-items: center;
-            }
-
-            .board-panel {
-                box-sizing: border-box;
-                max-width: 90vh;
-                width: 100%;
-                margin: auto;
-                padding: 20px;
-            }
-
-            .board-container {
-                box-sizing: border-box;
-                width: 100%;
-                padding-bottom: 100%;
-                position: relative;
-            }
-
-            neochess-board {
-                position: absolute;
-                width: 100%;
-                height: 100%;
             }
         </style>
     </head>
     <body>
-        <div class="board-panel">
-            <div class="board-container">
-                <neochess-board></neochess-board>
-            </div>
+        <div class="control-panel">
+            <button onclick="goToFirst();"><ion-icon name="play-skip-back"></ion-icon></button>
+            <button onclick="goToPrevious();"><ion-icon name="caret-back"></ion-icon></button>
+            <button onclick="goToNext();"><ion-icon name="caret-forward"></ion-icon></button>
+            <button onclick="goToLast();"><ion-icon name="play-skip-forward"></ion-icon></button>
+            <button onclick="toggleFlip();"><ion-icon name="refresh"></ion-icon></button>
         </div>
+        <neochess-board></neochess-board>
     </body>
+    <script>
+        function getBoard() {
+            return document.querySelector('neochess-board');
+        }
+
+        function goToPrevious() {
+            getBoard().getMatch().goToPreviousPosition();
+        }
+
+        function goToNext() {
+            getBoard().getMatch().goToNextPosition();
+        }
+
+        function goToFirst() {
+            getBoard().getMatch().goToStartPosition();
+        }
+
+        function goToLast() {
+            getBoard().getMatch().goToCurrentPosition();
+        }
+
+        function toggleFlip() {
+            getBoard().setFlipped(!getBoard().isFlipped());
+        }
+    </script>
 </html>
