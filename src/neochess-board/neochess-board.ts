@@ -583,19 +583,6 @@ export class NeochessBoardElement extends HTMLElement {
             }
             styleText += '}';
         }
-
-        if (theme.arrowsColor || theme.arrowsOpacity) {
-            styleText += '.arrow-hint {';
-            if (theme.arrowsColor) {
-                styleText += 'fill: ' + theme.arrowsColor + ';';
-                styleText += 'stroke: ' + theme.arrowsColor + ';';
-            }
-            if (theme.arrowsOpacity) {
-                styleText += 'fill-opacity: ' + theme.arrowsOpacity + ';';
-            }
-            styleText += '}';
-        }
-
         if (theme.pieceSet) {
             styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
             styleText += '.piece-white-knight { background-image: url(' + theme.pieceSet.whiteKnightImageUrl + '); }';
@@ -610,6 +597,26 @@ export class NeochessBoardElement extends HTMLElement {
             styleText += '.piece-black-queen { background-image: url(' + theme.pieceSet.blackQueenImageUrl + '); }';
             styleText += '.piece-black-king { background-image: url(' + theme.pieceSet.blackKingImageUrl + '); }';
         }
+        if (theme.highlightArrowsColor || theme.highlightArrowsOpacity || theme.highlightArrowsBorderColor || theme.highlightArrowsBorderWidth) {
+            styleText += '.arrow-highlighted {';
+            if (theme.highlightArrowsColor) {
+                styleText += 'fill: ' + theme.highlightArrowsColor + ';';
+                if (!theme.highlightArrowsBorderColor) {
+                    styleText += 'stroke: ' + theme.highlightArrowsColor + ';';
+                }
+            }
+            if (theme.highlightArrowsOpacity) {
+                styleText += 'fill-opacity: ' + theme.highlightArrowsOpacity + ';';
+            }
+            if (theme.highlightArrowsBorderColor) {
+                styleText += 'stroke: ' + theme.highlightArrowsBorderColor + ';';
+            }
+            if (theme.highlightArrowsBorderWidth) {
+                styleText += 'stroke-width: ' + theme.highlightArrowsBorderWidth + ';';
+            }
+            styleText += '}';
+        }
+
         const styleElement = document.createElement('style');
         styleElement.setAttribute('id', 'theme');
         styleElement.appendChild(document.createTextNode(styleText));

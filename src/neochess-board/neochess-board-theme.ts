@@ -16,6 +16,8 @@ export interface NeochessBoardTheme {
     destinationSquareOpacity?: number;
     highlightedSquareColor?: string;
     highlightedSquareOpacity?: number;
-    arrowsColor?: string;
-    arrowsOpacity?: number;
+    highlightArrowsColor?: string;
+    highlightArrowsOpacity?: number;
+    highlightArrowsBorderColor?: string;
+    highlightArrowsBorderWidth?: number;
 }
