@@ -260,7 +260,7 @@ template.innerHTML = `
         .board-flipped .square-g8 { left: 12.5%; top: 87.5%; }
         .board-flipped .square-h8 { left: 0; top: 87.5%; }
 
-        .board-overlay {
+        .board-coordinates {
             position: absolute;
             top: 0;
             left: 0;
@@ -274,13 +274,47 @@ template.innerHTML = `
             font-weight: 600;
         }
 
-        .coordinate-light {
+        .coordinate:nth-of-type(even), .board-flipped .coordinate:nth-of-type(odd) {
             fill: lightblue;
         }
 
-        .coordinate-dark {
+        .coordinate:nth-of-type(odd), .board-flipped .coordinate:nth-of-type(even) {
             fill: azure;
         }
+
+        .coordinate-rank-1 { transform: translate(0.75%, 90.75%); }
+        .coordinate-rank-2 { transform: translate(0.75%, 78.25%); }
+        .coordinate-rank-3 { transform: translate(0.75%, 65.75%); }
+        .coordinate-rank-4 { transform: translate(0.75%, 53.25%); }
+        .coordinate-rank-5 { transform: translate(0.75%, 40.75%); }
+        .coordinate-rank-6 { transform: translate(0.75%, 28.25%); }
+        .coordinate-rank-7 { transform: translate(0.75%, 15.75%); }
+        .coordinate-rank-8 { transform: translate(0.75%, 3.5%); }
+        .coordinate-file-a { transform: translate(10.5%, 99%); }
+        .coordinate-file-b { transform: translate(23%, 99%); }
+        .coordinate-file-c { transform: translate(35.5%, 99%); }
+        .coordinate-file-d { transform: translate(48%, 99%); }
+        .coordinate-file-e { transform: translate(60.5%, 99%); }
+        .coordinate-file-f { transform: translate(73%, 99%); }
+        .coordinate-file-g { transform: translate(85.5%, 99%); }
+        .coordinate-file-h { transform: translate(98%, 99%); }
+
+        .board-flipped .coordinate-rank-1 { transform: translate(0.75%, 3.5%); }
+        .board-flipped .coordinate-rank-2 { transform: translate(0.75%, 15.75%); }
+        .board-flipped .coordinate-rank-3 { transform: translate(0.75%, 28.25%); }
+        .board-flipped .coordinate-rank-4 { transform: translate(0.75%, 40.75%); }
+        .board-flipped .coordinate-rank-5 { transform: translate(0.75%, 53.25%); }
+        .board-flipped .coordinate-rank-6 { transform: translate(0.75%, 65.75%); }
+        .board-flipped .coordinate-rank-7 { transform: translate(0.75%, 78.25%); }
+        .board-flipped .coordinate-rank-8 { transform: translate(0.75%, 90.75%); }
+        .board-flipped .coordinate-file-h { transform: translate(10.5%, 99%); }
+        .board-flipped .coordinate-file-g { transform: translate(23%, 99%); }
+        .board-flipped .coordinate-file-f { transform: translate(35.5%, 99%); }
+        .board-flipped .coordinate-file-e { transform: translate(48%, 99%); }
+        .board-flipped .coordinate-file-d { transform: translate(60.5%, 99%); }
+        .board-flipped .coordinate-file-c { transform: translate(73%, 99%); }
+        .board-flipped .coordinate-file-b { transform: translate(85.5%, 99%); }
+        .board-flipped .coordinate-file-a { transform: translate(98%, 99%); }
 
         .arrow-hint {
             stroke: darkgoldenrod;
@@ -375,7 +409,7 @@ template.innerHTML = `
                 <div class="square square-light square-a6"></div><div class="square square-dark square-b6"></div><div class="square square-light square-c6"></div><div class="square square-dark square-d6"></div><div class="square square-light square-e6"></div><div class="square square-dark square-f6"></div><div class="square square-light square-g6"></div><div class="square square-dark square-h6"></div>
                 <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
                 <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
-                <svg viewBox="0 0 100 100" class="board-overlay" preserveAspectRatio="none"></svg>
+                <svg viewBox="0 0 100 100" class="board-coordinates" preserveAspectRatio="none" font-size="2.8"><text class="coordinate coordinate-rank-1">1</text><text class="coordinate coordinate-rank-2">2</text><text class="coordinate coordinate-rank-3">3</text><text class="coordinate coordinate-rank-4">4</text><text class="coordinate coordinate-rank-5">5</text><text class="coordinate coordinate-rank-6">6</text><text class="coordinate coordinate-rank-7">7</text><text class="coordinate coordinate-rank-8">8</text><text class="coordinate coordinate-file-a">a</text><text class="coordinate coordinate-file-b">b</text><text class="coordinate coordinate-file-c">c</text><text class="coordinate coordinate-file-d">d</text><text class="coordinate coordinate-file-e">e</text><text class="coordinate coordinate-file-f">f</text><text class="coordinate coordinate-file-g">g</text><text class="coordinate coordinate-file-h">h</text></svg>
             </div>
         </div>
     </div>
@@ -432,7 +466,6 @@ export class NeochessBoardElement extends HTMLElement {
         }
         this.match.addEventListener('positionChange', this.onPositionChange);
         this.updateState();
-        this.drawCoordinates();
     }
 
     public disconnectedCallback() {
@@ -459,7 +492,7 @@ export class NeochessBoardElement extends HTMLElement {
             }
             styleText += '}';
             if (theme.boardColor && !theme.lightSquareColor) {
-                styleText += '.coordinate-dark { fill: ' + theme.boardColor + '; }';
+                styleText += '.coordinate:nth-of-type(odd), .board-flipped .coordinate:nth-of-type(even) { fill: ' + theme.boardColor + '; }';
             }
         }
         if (theme.boardImageUrl) {
@@ -467,24 +500,24 @@ export class NeochessBoardElement extends HTMLElement {
             styleText += '.square-light { background-color: transparent }';
             styleText += '.square-dark { background-color: transparent }';
             if (!theme.coordinatesColor) {
-                styleText += '.coordinate-dark, .coordinate-light { fill: white; }';
+                styleText += '.coordinate { fill: white; }';
             }
         } else {
             if (theme.lightSquareColor) {
                 styleText += '.square-light { background-color: ' + theme.lightSquareColor + '}';
                 if (!theme.coordinatesColor) {
-                    styleText += '.coordinate-dark { fill: ' + theme.lightSquareColor + '; }';
+                    styleText += '.coordinate:nth-of-type(odd), .board-flipped .coordinate:nth-of-type(even) { fill: ' + theme.lightSquareColor + '; }';
                 }
             }
             if (theme.darkSquareColor) {
                 styleText += '.square-dark { background-color: ' + theme.darkSquareColor + '}';
                 if (!theme.coordinatesColor) {
-                    styleText += '.coordinate-light { fill: ' + theme.darkSquareColor + '; }';
+                    styleText += '.coordinate:nth-of-type(even), .board-flipped .coordinate:nth-of-type(odd) { fill: ' + theme.darkSquareColor + '; }';
                 }
             }
         }
         if (theme.coordinatesColor) {
-            styleText += '.coordinate-dark, .coordinate-light { fill: ' + theme.coordinatesColor + '; }';
+            styleText += '.coordinate { fill: ' + theme.coordinatesColor + '; }';
         }
         if (theme.coordinatesVisible === false) {
             styleText += '.coordinate { display: none; }';
@@ -812,7 +845,6 @@ export class NeochessBoardElement extends HTMLElement {
         } else {
             this.shadowRoot.querySelector('.board').classList.remove('board-flipped');
         }
-        this.drawCoordinates();
     }
 
     private updateAnimationState() {
@@ -871,37 +903,6 @@ export class NeochessBoardElement extends HTMLElement {
 
     private clearArrows() {
         this.shadowRoot.querySelectorAll('.arrow').forEach((element: HTMLElement) => element.remove());
-    }
-
-    private drawCoordinates() {
-        const overlayElement = this.shadowRoot.querySelector('.board-overlay');
-        overlayElement.querySelectorAll('.coordinate').forEach((element: Element) => element.remove());
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '1' : '8', 0.75, 3.5, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '2' : '7', 0.75, 15.75, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '3' : '6', 0.75, 28.25, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '4' : '5', 0.75, 40.75, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '5' : '4', 0.75, 53.25, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '6' : '3', 0.75, 65.75, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '7' : '2', 0.75, 78.25, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? '8' : '1', 0.75, 90.75, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'h' : 'a',10.5, 99, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'g' : 'b',23, 99, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'f' : 'c',35.5, 99, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'e' : 'd',48, 99, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'd' : 'e',60.5, 99, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'c' : 'f',73, 99, true));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'b' : 'g',85.5, 99, false));
-        overlayElement.appendChild(this.drawCoordinate(this.flipped ? 'a' : 'h',98, 99, true));
-    }
-
-    private drawCoordinate(text: string, x: number, y: number, isLight: boolean): Element {
-        const coordinate = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        coordinate.setAttribute('x', String(x));
-        coordinate.setAttribute('y', String(y));
-        coordinate.setAttribute('font-size', '2.8');
-        coordinate.classList.add('coordinate', isLight ? 'coordinate-light' : 'coordinate-dark');
-        coordinate.append(document.createTextNode(text));
-        return coordinate;
     }
 
     private drawLine(fromSquare: Square, toSquare: Square, arrowWidth = 2.5, className = 'arrow-hint'): Element {
