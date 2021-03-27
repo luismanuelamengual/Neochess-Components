@@ -63,17 +63,6 @@ template.innerHTML = `
             background-color: lightblue;
         }
 
-        .square-last-move-indicator::before {
-            position: absolute;
-            content: '';
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-color: palegoldenrod;
-            opacity: 0.7;
-        }
-
         .square-origin::after {
             position: absolute;
             content: '';
@@ -94,7 +83,7 @@ template.innerHTML = `
             height: 100%;
             border-width: 4px;
             border-style: solid;
-            border-color: lightgray;
+            border-color: orange;
             z-index: 120;
         }
 
@@ -316,6 +305,25 @@ template.innerHTML = `
         .board-flipped .coordinate-file-b { transform: translate(85.5%, 99%); }
         .board-flipped .coordinate-file-a { transform: translate(98%, 99%); }
 
+        .board-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .board-flipped .board-overlay {
+            transform: rotate(180deg);
+        }
+
+        .arrow-last-move {
+            fill: darkorange;
+            fill-opacity: 0.7;
+        }
+
         .arrow-hint {
             stroke: darkgoldenrod;
             fill: darkgoldenrod;
@@ -410,6 +418,7 @@ template.innerHTML = `
                 <div class="square square-dark square-a7"></div><div class="square square-light square-b7"></div><div class="square square-dark square-c7"></div><div class="square square-light square-d7"></div><div class="square square-dark square-e7"></div><div class="square square-light square-f7"></div><div class="square square-dark square-g7"></div><div class="square square-light square-h7"></div>
                 <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
                 <svg viewBox="0 0 100 100" class="board-coordinates" preserveAspectRatio="none" font-size="2.8"><text class="coordinate coordinate-rank-1">1</text><text class="coordinate coordinate-rank-2">2</text><text class="coordinate coordinate-rank-3">3</text><text class="coordinate coordinate-rank-4">4</text><text class="coordinate coordinate-rank-5">5</text><text class="coordinate coordinate-rank-6">6</text><text class="coordinate coordinate-rank-7">7</text><text class="coordinate coordinate-rank-8">8</text><text class="coordinate coordinate-file-a">a</text><text class="coordinate coordinate-file-b">b</text><text class="coordinate coordinate-file-c">c</text><text class="coordinate coordinate-file-d">d</text><text class="coordinate coordinate-file-e">e</text><text class="coordinate coordinate-file-f">f</text><text class="coordinate coordinate-file-g">g</text><text class="coordinate coordinate-file-h">h</text></svg>
+                <svg viewBox="0 0 100 100" class="board-overlay" preserveAspectRatio="none"></svg>
             </div>
         </div>
     </div>
@@ -519,9 +528,6 @@ export class NeochessBoardElement extends HTMLElement {
         if (theme.coordinatesColor) {
             styleText += '.coordinate { fill: ' + theme.coordinatesColor + '; }';
         }
-        if (theme.coordinatesVisible === false) {
-            styleText += '.coordinate { display: none; }';
-        }
         if (theme.selectedSquareColor || theme.selectedSquareOpacity) {
             styleText += '.square-origin::after {';
             if (theme.selectedSquareColor) {
@@ -532,13 +538,13 @@ export class NeochessBoardElement extends HTMLElement {
             }
             styleText += '}';
         }
-        if (theme.lastMoveSquareColor || theme.lastMoveSquareOpacity) {
-            styleText += '.square-last-move-indicator::before {';
-            if (theme.lastMoveSquareColor) {
-                styleText += 'background-color: ' + theme.lastMoveSquareColor + ';';
+        if (theme.lastMoveArrowColor || theme.lastMoveArrowOpacity) {
+            styleText += '.arrow-last-move {';
+            if (theme.lastMoveArrowColor) {
+                styleText += 'fill: ' + theme.lastMoveArrowColor + ';';
             }
-            if (theme.lastMoveSquareOpacity) {
-                styleText += 'opacity: ' + theme.lastMoveSquareOpacity + ';';
+            if (theme.lastMoveArrowOpacity) {
+                styleText += 'fill-opacity: ' + theme.lastMoveArrowOpacity + ';';
             }
             styleText += '}';
         }
@@ -635,12 +641,7 @@ export class NeochessBoardElement extends HTMLElement {
         this.clearHighlightedSquares();
         this.clearArrows();
         this.clearLegalMoves();
-        this.shadowRoot.querySelectorAll('.square-last-move-indicator').forEach((element: HTMLElement) => element.classList.remove('square-last-move-indicator'));
-        const lastMove = this.match.getMove();
-        if (lastMove) {
-            this.squareElements[lastMove.getFromSquare()].classList.add('square-last-move-indicator');
-            this.squareElements[lastMove.getToSquare()].classList.add('square-last-move-indicator');
-        }
+        this.showLastMoveArrow();
     }
 
     private onContextMenu(event: MouseEvent) {
@@ -732,7 +733,7 @@ export class NeochessBoardElement extends HTMLElement {
                         this.highlightData.element = null;
                     }
                     if (this.highlightData.toSquare != this.highlightData.fromSquare) {
-                        this.highlightData.element = this.drawLine(this.highlightData.fromSquare, this.highlightData.toSquare);
+                        // this.highlightData.element = this.drawLine(this.highlightData.fromSquare, this.highlightData.toSquare);
                     }
                 }
             }
@@ -855,6 +856,28 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
+    private clearLastMoveArrow() {
+        this.shadowRoot.querySelectorAll('.arrow-last-move').forEach((element: HTMLElement) => element.remove());
+    }
+
+    private showLastMoveArrow() {
+        this.clearLastMoveArrow();
+        const lastMove = this.match.getMove();
+        if (lastMove) {
+            const boardOverlay = this.shadowRoot.querySelector('.board-overlay');
+            boardOverlay.appendChild(this.createLine({
+                fromSquare: lastMove.getFromSquare(),
+                toSquare: lastMove.getToSquare(),
+                arrowOriginOffset: 1,
+                arrowDestinationOffset: 2,
+                arrowWidth: 2.2,
+                arrowHeadHeight: 4,
+                arrowHeadWidth: 6,
+                classes: ['arrow-last-move']
+            }));
+        }
+    }
+
     private showLegalMoves(square: Square) {
         this.clearLegalMoves();
         const originSquareElement = this.squareElements[square] as HTMLElement;
@@ -905,17 +928,20 @@ export class NeochessBoardElement extends HTMLElement {
         this.shadowRoot.querySelectorAll('.arrow').forEach((element: HTMLElement) => element.remove());
     }
 
-    private drawLine(fromSquare: Square, toSquare: Square, arrowWidth = 2.5, className = 'arrow-hint'): Element {
-        const arrowOriginOffset = 4;
-        const arrowDestinationOffset = 0;
+    private createLine(options: {fromSquare: Square, toSquare: Square, arrowWidth?: number, arrowHeadWidth?: number, arrowHeadHeight?: number, arrowOriginOffset?: number, arrowDestinationOffset?: number, classes?: Array<string>}): Element {
+        const fromSquare = options.fromSquare;
+        const toSquare = options.toSquare;
+        const arrowOriginOffset = options.arrowOriginOffset ?? 4;
+        const arrowDestinationOffset = options.arrowDestinationOffset ?? 0;
+        const arrowWidth = options.arrowWidth ?? 2.5;
+        const arrowHeadHeight = options.arrowHeadHeight ?? arrowWidth * 1.3;
+        const arrowHeadWidth = options.arrowHeadWidth ?? arrowWidth * 2;
         const fromSquareRect = this.getSquareRect(fromSquare);
         const toSquareRect = this.getSquareRect(toSquare);
         const arrowAngle = 180 - (Math.atan2(toSquareRect.x - fromSquareRect.x, toSquareRect.y - fromSquareRect.y) * 180 / Math.PI);
         const fromSquareCenterPoint = new DOMPoint(fromSquareRect.x + (fromSquareRect.width / 2), fromSquareRect.y + (fromSquareRect.height / 2));
         const toSquareCenterPoint = new DOMPoint(toSquareRect.x + (toSquareRect.width / 2), toSquareRect.y + (toSquareRect.height / 2));
-        const arrowHeadHeight = arrowWidth * 1.3;
-        const arrowHeadWidth = arrowWidth * 2;
-        const arrowHeight = Math.sqrt(Math.pow(toSquareCenterPoint.x - fromSquareCenterPoint.x, 2) + Math.pow(toSquareCenterPoint.y - fromSquareCenterPoint.y, 2)) - arrowOriginOffset + arrowDestinationOffset - arrowHeadHeight;
+        const arrowHeight = Math.sqrt(Math.pow(toSquareCenterPoint.x - fromSquareCenterPoint.x, 2) + Math.pow(toSquareCenterPoint.y - fromSquareCenterPoint.y, 2)) - arrowOriginOffset - arrowDestinationOffset - arrowHeadHeight;
         let x = fromSquareCenterPoint.x - (arrowWidth / 2);
         let y = fromSquareCenterPoint.y - arrowOriginOffset;
         const polygonPoints = [];
@@ -935,11 +961,11 @@ export class NeochessBoardElement extends HTMLElement {
         y += arrowHeight;
         polygonPoints.push(x + ' ' + y);
         const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        polygon.classList.add('arrow', className);
+        if (options.classes) {
+            polygon.classList.add(...options.classes);
+        }
         polygon.setAttribute('points', polygonPoints.join(','));
         polygon.setAttribute('transform', 'rotate(' + arrowAngle + ' ' + fromSquareCenterPoint.x + ' ' + fromSquareCenterPoint.y + ')');
-        const overlayElement = this.shadowRoot.querySelector('.board-overlay');
-        overlayElement.appendChild(polygon);
         return polygon;
     }
 
@@ -948,8 +974,8 @@ export class NeochessBoardElement extends HTMLElement {
         const rank = BoardUtils.getRank(square);
         const width = 12.5;
         const height = 12.5;
-        const x = (this.flipped ? (7 - file) : file) * width;
-        const y = (this.flipped ? rank : (7 - rank)) * height;
+        const x = file * width;
+        const y = (7 - rank) * height;
         return new DOMRect(x, y, width, height);
     }
 }

@@ -7,12 +7,11 @@ export interface NeochessBoardTheme {
     lightSquareColor?: string;
     darkSquareColor?: string;
     pieceSet?: NeochessBoardPieceset;
-    coordinatesVisible?: boolean;
     coordinatesColor?: string;
     selectedSquareColor?: string;
     selectedSquareOpacity?: number;
-    lastMoveSquareColor?: string;
-    lastMoveSquareOpacity?: number;
+    lastMoveArrowColor?: string;
+    lastMoveArrowOpacity?: number;
     destinationSquareColor?: string;
     destinationSquareOpacity?: number;
     highlightedSquareColor?: string;
