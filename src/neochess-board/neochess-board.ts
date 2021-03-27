@@ -324,13 +324,6 @@ template.innerHTML = `
             fill-opacity: 0.7;
         }
 
-        .arrow-hint {
-            stroke: darkgoldenrod;
-            fill: darkgoldenrod;
-            stroke-width: 0.3;
-            fill-opacity: 0.4;
-        }
-
         .piece {
             position: absolute;
             width: 12.5%;
@@ -397,6 +390,27 @@ template.innerHTML = `
             background-image: url(` + require('./assets/images/pieces/black_king.png') + `);
         }
 
+        .board-highlight-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 180;
+        }
+
+        .board-flipped .board-highlight-overlay {
+            transform: rotate(180deg);
+        }
+
+        .arrow-highlighted {
+            fill: khaki;
+            fill-opacity: 0.7;
+            stroke-width: 0.3;
+            stroke: darkkhaki;
+        }
+
         .piece-dragging {
             z-index: 200;
             cursor: grabbing;
@@ -419,6 +433,7 @@ template.innerHTML = `
                 <div class="square square-light square-a8"></div><div class="square square-dark square-b8"></div><div class="square square-light square-c8"></div><div class="square square-dark square-d8"></div><div class="square square-light square-e8"></div><div class="square square-dark square-f8"></div><div class="square square-light square-g8"></div><div class="square square-dark square-h8"></div>
                 <svg viewBox="0 0 100 100" class="board-coordinates" preserveAspectRatio="none" font-size="2.8"><text class="coordinate coordinate-rank-1">1</text><text class="coordinate coordinate-rank-2">2</text><text class="coordinate coordinate-rank-3">3</text><text class="coordinate coordinate-rank-4">4</text><text class="coordinate coordinate-rank-5">5</text><text class="coordinate coordinate-rank-6">6</text><text class="coordinate coordinate-rank-7">7</text><text class="coordinate coordinate-rank-8">8</text><text class="coordinate coordinate-file-a">a</text><text class="coordinate coordinate-file-b">b</text><text class="coordinate coordinate-file-c">c</text><text class="coordinate coordinate-file-d">d</text><text class="coordinate coordinate-file-e">e</text><text class="coordinate coordinate-file-f">f</text><text class="coordinate coordinate-file-g">g</text><text class="coordinate coordinate-file-h">h</text></svg>
                 <svg viewBox="0 0 100 100" class="board-overlay" preserveAspectRatio="none"></svg>
+                <svg viewBox="0 0 100 100" class="board-highlight-overlay" preserveAspectRatio="none"></svg>
             </div>
         </div>
     </div>
@@ -639,7 +654,7 @@ export class NeochessBoardElement extends HTMLElement {
     private onPositionChange() {
         this.updatePosition();
         this.clearHighlightedSquares();
-        this.clearArrows();
+        this.clearHighlightedArrows();
         this.clearLegalMoves();
         this.showLastMoveArrow();
     }
@@ -669,7 +684,7 @@ export class NeochessBoardElement extends HTMLElement {
             }
         } else {
             this.clearHighlightedSquares();
-            this.clearArrows();
+            this.clearHighlightedArrows();
             if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
                 const squareElement = event.target as HTMLElement;
                 if (squareElement.classList.contains('square-destination-hint')) {
@@ -733,7 +748,7 @@ export class NeochessBoardElement extends HTMLElement {
                         this.highlightData.element = null;
                     }
                     if (this.highlightData.toSquare != this.highlightData.fromSquare) {
-                        // this.highlightData.element = this.drawLine(this.highlightData.fromSquare, this.highlightData.toSquare);
+                        this.highlightData.element = this.addHighlightArrow(this.highlightData.fromSquare, this.highlightData.toSquare);
                     }
                 }
             }
@@ -870,7 +885,7 @@ export class NeochessBoardElement extends HTMLElement {
                 toSquare: lastMove.getToSquare(),
                 arrowOriginOffset: 1,
                 arrowDestinationOffset: 2,
-                arrowWidth: 2.2,
+                arrowWidth: 2,
                 arrowHeadHeight: 4,
                 arrowHeadWidth: 6,
                 classes: ['arrow-last-move']
@@ -916,16 +931,31 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
-    private toggleHighlightSquare(square: Square) {
+    public toggleHighlightSquare(square: Square) {
         this.squareElements[square].classList.toggle('square-highlighted');
     }
 
-    private clearHighlightedSquares() {
+    public clearHighlightedSquares() {
         this.shadowRoot.querySelectorAll('.square-highlighted').forEach((element: HTMLElement) => element.classList.remove('square-highlighted'));
     }
 
-    private clearArrows() {
-        this.shadowRoot.querySelectorAll('.arrow').forEach((element: HTMLElement) => element.remove());
+    public addHighlightArrow(fromSquare: Square, toSquare: Square): Element {
+        const line = this.createLine({
+            fromSquare,
+            toSquare,
+            arrowOriginOffset: 4,
+            arrowDestinationOffset: 0,
+            arrowWidth: 2.8,
+            arrowHeadHeight: 4,
+            arrowHeadWidth: 6,
+            classes: ['arrow-highlighted']
+        })
+        this.shadowRoot.querySelector('.board-highlight-overlay').appendChild(line);
+        return line;
+    }
+
+    public clearHighlightedArrows() {
+        this.shadowRoot.querySelectorAll('.arrow-highlighted').forEach((element: HTMLElement) => element.remove());
     }
 
     private createLine(options: {fromSquare: Square, toSquare: Square, arrowWidth?: number, arrowHeadWidth?: number, arrowHeadHeight?: number, arrowOriginOffset?: number, arrowDestinationOffset?: number, classes?: Array<string>}): Element {
