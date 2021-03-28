@@ -7,7 +7,6 @@ template.innerHTML = `
         :host {
             display: block;
             width: 500px;
-            height: 500px;
             border: 1px solid lightgray;
             -webkit-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
             -moz-box-shadow: 3px 3px 4px -2px rgba(0,0,0,0.75);
