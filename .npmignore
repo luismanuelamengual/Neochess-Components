@@ -2,7 +2,6 @@ src/
 www/
 node_modules/
 tsconfig.json
-webpack.config.js
 .editorconfig
 
 *~
