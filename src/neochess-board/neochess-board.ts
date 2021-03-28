@@ -183,70 +183,70 @@ template.innerHTML = `
         .square-g8 { left: 75%; top: 0; }
         .square-h8 { left: 87.5%; top: 0; }
 
-        .board-flipped .square-a1 { left: 87.5%; top: 0; }
-        .board-flipped .square-b1 { left: 75%; top: 0; }
-        .board-flipped .square-c1 { left: 62.5%; top: 0; }
-        .board-flipped .square-d1 { left: 50%; top: 0; }
-        .board-flipped .square-e1 { left: 37.5%; top: 0; }
-        .board-flipped .square-f1 { left: 25%; top: 0; }
-        .board-flipped .square-g1 { left: 12.5%; top: 0; }
-        .board-flipped .square-h1 { left: 0; top: 0; }
-        .board-flipped .square-a2 { left: 87.5%; top: 12.5%; }
-        .board-flipped .square-b2 { left: 75%; top: 12.5%; }
-        .board-flipped .square-c2 { left: 62.5%; top: 12.5%; }
-        .board-flipped .square-d2 { left: 50%; top: 12.5%; }
-        .board-flipped .square-e2 { left: 37.5%; top: 12.5%; }
-        .board-flipped .square-f2 { left: 25%; top: 12.5%; }
-        .board-flipped .square-g2 { left: 12.5%; top: 12.5%; }
-        .board-flipped .square-h2 { left: 0; top: 12.5%; }
-        .board-flipped .square-a3 { left: 87.5%; top: 25%; }
-        .board-flipped .square-b3 { left: 75%; top: 25%; }
-        .board-flipped .square-c3 { left: 62.5%; top: 25%; }
-        .board-flipped .square-d3 { left: 50%; top: 25%; }
-        .board-flipped .square-e3 { left: 37.5%; top: 25%; }
-        .board-flipped .square-f3 { left: 25%; top: 25%; }
-        .board-flipped .square-g3 { left: 12.5%; top: 25%; }
-        .board-flipped .square-h3 { left: 0; top: 25%; }
-        .board-flipped .square-a4 { left: 87.5%; top: 37.5%; }
-        .board-flipped .square-b4 { left: 75%; top: 37.5%; }
-        .board-flipped .square-c4 { left: 62.5%; top: 37.5%; }
-        .board-flipped .square-d4 { left: 50%; top: 37.5%; }
-        .board-flipped .square-e4 { left: 37.5%; top: 37.5%; }
-        .board-flipped .square-f4 { left: 25%; top: 37.5%; }
-        .board-flipped .square-g4 { left: 12.5%; top: 37.5%; }
-        .board-flipped .square-h4 { left: 0; top: 37.5%; }
-        .board-flipped .square-a5 { left: 87.5%; top: 50%; }
-        .board-flipped .square-b5 { left: 75%; top: 50%; }
-        .board-flipped .square-c5 { left: 62.5%; top: 50%; }
-        .board-flipped .square-d5 { left: 50%; top: 50%; }
-        .board-flipped .square-e5 { left: 37.5%; top: 50%; }
-        .board-flipped .square-f5 { left: 25%; top: 50%; }
-        .board-flipped .square-g5 { left: 12.5%; top: 50%; }
-        .board-flipped .square-h5 { left: 0; top: 50%; }
-        .board-flipped .square-a6 { left: 87.5%; top: 62.5%; }
-        .board-flipped .square-b6 { left: 75%; top: 62.5%; }
-        .board-flipped .square-c6 { left: 62.5%; top: 62.5%; }
-        .board-flipped .square-d6 { left: 50%; top: 62.5%; }
-        .board-flipped .square-e6 { left: 37.5%; top: 62.5%; }
-        .board-flipped .square-f6 { left: 25%; top: 62.5%; }
-        .board-flipped .square-g6 { left: 12.5%; top: 62.5%; }
-        .board-flipped .square-h6 { left: 0; top: 62.5%; }
-        .board-flipped .square-a7 { left: 87.5%; top: 75%; }
-        .board-flipped .square-b7 { left: 75%; top: 75%; }
-        .board-flipped .square-c7 { left: 62.5%; top: 75%; }
-        .board-flipped .square-d7 { left: 50%; top: 75%; }
-        .board-flipped .square-e7 { left: 37.5%; top: 75%; }
-        .board-flipped .square-f7 { left: 25%; top: 75%; }
-        .board-flipped .square-g7 { left: 12.5%; top: 75%; }
-        .board-flipped .square-h7 { left: 0; top: 75%; }
-        .board-flipped .square-a8 { left: 87.5%; top: 87.5%; }
-        .board-flipped .square-b8 { left: 75%; top: 87.5%; }
-        .board-flipped .square-c8 { left: 62.5%; top: 87.5%; }
-        .board-flipped .square-d8 { left: 50%; top: 87.5%; }
-        .board-flipped .square-e8 { left: 37.5%; top: 87.5%; }
-        .board-flipped .square-f8 { left: 25%; top: 87.5%; }
-        .board-flipped .square-g8 { left: 12.5%; top: 87.5%; }
-        .board-flipped .square-h8 { left: 0; top: 87.5%; }
+        :host([flipped="true"]) .square-a1 { left: 87.5%; top: 0; }
+        :host([flipped="true"]) .square-b1 { left: 75%; top: 0; }
+        :host([flipped="true"]) .square-c1 { left: 62.5%; top: 0; }
+        :host([flipped="true"]) .square-d1 { left: 50%; top: 0; }
+        :host([flipped="true"]) .square-e1 { left: 37.5%; top: 0; }
+        :host([flipped="true"]) .square-f1 { left: 25%; top: 0; }
+        :host([flipped="true"]) .square-g1 { left: 12.5%; top: 0; }
+        :host([flipped="true"]) .square-h1 { left: 0; top: 0; }
+        :host([flipped="true"]) .square-a2 { left: 87.5%; top: 12.5%; }
+        :host([flipped="true"]) .square-b2 { left: 75%; top: 12.5%; }
+        :host([flipped="true"]) .square-c2 { left: 62.5%; top: 12.5%; }
+        :host([flipped="true"]) .square-d2 { left: 50%; top: 12.5%; }
+        :host([flipped="true"]) .square-e2 { left: 37.5%; top: 12.5%; }
+        :host([flipped="true"]) .square-f2 { left: 25%; top: 12.5%; }
+        :host([flipped="true"]) .square-g2 { left: 12.5%; top: 12.5%; }
+        :host([flipped="true"]) .square-h2 { left: 0; top: 12.5%; }
+        :host([flipped="true"]) .square-a3 { left: 87.5%; top: 25%; }
+        :host([flipped="true"]) .square-b3 { left: 75%; top: 25%; }
+        :host([flipped="true"]) .square-c3 { left: 62.5%; top: 25%; }
+        :host([flipped="true"]) .square-d3 { left: 50%; top: 25%; }
+        :host([flipped="true"]) .square-e3 { left: 37.5%; top: 25%; }
+        :host([flipped="true"]) .square-f3 { left: 25%; top: 25%; }
+        :host([flipped="true"]) .square-g3 { left: 12.5%; top: 25%; }
+        :host([flipped="true"]) .square-h3 { left: 0; top: 25%; }
+        :host([flipped="true"]) .square-a4 { left: 87.5%; top: 37.5%; }
+        :host([flipped="true"]) .square-b4 { left: 75%; top: 37.5%; }
+        :host([flipped="true"]) .square-c4 { left: 62.5%; top: 37.5%; }
+        :host([flipped="true"]) .square-d4 { left: 50%; top: 37.5%; }
+        :host([flipped="true"]) .square-e4 { left: 37.5%; top: 37.5%; }
+        :host([flipped="true"]) .square-f4 { left: 25%; top: 37.5%; }
+        :host([flipped="true"]) .square-g4 { left: 12.5%; top: 37.5%; }
+        :host([flipped="true"]) .square-h4 { left: 0; top: 37.5%; }
+        :host([flipped="true"]) .square-a5 { left: 87.5%; top: 50%; }
+        :host([flipped="true"]) .square-b5 { left: 75%; top: 50%; }
+        :host([flipped="true"]) .square-c5 { left: 62.5%; top: 50%; }
+        :host([flipped="true"]) .square-d5 { left: 50%; top: 50%; }
+        :host([flipped="true"]) .square-e5 { left: 37.5%; top: 50%; }
+        :host([flipped="true"]) .square-f5 { left: 25%; top: 50%; }
+        :host([flipped="true"]) .square-g5 { left: 12.5%; top: 50%; }
+        :host([flipped="true"]) .square-h5 { left: 0; top: 50%; }
+        :host([flipped="true"]) .square-a6 { left: 87.5%; top: 62.5%; }
+        :host([flipped="true"]) .square-b6 { left: 75%; top: 62.5%; }
+        :host([flipped="true"]) .square-c6 { left: 62.5%; top: 62.5%; }
+        :host([flipped="true"]) .square-d6 { left: 50%; top: 62.5%; }
+        :host([flipped="true"]) .square-e6 { left: 37.5%; top: 62.5%; }
+        :host([flipped="true"]) .square-f6 { left: 25%; top: 62.5%; }
+        :host([flipped="true"]) .square-g6 { left: 12.5%; top: 62.5%; }
+        :host([flipped="true"]) .square-h6 { left: 0; top: 62.5%; }
+        :host([flipped="true"]) .square-a7 { left: 87.5%; top: 75%; }
+        :host([flipped="true"]) .square-b7 { left: 75%; top: 75%; }
+        :host([flipped="true"]) .square-c7 { left: 62.5%; top: 75%; }
+        :host([flipped="true"]) .square-d7 { left: 50%; top: 75%; }
+        :host([flipped="true"]) .square-e7 { left: 37.5%; top: 75%; }
+        :host([flipped="true"]) .square-f7 { left: 25%; top: 75%; }
+        :host([flipped="true"]) .square-g7 { left: 12.5%; top: 75%; }
+        :host([flipped="true"]) .square-h7 { left: 0; top: 75%; }
+        :host([flipped="true"]) .square-a8 { left: 87.5%; top: 87.5%; }
+        :host([flipped="true"]) .square-b8 { left: 75%; top: 87.5%; }
+        :host([flipped="true"]) .square-c8 { left: 62.5%; top: 87.5%; }
+        :host([flipped="true"]) .square-d8 { left: 50%; top: 87.5%; }
+        :host([flipped="true"]) .square-e8 { left: 37.5%; top: 87.5%; }
+        :host([flipped="true"]) .square-f8 { left: 25%; top: 87.5%; }
+        :host([flipped="true"]) .square-g8 { left: 12.5%; top: 87.5%; }
+        :host([flipped="true"]) .square-h8 { left: 0; top: 87.5%; }
 
         .board-coordinates {
             position: absolute;
@@ -262,11 +262,11 @@ template.innerHTML = `
             font-weight: 600;
         }
 
-        .coordinate:nth-of-type(even), .board-flipped .coordinate:nth-of-type(odd) {
+        .coordinate:nth-of-type(even), :host([flipped="true"]) .coordinate:nth-of-type(odd) {
             fill: lightblue;
         }
 
-        .coordinate:nth-of-type(odd), .board-flipped .coordinate:nth-of-type(even) {
+        .coordinate:nth-of-type(odd), :host([flipped="true"]) .coordinate:nth-of-type(even) {
             fill: azure;
         }
 
@@ -287,22 +287,22 @@ template.innerHTML = `
         .coordinate-file-g { transform: translate(85.5%, 99%); }
         .coordinate-file-h { transform: translate(98%, 99%); }
 
-        .board-flipped .coordinate-rank-1 { transform: translate(0.75%, 3.5%); }
-        .board-flipped .coordinate-rank-2 { transform: translate(0.75%, 15.75%); }
-        .board-flipped .coordinate-rank-3 { transform: translate(0.75%, 28.25%); }
-        .board-flipped .coordinate-rank-4 { transform: translate(0.75%, 40.75%); }
-        .board-flipped .coordinate-rank-5 { transform: translate(0.75%, 53.25%); }
-        .board-flipped .coordinate-rank-6 { transform: translate(0.75%, 65.75%); }
-        .board-flipped .coordinate-rank-7 { transform: translate(0.75%, 78.25%); }
-        .board-flipped .coordinate-rank-8 { transform: translate(0.75%, 90.75%); }
-        .board-flipped .coordinate-file-h { transform: translate(10.5%, 99%); }
-        .board-flipped .coordinate-file-g { transform: translate(23%, 99%); }
-        .board-flipped .coordinate-file-f { transform: translate(35.5%, 99%); }
-        .board-flipped .coordinate-file-e { transform: translate(48%, 99%); }
-        .board-flipped .coordinate-file-d { transform: translate(60.5%, 99%); }
-        .board-flipped .coordinate-file-c { transform: translate(73%, 99%); }
-        .board-flipped .coordinate-file-b { transform: translate(85.5%, 99%); }
-        .board-flipped .coordinate-file-a { transform: translate(98%, 99%); }
+        :host([flipped="true"]) .coordinate-rank-1 { transform: translate(0.75%, 3.5%); }
+        :host([flipped="true"]) .coordinate-rank-2 { transform: translate(0.75%, 15.75%); }
+        :host([flipped="true"]) .coordinate-rank-3 { transform: translate(0.75%, 28.25%); }
+        :host([flipped="true"]) .coordinate-rank-4 { transform: translate(0.75%, 40.75%); }
+        :host([flipped="true"]) .coordinate-rank-5 { transform: translate(0.75%, 53.25%); }
+        :host([flipped="true"]) .coordinate-rank-6 { transform: translate(0.75%, 65.75%); }
+        :host([flipped="true"]) .coordinate-rank-7 { transform: translate(0.75%, 78.25%); }
+        :host([flipped="true"]) .coordinate-rank-8 { transform: translate(0.75%, 90.75%); }
+        :host([flipped="true"]) .coordinate-file-h { transform: translate(10.5%, 99%); }
+        :host([flipped="true"]) .coordinate-file-g { transform: translate(23%, 99%); }
+        :host([flipped="true"]) .coordinate-file-f { transform: translate(35.5%, 99%); }
+        :host([flipped="true"]) .coordinate-file-e { transform: translate(48%, 99%); }
+        :host([flipped="true"]) .coordinate-file-d { transform: translate(60.5%, 99%); }
+        :host([flipped="true"]) .coordinate-file-c { transform: translate(73%, 99%); }
+        :host([flipped="true"]) .coordinate-file-b { transform: translate(85.5%, 99%); }
+        :host([flipped="true"]) .coordinate-file-a { transform: translate(98%, 99%); }
 
         .board-overlay {
             position: absolute;
@@ -314,7 +314,7 @@ template.innerHTML = `
             z-index: 50;
         }
 
-        .board-flipped .board-overlay {
+        :host([flipped="true"]) .board-overlay {
             transform: rotate(180deg);
         }
 
@@ -399,7 +399,7 @@ template.innerHTML = `
             z-index: 180;
         }
 
-        .board-flipped .board-highlight-overlay {
+        :host([flipped="true"]) .board-highlight-overlay {
             transform: rotate(180deg);
         }
 
@@ -456,7 +456,6 @@ export class NeochessBoardElement extends HTMLElement {
     ];
 
     private match: Match;
-    private flipped: boolean = false;
     private animated: boolean = true;
     private squareElements: Array<HTMLElement>;
     private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
@@ -464,7 +463,6 @@ export class NeochessBoardElement extends HTMLElement {
 
     constructor() {
         super();
-        this.flipped = this.getAttribute('flipped') === 'true';
         this.animated = !(this.getAttribute('animated') === 'false');
         this.match = new Match(this.getAttribute('fen'));
         this.onContextMenu = this.onContextMenu.bind(this);
@@ -495,6 +493,14 @@ export class NeochessBoardElement extends HTMLElement {
         this.match.removeEventListener('positionChange', this.onPositionChange);
     }
 
+    public set flipped(flipped: boolean) {
+        this.setAttribute('flipped', String(flipped));
+    }
+
+    public get flipped(): boolean {
+        return this.getAttribute('flipped') == 'true';
+    }
+
     public removeTheme() {
         const skinElement = this.shadowRoot.getElementById('theme');
         if (skinElement) {
@@ -515,7 +521,7 @@ export class NeochessBoardElement extends HTMLElement {
             }
             styleText += '}';
             if (theme.boardColor && !theme.lightSquareColor) {
-                styleText += '.coordinate:nth-of-type(odd), .board-flipped .coordinate:nth-of-type(even) { fill: ' + theme.boardColor + '; }';
+                styleText += '.coordinate:nth-of-type(odd), :host([flipped="true"]) .coordinate:nth-of-type(even) { fill: ' + theme.boardColor + '; }';
             }
         }
         if (theme.boardImageUrl) {
@@ -529,13 +535,13 @@ export class NeochessBoardElement extends HTMLElement {
             if (theme.lightSquareColor) {
                 styleText += '.square-light { background-color: ' + theme.lightSquareColor + '}';
                 if (!theme.coordinatesColor) {
-                    styleText += '.coordinate:nth-of-type(odd), .board-flipped .coordinate:nth-of-type(even) { fill: ' + theme.lightSquareColor + '; }';
+                    styleText += '.coordinate:nth-of-type(odd), :host([flipped="true"]) .coordinate:nth-of-type(even) { fill: ' + theme.lightSquareColor + '; }';
                 }
             }
             if (theme.darkSquareColor) {
                 styleText += '.square-dark { background-color: ' + theme.darkSquareColor + '}';
                 if (!theme.coordinatesColor) {
-                    styleText += '.coordinate:nth-of-type(even), .board-flipped .coordinate:nth-of-type(odd) { fill: ' + theme.darkSquareColor + '; }';
+                    styleText += '.coordinate:nth-of-type(even), :host([flipped="true"]) .coordinate:nth-of-type(odd) { fill: ' + theme.darkSquareColor + '; }';
                 }
             }
         }
@@ -620,15 +626,6 @@ export class NeochessBoardElement extends HTMLElement {
         styleElement.setAttribute('id', 'theme');
         styleElement.appendChild(document.createTextNode(styleText));
         this.shadowRoot.appendChild(styleElement);
-    }
-
-    public setFlipped(flipped: boolean): void {
-        this.flipped = flipped;
-        this.updateFlipState();
-    }
-
-    public isFlipped(): boolean {
-        return this.flipped;
     }
 
     public setAnimated(animated: boolean): void {
@@ -789,7 +786,6 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updateState() {
-        this.updateFlipState();
         this.updateAnimationState();
         this.updatePosition();
     }
@@ -859,14 +855,6 @@ export class NeochessBoardElement extends HTMLElement {
         piecesToMove.forEach((_piece: Piece, square: Square) => {
             currentPieceElements[square].remove();
         });
-    }
-
-    private updateFlipState() {
-        if (this.flipped) {
-            this.shadowRoot.querySelector('.board').classList.add('board-flipped');
-        } else {
-            this.shadowRoot.querySelector('.board').classList.remove('board-flipped');
-        }
     }
 
     private updateAnimationState() {
