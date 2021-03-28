@@ -334,7 +334,7 @@ template.innerHTML = `
             z-index: 100;
         }
 
-        .board-animated .piece {
+        :host(:not([animated])) .piece, :host([animated="true"]) .piece {
             -webkit-transition: top 0.3s, left 0.3s;
             -moz-transition: top 0.3s, left 0.3s;
             -o-transition: top 0.3s, left 0.3s;
@@ -456,14 +456,12 @@ export class NeochessBoardElement extends HTMLElement {
     ];
 
     private match: Match;
-    private animated: boolean = true;
     private squareElements: Array<HTMLElement>;
     private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
     private highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
 
     constructor() {
         super();
-        this.animated = !(this.getAttribute('animated') === 'false');
         this.match = new Match(this.getAttribute('fen'));
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
@@ -486,7 +484,7 @@ export class NeochessBoardElement extends HTMLElement {
             }
         }
         this.match.addEventListener('positionChange', this.onPositionChange);
-        this.updateState();
+        this.updatePosition();
     }
 
     public disconnectedCallback() {
@@ -626,15 +624,6 @@ export class NeochessBoardElement extends HTMLElement {
         styleElement.setAttribute('id', 'theme');
         styleElement.appendChild(document.createTextNode(styleText));
         this.shadowRoot.appendChild(styleElement);
-    }
-
-    public setAnimated(animated: boolean): void {
-        this.animated = animated;
-        this.updateAnimationState();
-    }
-
-    public isAnimated(): boolean {
-        return this.animated;
     }
 
     public setMatch(match: Match): void {
@@ -785,11 +774,6 @@ export class NeochessBoardElement extends HTMLElement {
         }
     }
 
-    private updateState() {
-        this.updateAnimationState();
-        this.updatePosition();
-    }
-
     private updatePosition() {
         const currentPieces = [];
         const currentPieceElements = [];
@@ -855,14 +839,6 @@ export class NeochessBoardElement extends HTMLElement {
         piecesToMove.forEach((_piece: Piece, square: Square) => {
             currentPieceElements[square].remove();
         });
-    }
-
-    private updateAnimationState() {
-        if (this.animated) {
-            this.shadowRoot.querySelector('.board').classList.add('board-animated');
-        } else {
-            this.shadowRoot.querySelector('.board').classList.remove('board-animated');
-        }
     }
 
     private clearLastMoveArrow() {
