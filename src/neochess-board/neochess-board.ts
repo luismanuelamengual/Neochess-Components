@@ -455,14 +455,14 @@ export class NeochessBoardElement extends HTMLElement {
         'piece-black-pawn', 'piece-black-knight', 'piece-black-bishop', 'piece-black-rook', 'piece-black-queen', 'piece-black-king'
     ];
 
-    private match: Match;
+    private _match: Match;
     private squareElements: Array<HTMLElement>;
     private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
     private highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
 
     constructor() {
         super();
-        this.match = new Match(this.getAttribute('fen'));
+        this._match = new Match(this.getAttribute('fen'));
         this.onContextMenu = this.onContextMenu.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDrag = this.onDrag.bind(this);
@@ -483,12 +483,29 @@ export class NeochessBoardElement extends HTMLElement {
                 this.shadowRoot.addEventListener('mousedown', this.onDragStart);
             }
         }
-        this.match.addEventListener('positionChange', this.onPositionChange);
+        this._match.addEventListener('positionChange', this.onPositionChange);
         this.updatePosition();
     }
 
     public disconnectedCallback() {
-        this.match.removeEventListener('positionChange', this.onPositionChange);
+        this._match.removeEventListener('positionChange', this.onPositionChange);
+    }
+
+    public set match(match: Match|null) {
+        if (match != this._match) {
+            if (this._match) {
+                this._match.removeEventListener('positionChange', this.onPositionChange);
+            }
+            this._match = match;
+            if (this._match) {
+                this._match.addEventListener('positionChange', this.onPositionChange);
+            }
+            this.updatePosition();
+        }
+    }
+
+    public get match(): Match {
+        return this._match;
     }
 
     public set flipped(flipped: boolean) {
@@ -634,19 +651,6 @@ export class NeochessBoardElement extends HTMLElement {
         this.shadowRoot.appendChild(styleElement);
     }
 
-    public setMatch(match: Match): void {
-        if (this.match) {
-            this.match.removeEventListener('positionChange', this.onPositionChange)
-        }
-        this.match = match;
-        this.match.addEventListener('positionChange', this.onPositionChange);
-        this.updatePosition();
-    }
-
-    public getMatch(): Match {
-        return this.match;
-    }
-
     private isTouchDevice() {
         return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
     }
@@ -664,62 +668,65 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragStart(event: MouseEvent|TouchEvent) {
-        const isRightButtonPressed = (('which' in event && event.which === 3) || ('button' in event && event.button === 2));
-        if (isRightButtonPressed) {
-            this.clearLegalMoves();
-            if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
-                const squareElement = event.target as HTMLElement;
-                const square = this.squareElements.indexOf(squareElement);
-                this.highlightData = {
-                    fromSquare: square,
-                    toSquare: square
-                };
-                if (this.isTouchDevice()) {
-                    this.shadowRoot.addEventListener('touchmove', this.onDrag);
-                    this.shadowRoot.addEventListener('touchend', this.onDragEnd);
-                } else {
-                    this.shadowRoot.addEventListener('mousemove', this.onDrag);
-                    this.shadowRoot.addEventListener('mouseup', this.onDragEnd);
-                }
-            }
-        } else {
-            this.clearHighlightedSquares();
-            this.clearHighlightedArrows();
-            if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
-                const squareElement = event.target as HTMLElement;
-                if (squareElement.classList.contains('square-destination-hint')) {
-                    const fromSquare = this.squareElements.indexOf(this.shadowRoot.querySelector('.square-origin'));
-                    const toSquare = this.squareElements.indexOf(squareElement);
-                    this.clearLegalMoves();
-                    this.match.makeMove(new Move(fromSquare, toSquare));
-                } else {
-                    this.clearLegalMoves();
+        if (this._match) {
+            const isRightButtonPressed = (('which' in event && event.which === 3) || ('button' in event && event.button === 2));
+            if (isRightButtonPressed) {
+                this.clearLegalMoves();
+                if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
+                    const squareElement = event.target as HTMLElement;
                     const square = this.squareElements.indexOf(squareElement);
-                    const piece = this.match.getPiece(square);
-                    if (piece >= 0 && BoardUtils.getSide(piece) == this.match.getSideToMove()) {
-                        const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
-                        const movingPieceElement: HTMLElement = this.shadowRoot.querySelector('.piece.' + movingPieceSquareClass);
-                        movingPieceElement.classList.add('piece-dragging');
-                        const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
-                        const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
-                        this.moveData = {
-                            fromSquare: square,
-                            grabElement: movingPieceElement,
-                            grabXOffset: (clientX - movingPieceElement.offsetLeft),
-                            grabYOffset: (clientY - movingPieceElement.offsetTop)
-                        };
-                        if (this.isTouchDevice()) {
-                            this.shadowRoot.addEventListener('touchmove', this.onDrag);
-                            this.shadowRoot.addEventListener('touchend', this.onDragEnd);
-                        } else {
-                            this.shadowRoot.addEventListener('mousemove', this.onDrag);
-                            this.shadowRoot.addEventListener('mouseup', this.onDragEnd);
-                        }
-                        this.showLegalMoves(square);
+                    this.highlightData = {
+                        fromSquare: square,
+                        toSquare: square
+                    };
+                    if (this.isTouchDevice()) {
+                        this.shadowRoot.addEventListener('touchmove', this.onDrag);
+                        this.shadowRoot.addEventListener('touchend', this.onDragEnd);
+                    } else {
+                        this.shadowRoot.addEventListener('mousemove', this.onDrag);
+                        this.shadowRoot.addEventListener('mouseup', this.onDragEnd);
                     }
                 }
             } else {
-                this.clearLegalMoves();
+                this.clearHighlightedSquares();
+                this.clearHighlightedArrows();
+                if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
+                    const squareElement = event.target as HTMLElement;
+                    if (squareElement.classList.contains('square-destination-hint')) {
+                        const fromSquare = this.squareElements.indexOf(this.shadowRoot.querySelector('.square-origin'));
+                        const toSquare = this.squareElements.indexOf(squareElement);
+                        this.clearLegalMoves();
+                        const move = new Move(fromSquare, toSquare);
+                        this._match.makeMove(move);
+                    } else {
+                        this.clearLegalMoves();
+                        const square = this.squareElements.indexOf(squareElement);
+                        const piece = this._match.getPiece(square);
+                        if (piece >= 0 && BoardUtils.getSide(piece) == this._match.getSideToMove()) {
+                            const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
+                            const movingPieceElement: HTMLElement = this.shadowRoot.querySelector('.piece.' + movingPieceSquareClass);
+                            movingPieceElement.classList.add('piece-dragging');
+                            const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
+                            const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
+                            this.moveData = {
+                                fromSquare: square,
+                                grabElement: movingPieceElement,
+                                grabXOffset: (clientX - movingPieceElement.offsetLeft),
+                                grabYOffset: (clientY - movingPieceElement.offsetTop)
+                            };
+                            if (this.isTouchDevice()) {
+                                this.shadowRoot.addEventListener('touchmove', this.onDrag);
+                                this.shadowRoot.addEventListener('touchend', this.onDragEnd);
+                            } else {
+                                this.shadowRoot.addEventListener('mousemove', this.onDrag);
+                                this.shadowRoot.addEventListener('mouseup', this.onDragEnd);
+                            }
+                            this.showLegalMoves(square);
+                        }
+                    }
+                } else {
+                    this.clearLegalMoves();
+                }
             }
         }
     }
@@ -771,7 +778,7 @@ export class NeochessBoardElement extends HTMLElement {
                 this.moveData.grabElement.style.top = '';
             }
             if (this.moveData.fromSquare >= 0 && this.moveData.toSquare >= 0) {
-                this.match.makeMove(new Move(this.moveData.fromSquare, this.moveData.toSquare));
+                this._match.makeMove(new Move(this.moveData.fromSquare, this.moveData.toSquare));
             }
             this.moveData = null;
         } else if (this.highlightData) {
@@ -783,70 +790,74 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private updatePosition() {
-        const currentPieces = [];
-        const currentPieceElements = [];
-        this.shadowRoot.querySelectorAll('.piece').forEach((element: HTMLElement) => {
-            const square = Number(element.dataset.square);
-            const piece = Number(element.dataset.piece);
-            currentPieces[square] = piece;
-            currentPieceElements[square] = element;
-        });
-        const piecesToMove = [];
-        const piecesToCreate = [];
-        for (let square = Square.A1; square <= Square.H8; square++) {
-            const piece = this.match.getPiece(square);
-            const currentPiece = currentPieces[square];
-            if (piece != currentPiece) {
-                if (piece >= 0) {
-                    if (currentPiece >= 0) {
+        if (this._match) {
+            const currentPieces = [];
+            const currentPieceElements = [];
+            this.shadowRoot.querySelectorAll('.piece').forEach((element: HTMLElement) => {
+                const square = Number(element.dataset.square);
+                const piece = Number(element.dataset.piece);
+                currentPieces[square] = piece;
+                currentPieceElements[square] = element;
+            });
+            const piecesToMove = [];
+            const piecesToCreate = [];
+            for (let square = Square.A1; square <= Square.H8; square++) {
+                const piece = this._match.getPiece(square);
+                const currentPiece = currentPieces[square];
+                if (piece != currentPiece) {
+                    if (piece >= 0) {
+                        if (currentPiece >= 0) {
+                            piecesToMove[square] = currentPiece;
+                        }
+                        piecesToCreate[square] = piece;
+                    } else {
                         piecesToMove[square] = currentPiece;
                     }
-                    piecesToCreate[square] = piece;
-                } else {
-                    piecesToMove[square] = currentPiece;
                 }
             }
-        }
 
-        const boardContentElement = this.shadowRoot.querySelector('.board-content');
-        piecesToCreate.forEach((pieceToCreate: Piece, destinationSquare: Square) => {
-            const destinationSquareFile = BoardUtils.getFile(destinationSquare);
-            const destinationSquareRank = BoardUtils.getRank(destinationSquare);
-            let possibleOriginSquares = [];
-            piecesToMove.forEach((piece: Piece, square: Square) => {
-                if (piece == pieceToCreate) {
-                    possibleOriginSquares.push(square);
-                }
-            });
-            if (BoardUtils.getFigure(pieceToCreate) == Figure.BISHOP) {
-                possibleOriginSquares = possibleOriginSquares.filter((square: Square) => {
-                    const squareDistance = Math.abs(destinationSquareFile - BoardUtils.getFile(square)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square));
-                    return squareDistance % 2 == 0;
+            const boardContentElement = this.shadowRoot.querySelector('.board-content');
+            piecesToCreate.forEach((pieceToCreate: Piece, destinationSquare: Square) => {
+                const destinationSquareFile = BoardUtils.getFile(destinationSquare);
+                const destinationSquareRank = BoardUtils.getRank(destinationSquare);
+                let possibleOriginSquares = [];
+                piecesToMove.forEach((piece: Piece, square: Square) => {
+                    if (piece == pieceToCreate) {
+                        possibleOriginSquares.push(square);
+                    }
                 });
-            }
-            possibleOriginSquares.sort((square1: Square, square2: Square) => {
-                const square1Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square1)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square1));
-                const square2Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square2)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square2));
-                return square1Distance - square2Distance;
-            });
+                if (BoardUtils.getFigure(pieceToCreate) == Figure.BISHOP) {
+                    possibleOriginSquares = possibleOriginSquares.filter((square: Square) => {
+                        const squareDistance = Math.abs(destinationSquareFile - BoardUtils.getFile(square)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square));
+                        return squareDistance % 2 == 0;
+                    });
+                }
+                possibleOriginSquares.sort((square1: Square, square2: Square) => {
+                    const square1Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square1)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square1));
+                    const square2Distance = Math.abs(destinationSquareFile - BoardUtils.getFile(square2)) + Math.abs(destinationSquareRank - BoardUtils.getRank(square2));
+                    return square1Distance - square2Distance;
+                });
 
-            if (!possibleOriginSquares.length) {
-                const pieceElement = document.createElement('div');
-                pieceElement.classList.add('piece', NeochessBoardElement.PIECE_CLASSES[pieceToCreate], NeochessBoardElement.SQUARE_CLASSES[destinationSquare]);
-                pieceElement.dataset.square = String(destinationSquare);
-                pieceElement.dataset.piece = String(pieceToCreate);
-                boardContentElement.appendChild(pieceElement);
-            } else {
-                const originSquare = possibleOriginSquares[0];
-                delete piecesToMove[originSquare];
-                const originSquareElement = currentPieceElements[originSquare];
-                originSquareElement.classList.replace(NeochessBoardElement.SQUARE_CLASSES[originSquare], NeochessBoardElement.SQUARE_CLASSES[destinationSquare]);
-                originSquareElement.dataset.square = String(destinationSquare);
-            }
-        });
-        piecesToMove.forEach((_piece: Piece, square: Square) => {
-            currentPieceElements[square].remove();
-        });
+                if (!possibleOriginSquares.length) {
+                    const pieceElement = document.createElement('div');
+                    pieceElement.classList.add('piece', NeochessBoardElement.PIECE_CLASSES[pieceToCreate], NeochessBoardElement.SQUARE_CLASSES[destinationSquare]);
+                    pieceElement.dataset.square = String(destinationSquare);
+                    pieceElement.dataset.piece = String(pieceToCreate);
+                    boardContentElement.appendChild(pieceElement);
+                } else {
+                    const originSquare = possibleOriginSquares[0];
+                    delete piecesToMove[originSquare];
+                    const originSquareElement = currentPieceElements[originSquare];
+                    originSquareElement.classList.replace(NeochessBoardElement.SQUARE_CLASSES[originSquare], NeochessBoardElement.SQUARE_CLASSES[destinationSquare]);
+                    originSquareElement.dataset.square = String(destinationSquare);
+                }
+            });
+            piecesToMove.forEach((_piece: Piece, square: Square) => {
+                currentPieceElements[square].remove();
+            });
+        } else {
+            this.shadowRoot.querySelectorAll('.piece').forEach((element: HTMLElement) => element.remove());
+        }
     }
 
     private clearLastMoveArrow() {
@@ -855,32 +866,36 @@ export class NeochessBoardElement extends HTMLElement {
 
     private showLastMoveArrow() {
         this.clearLastMoveArrow();
-        const lastMove = this.match.getMove();
-        if (lastMove) {
-            const boardOverlay = this.shadowRoot.querySelector('.board-overlay');
-            boardOverlay.appendChild(this.createLine({
-                fromSquare: lastMove.getFromSquare(),
-                toSquare: lastMove.getToSquare(),
-                arrowOriginOffset: 1,
-                arrowDestinationOffset: 2,
-                arrowWidth: 2,
-                arrowHeadHeight: 4,
-                arrowHeadWidth: 6,
-                classes: ['arrow-last-move']
-            }));
+        if (this._match) {
+            const lastMove = this._match.getMove();
+            if (lastMove) {
+                const boardOverlay = this.shadowRoot.querySelector('.board-overlay');
+                boardOverlay.appendChild(this.createLine({
+                    fromSquare: lastMove.getFromSquare(),
+                    toSquare: lastMove.getToSquare(),
+                    arrowOriginOffset: 1,
+                    arrowDestinationOffset: 2,
+                    arrowWidth: 2,
+                    arrowHeadHeight: 4,
+                    arrowHeadWidth: 6,
+                    classes: ['arrow-last-move']
+                }));
+            }
         }
     }
 
     private showLegalMoves(square: Square) {
         this.clearLegalMoves();
-        const originSquareElement = this.squareElements[square] as HTMLElement;
-        const destinationSquares = this.match.getLegalMoves().filter((move) => move.getFromSquare() === square).map((move) => move.getToSquare());
-        originSquareElement.classList.add('square-origin');
-        for (const destinationSquare of destinationSquares) {
-            const destinationSquareElement = this.squareElements[destinationSquare];
-            destinationSquareElement.classList.add('square-destination-hint');
-            if (this.match.getPiece(destinationSquare) >= 0) {
-                destinationSquareElement.classList.add('square-destination-hint-capture');
+        if (this._match) {
+            const originSquareElement = this.squareElements[square] as HTMLElement;
+            const destinationSquares = this._match.getLegalMoves().filter((move) => move.getFromSquare() === square).map((move) => move.getToSquare());
+            originSquareElement.classList.add('square-origin');
+            for (const destinationSquare of destinationSquares) {
+                const destinationSquareElement = this.squareElements[destinationSquare];
+                destinationSquareElement.classList.add('square-destination-hint');
+                if (this._match.getPiece(destinationSquare) >= 0) {
+                    destinationSquareElement.classList.add('square-destination-hint-capture');
+                }
             }
         }
     }
