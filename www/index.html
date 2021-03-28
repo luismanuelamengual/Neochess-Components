@@ -25,22 +25,29 @@
                 align-items: center;
             }
 
+            .container {
+                width: 100%;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
             neochess-board {
                 width: 100%;
                 height: 100%;
-                max-width: 800px;
             }
         </style>
     </head>
     <body>
-        <div class="control-panel">
-            <button onclick="goToFirst();"><ion-icon name="play-skip-back"></ion-icon></button>
-            <button onclick="goToPrevious();"><ion-icon style="transform: rotate(180deg)" name="play"></ion-icon></button>
-            <button onclick="goToNext();"><ion-icon name="play"></ion-icon></button>
-            <button onclick="goToLast();"><ion-icon name="play-skip-forward"></ion-icon></button>
-            <button onclick="toggleFlip();"><ion-icon name="sync"></ion-icon></button>
+        <div class="container">
+            <div class="control-panel">
+                <button onclick="goToFirst();"><ion-icon name="play-skip-back"></ion-icon></button>
+                <button onclick="goToPrevious();"><ion-icon style="transform: rotate(180deg)" name="play"></ion-icon></button>
+                <button onclick="goToNext();"><ion-icon name="play"></ion-icon></button>
+                <button onclick="goToLast();"><ion-icon name="play-skip-forward"></ion-icon></button>
+                <button onclick="toggleFlip();"><ion-icon name="sync"></ion-icon></button>
+            </div>
+            <neochess-board></neochess-board>
         </div>
-        <neochess-board></neochess-board>
     </body>
     <script>
         function getBoard() {
