@@ -499,6 +499,14 @@ export class NeochessBoardElement extends HTMLElement {
         return this.getAttribute('flipped') == 'true';
     }
 
+    public set animated(animated: boolean) {
+        this.setAttribute('animated', String(animated));
+    }
+
+    public get animated(): boolean {
+        return !this.hasAttribute('animated') || this.getAttribute('animated') == 'true';
+    }
+
     public removeTheme() {
         const skinElement = this.shadowRoot.getElementById('theme');
         if (skinElement) {
