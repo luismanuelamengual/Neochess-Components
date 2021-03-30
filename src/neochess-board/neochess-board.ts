@@ -332,13 +332,17 @@ template.innerHTML = `
             background-position: center;
             pointer-events: none;
             z-index: 100;
-        }
-
-        :host(:not([animated])) .piece, :host([animated="true"]) .piece {
             -webkit-transition: top 0.3s, left 0.3s;
             -moz-transition: top 0.3s, left 0.3s;
             -o-transition: top 0.3s, left 0.3s;
             transition: top 0.3s, left 0.3s;
+        }
+
+        :host([animated="false"]) .piece {
+            -webkit-transition: none !important;
+            -moz-transition: none !important;
+            -o-transition: none !important;
+            transition: none !important;
         }
 
         .piece-white-pawn {
@@ -519,7 +523,7 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     public get animated(): boolean {
-        return !this.hasAttribute('animated') || this.getAttribute('animated') == 'true';
+        return this.getAttribute('animated') != 'false';
     }
 
     public set animated(animated: boolean) {
