@@ -262,6 +262,10 @@ template.innerHTML = `
             z-index: 150;
         }
 
+        :host([show-coordinates="false"]) .board-coordinates {
+            display: none;
+        }
+
         .coordinate {
             font-weight: 600;
         }
@@ -552,6 +556,14 @@ export class NeochessBoardElement extends HTMLElement {
 
     public set showLegalMovesHint(showLegalMovesHint: boolean) {
         this.setAttribute('show-legal-moves-hint', String(showLegalMovesHint));
+    }
+
+    public get showCoordinates(): boolean {
+        return this.getAttribute('show-coordinates') != 'false';
+    }
+
+    public set showCoordinates(showCoordinates: boolean) {
+        this.setAttribute('show-coordinates', String(showCoordinates));
     }
 
     public get theme(): NeochessBoardTheme {
