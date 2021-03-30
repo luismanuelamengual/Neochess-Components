@@ -485,6 +485,7 @@ export class NeochessBoardElement extends HTMLElement {
         }
         this._match.addEventListener('positionChange', this.onPositionChange);
         this.updatePosition();
+        this.showLastMoveArrow();
     }
 
     public disconnectedCallback() {
@@ -501,6 +502,7 @@ export class NeochessBoardElement extends HTMLElement {
                 this._match.addEventListener('positionChange', this.onPositionChange);
             }
             this.updatePosition();
+            this.showLastMoveArrow();
         }
     }
 
