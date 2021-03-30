@@ -493,11 +493,8 @@ export class NeochessBoardElement extends HTMLElement {
             this._squareElements = [];
             this.shadowRoot.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this._squareElements.push(squareElement));
             this.shadowRoot.addEventListener('contextmenu', (event) => event.preventDefault());
-            if (this.isTouchDevice()) {
-                this.shadowRoot.addEventListener('touchstart', this.onDragStart);
-            } else {
-                this.shadowRoot.addEventListener('mousedown', this.onDragStart);
-            }
+            this.shadowRoot.querySelector('.board').addEventListener('touchstart', this.onDragStart);
+            this.shadowRoot.querySelector('.board').addEventListener('mousedown', this.onDragStart);
         }
         this._match.addEventListener('positionChange', this.onPositionChange);
         this.updatePosition();
@@ -704,10 +701,6 @@ export class NeochessBoardElement extends HTMLElement {
         this._theme = theme;
     }
 
-    private isTouchDevice() {
-        return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
-    }
-
     private onPositionChange() {
         this.updatePosition();
         this.clearHighlightedSquares();
@@ -717,6 +710,9 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragStart(event: MouseEvent|TouchEvent) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        event.stopPropagation();
         if (!this.readonly && this._match) {
             const isRightButtonPressed = (('which' in event && event.which === 3) || ('button' in event && event.button === 2));
             if (isRightButtonPressed) {
@@ -728,7 +724,7 @@ export class NeochessBoardElement extends HTMLElement {
                         fromSquare: square,
                         toSquare: square
                     };
-                    if (this.isTouchDevice()) {
+                    if ('changedTouches' in event) {
                         this.shadowRoot.addEventListener('touchmove', this.onDrag);
                         this.shadowRoot.addEventListener('touchend', this.onDragEnd);
                     } else {
@@ -755,15 +751,15 @@ export class NeochessBoardElement extends HTMLElement {
                             const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
                             const movingPieceElement: HTMLElement = this.shadowRoot.querySelector('.piece.' + movingPieceSquareClass);
                             movingPieceElement.classList.add('piece-dragging');
-                            const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
-                            const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
+                            const clientX = ('changedTouches' in event)? event.changedTouches[0].clientX : event.clientX;
+                            const clientY = ('changedTouches' in event)? event.changedTouches[0].clientY : event.clientY;
                             this._moveData = {
                                 fromSquare: square,
                                 grabElement: movingPieceElement,
                                 grabXOffset: (clientX - movingPieceElement.offsetLeft),
                                 grabYOffset: (clientY - movingPieceElement.offsetTop)
                             };
-                            if (this.isTouchDevice()) {
+                            if ('changedTouches' in event) {
                                 this.shadowRoot.addEventListener('touchmove', this.onDrag);
                                 this.shadowRoot.addEventListener('touchend', this.onDragEnd);
                             } else {
@@ -781,8 +777,8 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDrag(event: MouseEvent|TouchEvent) {
-        const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
-        const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
+        const clientX = ('changedTouches' in event)? event.changedTouches[0].clientX : event.clientX;
+        const clientY = ('changedTouches' in event)? event.changedTouches[0].clientY : event.clientY;
         if (this._moveData) {
             this._moveData.grabElement.style.left = (clientX - this._moveData.grabXOffset) + 'px';
             this._moveData.grabElement.style.top = (clientY - this._moveData.grabYOffset) + 'px';
@@ -813,13 +809,10 @@ export class NeochessBoardElement extends HTMLElement {
 
     private onDragEnd() {
         this.clearMoveHighlightSquare();
-        if (this.isTouchDevice()) {
-            this.removeEventListener('touchmove', this.onDrag);
-            this.removeEventListener('touchend', this.onDragEnd);
-        } else {
-            this.removeEventListener('mousemove', this.onDrag);
-            this.removeEventListener('mouseup', this.onDragEnd);
-        }
+        this.shadowRoot.removeEventListener('touchmove', this.onDrag);
+        this.shadowRoot.removeEventListener('touchend', this.onDragEnd);
+        this.shadowRoot.removeEventListener('mousemove', this.onDrag);
+        this.shadowRoot.removeEventListener('mouseup', this.onDragEnd);
         if (this._moveData) {
             if (this._moveData.grabElement) {
                 this._moveData.grabElement.classList.remove('piece-dragging');
