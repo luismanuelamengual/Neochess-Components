@@ -107,6 +107,10 @@ template.innerHTML = `
             border-radius: 50%;
         }
 
+        :host([show-legal-moves-hint="false"]) .square-destination-hint::after {
+            display: none;
+        }
+
         .square-highlighted::after {
             position: absolute;
             content: '';
@@ -540,6 +544,14 @@ export class NeochessBoardElement extends HTMLElement {
 
     public set showLastMoveHint(showLastMoveHint: boolean) {
         this.setAttribute('show-last-move-hint', String(showLastMoveHint));
+    }
+
+    public get showLegalMovesHint(): boolean {
+        return this.getAttribute('show-legal-moves-hint') != 'false';
+    }
+
+    public set showLegalMovesHint(showLegalMovesHint: boolean) {
+        this.setAttribute('show-legal-moves-hint', String(showLegalMovesHint));
     }
 
     public get theme(): NeochessBoardTheme {
