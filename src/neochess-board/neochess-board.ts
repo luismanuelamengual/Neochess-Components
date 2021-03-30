@@ -463,7 +463,6 @@ export class NeochessBoardElement extends HTMLElement {
     constructor() {
         super();
         this._match = new Match(this.getAttribute('fen'));
-        this.onContextMenu = this.onContextMenu.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDrag = this.onDrag.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -476,7 +475,7 @@ export class NeochessBoardElement extends HTMLElement {
             this.shadowRoot.appendChild(template.content.cloneNode(true));
             this.squareElements = [];
             this.shadowRoot.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
-            this.shadowRoot.addEventListener('contextmenu', this.onContextMenu);
+            this.shadowRoot.addEventListener('contextmenu', (event) => event.preventDefault());
             if (this.isTouchDevice()) {
                 this.shadowRoot.addEventListener('touchstart', this.onDragStart);
             } else {
@@ -665,10 +664,6 @@ export class NeochessBoardElement extends HTMLElement {
         this.showLastMoveArrow();
     }
 
-    private onContextMenu(event: MouseEvent) {
-        event.preventDefault();
-    }
-
     private onDragStart(event: MouseEvent|TouchEvent) {
         if (this._match) {
             const isRightButtonPressed = (('which' in event && event.which === 3) || ('button' in event && event.button === 2));
@@ -797,8 +792,7 @@ export class NeochessBoardElement extends HTMLElement {
             const currentPieceElements = [];
             this.shadowRoot.querySelectorAll('.piece').forEach((element: HTMLElement) => {
                 const square = Number(element.dataset.square);
-                const piece = Number(element.dataset.piece);
-                currentPieces[square] = piece;
+                currentPieces[square] = Number(element.dataset.piece);
                 currentPieceElements[square] = element;
             });
             const piecesToMove = [];
