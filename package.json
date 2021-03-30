@@ -1,6 +1,6 @@
 {
     "name": "@neochess/components",
-    "version": "0.0.6-alpha2",
+    "version": "0.0.6",
     "description": "Set of professional chess components",
     "author": "Luis Manuel Amengual",
     "license": "ISC",
