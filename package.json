@@ -12,8 +12,9 @@
     "scripts": {
         "clean": "rimraf dist",
         "build": "npm run clean && tsc && rollup -c",
-        "build:watch": "tsc --watch",
-        "start": "concurrently --kill-others --names tsc,web-dev-server \"npm run build:watch\" \"wds --app-index www/index.html --node-resolve --open --watch\"",
+        "start": "concurrently --kill-others --names tsc,web-dev-server \"npm run start:watch\" \"npm run start:serve\"",
+        "start:watch": "tsc --watch --outDir www/build",
+        "start:serve": "wds --app-index index.html --node-resolve --open --watch --root-dir www",
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
