@@ -46,6 +46,27 @@ To use the components just add one of the components custom tags (neochess-board
 
 If you are using an Angular application you will have to add the CUSTOM_ELEMENTS_SCHEMA to the schemas of your ngModule
 
+## Components
+
+### NeochessBoard
+
+#### Tag Name
+
+`neochess-board`
+
+#### Attributes
+
+| Property            | Attribute             | Description | Type                                           | Default         |
+| ------------------- | --------------------- | ----------- | ---------------------------------------------- | --------------- |
+| `match` | `match` | The underlying match behind de component | `Match` | `null` |
+| `theme` | `theme` | The colors scheme to use in the board | `NeochessBoardTheme` | `null` |
+| `flipped` | `flipped` | Indicates whether black or white side should be down | `boolean` | `false` |
+| `animated` | `animated` | Indicates whether there should be piece animations | `boolean` | `true` |
+| `readonly` | `readonly` | Indicates whether user can make moves on the board | `boolean` | `false` |
+| `showLastMoveHint` | `show-last-move-hint` | Show an arrow of the last move on the board | `boolean` | `true` |
+| `showLegalMovesHint` | `show-legal-moves-hint` | Shows legal moves when selecting a piece | `boolean` | `true` |
+| `showCoordinates` | `show-coordinates` | Shows or not the ranks and files coordinates | `boolean` | `true` |
+
 ## Contact
 
 For bugs or for requirements please contact me at luismanuelamengual@gmail.com
