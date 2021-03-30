@@ -1,14 +1,21 @@
 {
     "name": "@neochess/components",
     "version": "0.0.6-alpha2",
-    "description": "Neochess components",
+    "description": "Set of professional chess components",
+    "author": "Luis Manuel Amengual",
+    "license": "ISC",
+    "keywords": [
+        "chess",
+        "neochess",
+        "typescript",
+        "webcomponents",
+        "board",
+        "chessboard"
+    ],
     "type": "module",
     "main": "dist/neochess-components.js",
     "module": "dist/neochess-components.js",
     "types": "dist/neochess-components.d.ts",
-    "keywords": [],
-    "author": "Luis Manuel Amengual",
-    "license": "ISC",
     "scripts": {
         "clean": "rimraf dist",
         "build": "npm run clean && tsc && rollup -c",
