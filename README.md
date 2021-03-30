@@ -10,6 +10,8 @@
 
 Neochess Components is a library of chess components built as web components that are ready to be used within your favourite framework (React, Angular, Vue, etc) or with just vanilla javascript.
 
+![alt text](https://luismanuelamengual.github.io/neochess/components/assets/images/screenshot.png)
+
 ## Installation
 
 ### With Node
