@@ -323,6 +323,10 @@ template.innerHTML = `
             fill-opacity: 0.7;
         }
 
+        :host([show-last-move-hint="false"]) .arrow-last-move {
+            display: none;
+        }
+
         .piece {
             position: absolute;
             width: 12.5%;
@@ -528,6 +532,14 @@ export class NeochessBoardElement extends HTMLElement {
 
     public set animated(animated: boolean) {
         this.setAttribute('animated', String(animated));
+    }
+
+    public get showLastMoveHint(): boolean {
+        return this.getAttribute('show-last-move-hint') != 'false';
+    }
+
+    public set showLastMoveHint(showLastMoveHint: boolean) {
+        this.setAttribute('show-last-move-hint', String(showLastMoveHint));
     }
 
     public get theme(): NeochessBoardTheme {
