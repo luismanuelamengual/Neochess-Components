@@ -457,9 +457,9 @@ export class NeochessBoardElement extends HTMLElement {
 
     private _match: Match;
     private _theme: NeochessBoardTheme = null;
-    private squareElements: Array<HTMLElement>;
-    private moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
-    private highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
+    private _squareElements: Array<HTMLElement>;
+    private _moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
+    private _highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
 
     constructor() {
         super();
@@ -474,8 +474,8 @@ export class NeochessBoardElement extends HTMLElement {
         if (!this.shadowRoot) {
             this.attachShadow({mode: 'open'});
             this.shadowRoot.appendChild(template.content.cloneNode(true));
-            this.squareElements = [];
-            this.shadowRoot.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this.squareElements.push(squareElement));
+            this._squareElements = [];
+            this.shadowRoot.querySelectorAll('.square').forEach((squareElement: HTMLElement) => this._squareElements.push(squareElement));
             this.shadowRoot.addEventListener('contextmenu', (event) => event.preventDefault());
             if (this.isTouchDevice()) {
                 this.shadowRoot.addEventListener('touchstart', this.onDragStart);
@@ -675,8 +675,8 @@ export class NeochessBoardElement extends HTMLElement {
                 this.clearLegalMoves();
                 if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
                     const squareElement = event.target as HTMLElement;
-                    const square = this.squareElements.indexOf(squareElement);
-                    this.highlightData = {
+                    const square = this._squareElements.indexOf(squareElement);
+                    this._highlightData = {
                         fromSquare: square,
                         toSquare: square
                     };
@@ -694,14 +694,14 @@ export class NeochessBoardElement extends HTMLElement {
                 if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
                     const squareElement = event.target as HTMLElement;
                     if (squareElement.classList.contains('square-destination-hint')) {
-                        const fromSquare = this.squareElements.indexOf(this.shadowRoot.querySelector('.square-origin'));
-                        const toSquare = this.squareElements.indexOf(squareElement);
+                        const fromSquare = this._squareElements.indexOf(this.shadowRoot.querySelector('.square-origin'));
+                        const toSquare = this._squareElements.indexOf(squareElement);
                         this.clearLegalMoves();
                         const move = new Move(fromSquare, toSquare);
                         this._match.makeMove(move);
                     } else {
                         this.clearLegalMoves();
-                        const square = this.squareElements.indexOf(squareElement);
+                        const square = this._squareElements.indexOf(squareElement);
                         const piece = this._match.getPiece(square);
                         if (piece >= 0 && BoardUtils.getSide(piece) == this._match.getSideToMove()) {
                             const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
@@ -709,7 +709,7 @@ export class NeochessBoardElement extends HTMLElement {
                             movingPieceElement.classList.add('piece-dragging');
                             const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
                             const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
-                            this.moveData = {
+                            this._moveData = {
                                 fromSquare: square,
                                 grabElement: movingPieceElement,
                                 grabXOffset: (clientX - movingPieceElement.offsetLeft),
@@ -735,28 +735,28 @@ export class NeochessBoardElement extends HTMLElement {
     private onDrag(event: MouseEvent|TouchEvent) {
         const clientX = (event instanceof MouseEvent)? event.clientX : event.changedTouches[0].clientX;
         const clientY = (event instanceof MouseEvent)? event.clientY : event.changedTouches[0].clientY;
-        if (this.moveData) {
-            this.moveData.grabElement.style.left = (clientX - this.moveData.grabXOffset) + 'px';
-            this.moveData.grabElement.style.top = (clientY - this.moveData.grabYOffset) + 'px';
+        if (this._moveData) {
+            this._moveData.grabElement.style.left = (clientX - this._moveData.grabXOffset) + 'px';
+            this._moveData.grabElement.style.top = (clientY - this._moveData.grabYOffset) + 'px';
             const elementAtPoint = this.shadowRoot.elementFromPoint(clientX, clientY);
             if (elementAtPoint && elementAtPoint.classList.contains('square')) {
-                this.moveData.toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
-                this.setMoveHighlightSquare(this.moveData.toSquare);
+                this._moveData.toSquare = this._squareElements.indexOf(elementAtPoint as HTMLElement);
+                this.setMoveHighlightSquare(this._moveData.toSquare);
             } else {
                 this.clearMoveHighlightSquare();
             }
-        } else if (this.highlightData) {
+        } else if (this._highlightData) {
             const elementAtPoint = this.shadowRoot.elementFromPoint(clientX, clientY);
             if (elementAtPoint && elementAtPoint.classList.contains('square')) {
-                const toSquare = this.squareElements.indexOf(elementAtPoint as HTMLElement);
-                if (this.highlightData.toSquare != toSquare) {
-                    this.highlightData.toSquare = toSquare;
-                    if (this.highlightData.element) {
-                        this.highlightData.element.remove();
-                        this.highlightData.element = null;
+                const toSquare = this._squareElements.indexOf(elementAtPoint as HTMLElement);
+                if (this._highlightData.toSquare != toSquare) {
+                    this._highlightData.toSquare = toSquare;
+                    if (this._highlightData.element) {
+                        this._highlightData.element.remove();
+                        this._highlightData.element = null;
                     }
-                    if (this.highlightData.toSquare != this.highlightData.fromSquare) {
-                        this.highlightData.element = this.addHighlightArrow(this.highlightData.fromSquare, this.highlightData.toSquare);
+                    if (this._highlightData.toSquare != this._highlightData.fromSquare) {
+                        this._highlightData.element = this.addHighlightArrow(this._highlightData.fromSquare, this._highlightData.toSquare);
                     }
                 }
             }
@@ -772,21 +772,21 @@ export class NeochessBoardElement extends HTMLElement {
             this.removeEventListener('mousemove', this.onDrag);
             this.removeEventListener('mouseup', this.onDragEnd);
         }
-        if (this.moveData) {
-            if (this.moveData.grabElement) {
-                this.moveData.grabElement.classList.remove('piece-dragging');
-                this.moveData.grabElement.style.left = '';
-                this.moveData.grabElement.style.top = '';
+        if (this._moveData) {
+            if (this._moveData.grabElement) {
+                this._moveData.grabElement.classList.remove('piece-dragging');
+                this._moveData.grabElement.style.left = '';
+                this._moveData.grabElement.style.top = '';
             }
-            if (this.moveData.fromSquare >= 0 && this.moveData.toSquare >= 0) {
-                this._match.makeMove(new Move(this.moveData.fromSquare, this.moveData.toSquare));
+            if (this._moveData.fromSquare >= 0 && this._moveData.toSquare >= 0) {
+                this._match.makeMove(new Move(this._moveData.fromSquare, this._moveData.toSquare));
             }
-            this.moveData = null;
-        } else if (this.highlightData) {
-            if (this.highlightData.fromSquare == this.highlightData.toSquare) {
-                this.toggleHighlightSquare(this.highlightData.fromSquare);
+            this._moveData = null;
+        } else if (this._highlightData) {
+            if (this._highlightData.fromSquare == this._highlightData.toSquare) {
+                this.toggleHighlightSquare(this._highlightData.fromSquare);
             }
-            this.highlightData = null;
+            this._highlightData = null;
         }
     }
 
@@ -887,11 +887,11 @@ export class NeochessBoardElement extends HTMLElement {
     private showLegalMoves(square: Square) {
         this.clearLegalMoves();
         if (this._match) {
-            const originSquareElement = this.squareElements[square] as HTMLElement;
+            const originSquareElement = this._squareElements[square] as HTMLElement;
             const destinationSquares = this._match.getLegalMoves().filter((move) => move.getFromSquare() === square).map((move) => move.getToSquare());
             originSquareElement.classList.add('square-origin');
             for (const destinationSquare of destinationSquares) {
-                const destinationSquareElement = this.squareElements[destinationSquare];
+                const destinationSquareElement = this._squareElements[destinationSquare];
                 destinationSquareElement.classList.add('square-destination-hint');
                 if (this._match.getPiece(destinationSquare) >= 0) {
                     destinationSquareElement.classList.add('square-destination-hint-capture');
@@ -910,7 +910,7 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private setMoveHighlightSquare(square: Square) {
-        const squareElement = this.squareElements[square] as HTMLElement;
+        const squareElement = this._squareElements[square] as HTMLElement;
         if (!squareElement.classList.contains('square-destination')) {
             this.clearMoveHighlightSquare();
             squareElement.classList.add('square-destination');
@@ -925,7 +925,7 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     public toggleHighlightSquare(square: Square) {
-        this.squareElements[square].classList.toggle('square-highlighted');
+        this._squareElements[square].classList.toggle('square-highlighted');
     }
 
     public clearHighlightedSquares() {
