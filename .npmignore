@@ -2,6 +2,7 @@ src/
 www/
 node_modules/
 tsconfig.json
+web-dev-server.config.js
 .editorconfig
 
 *~

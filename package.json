@@ -14,7 +14,7 @@
         "build": "npm run clean && tsc && rollup -c",
         "start": "concurrently --kill-others --names tsc,web-dev-server \"npm run start:watch\" \"npm run start:serve\"",
         "start:watch": "tsc --watch --outDir www/build",
-        "start:serve": "wds --app-index index.html --node-resolve --open --watch --root-dir www",
+        "start:serve": "wds --config web-dev-server.config.js",
         "prepublishOnly": "npm run build"
     },
     "dependencies": {
