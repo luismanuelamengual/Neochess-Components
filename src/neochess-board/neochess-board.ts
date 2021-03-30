@@ -1010,3 +1010,9 @@ export class NeochessBoardElement extends HTMLElement {
 if (!customElements.get('neochess-board')) {
     customElements.define('neochess-board', NeochessBoardElement);
 }
+
+declare global {
+    interface HTMLElementTagNameMap {
+        'neochess-board': NeochessBoardElement,
+    }
+}
