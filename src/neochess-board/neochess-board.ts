@@ -542,6 +542,14 @@ export class NeochessBoardElement extends HTMLElement {
         this.setAttribute('animated', String(animated));
     }
 
+    public get readonly(): boolean {
+        return this.getAttribute('readonly') == 'true';
+    }
+
+    public set readonly(readonly: boolean) {
+        this.setAttribute('readonly', String(readonly));
+    }
+
     public get showLastMoveHint(): boolean {
         return this.getAttribute('show-last-move-hint') != 'false';
     }
@@ -709,7 +717,7 @@ export class NeochessBoardElement extends HTMLElement {
     }
 
     private onDragStart(event: MouseEvent|TouchEvent) {
-        if (this._match) {
+        if (!this.readonly && this._match) {
             const isRightButtonPressed = (('which' in event && event.which === 3) || ('button' in event && event.button === 2));
             if (isRightButtonPressed) {
                 this.clearLegalMoves();
