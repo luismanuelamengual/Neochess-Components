@@ -39,11 +39,12 @@
     <body>
         <div class="container">
             <div class="control-panel">
+                <button onclick="startNew();"><ion-icon name="add"></ion-icon></button>
+                <button onclick="toggleFlip();"><ion-icon name="refresh"></ion-icon></button>
                 <button onclick="goToFirst();"><ion-icon name="play-skip-back"></ion-icon></button>
                 <button onclick="goToPrevious();"><ion-icon style="transform: rotate(180deg)" name="play"></ion-icon></button>
                 <button onclick="goToNext();"><ion-icon name="play"></ion-icon></button>
                 <button onclick="goToLast();"><ion-icon name="play-skip-forward"></ion-icon></button>
-                <button onclick="toggleFlip();"><ion-icon name="sync"></ion-icon></button>
             </div>
             <neochess-board></neochess-board>
         </div>
@@ -51,6 +52,10 @@
     <script>
         function getBoard() {
             return document.querySelector('neochess-board');
+        }
+
+        function startNew() {
+            getBoard().match.startNew();
         }
 
         function goToPrevious() {
