@@ -1,6 +1,7 @@
 
 
 [![npm version](https://badge.fury.io/js/%40neochess%2Fcomponents.svg)](https://badge.fury.io/js/%40neochess%2Fcomponents)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@neochess/components)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![](https://img.shields.io/github/forks/luismanuelamengual/Neochess-Components.svg?style=social&label=Fork)
 ![](https://img.shields.io/github/stars/luismanuelamengual/Neochess-Components.svg?style=social&label=Star)
