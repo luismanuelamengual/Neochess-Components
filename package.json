@@ -12,6 +12,13 @@
         "board",
         "chessboard"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/luismanuelamengual/Neochess-Components"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "type": "module",
     "main": "dist/neochess-components.js",
     "module": "dist/neochess-components.js",
