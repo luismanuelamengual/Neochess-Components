@@ -3,7 +3,7 @@
     "version": "0.0.7",
     "description": "Set of professional chess components",
     "author": "Luis Manuel Amengual",
-    "license": "ISC",
+    "license": "MIT",
     "keywords": [
         "chess",
         "neochess",

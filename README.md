@@ -1,6 +1,7 @@
 
 
 [![npm version](https://badge.fury.io/js/%40neochess%2Fcomponents.svg)](https://badge.fury.io/js/%40neochess%2Fcomponents)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![](https://img.shields.io/github/forks/luismanuelamengual/Neochess-Components.svg?style=social&label=Fork)
 ![](https://img.shields.io/github/stars/luismanuelamengual/Neochess-Components.svg?style=social&label=Star)
 ![](https://img.shields.io/github/watchers/luismanuelamengual/Neochess-Components.svg?style=social&label=Watch)
@@ -12,9 +13,9 @@ Neochess Components is a library of chess components built as web components tha
 
 ![alt text](https://luismanuelamengual.github.io/neochess/components/assets/images/screenshot.png)
 
-## Installation
+[Live Demo ↗](https://luismanuelamengual.github.io/neochess/components/)
 
-### With Node
+## Installation
 
 To use this library install it by running:
 
@@ -28,44 +29,31 @@ and import the library in your main module/component/index.html:
 import '@neochess/components';
 ```
 
-### With CDN (bundled version of components)
-
-Add the following script of the "bundled" components to the "head" of your html page
-
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@neochess/components{VERSION}/dist/neochess-components.bundle.js"></script>
-```
-
 ## Usage
 
 To use the components just add one of the components custom tags (neochess-board) in your html
 
+<!--
+```
+<custom-element-demo>
+  <template>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@neochess/components@0.0.7/dist/neochess-components.bundle.js"></script>
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
 ```html
 <neochess-board></neochess-board>
 ```
 
-If you are using an Angular application you will have to add the CUSTOM_ELEMENTS_SCHEMA to the schemas of your ngModule
+## Contributing
 
-## Components
-
-### NeochessBoard
-
-#### Tag Name
-
-`neochess-board`
-
-#### Attributes
-
-| Property            | Attribute             | Description | Type                                           | Default         |
-| ------------------- | --------------------- | ----------- | ---------------------------------------------- | --------------- |
-| `match` | `match` | The underlying match behind de component | `Match` | `null` |
-| `theme` | `theme` | The colors scheme to use in the board | `NeochessBoardTheme` | `null` |
-| `flipped` | `flipped` | Indicates whether black or white side should be down | `boolean` | `false` |
-| `animated` | `animated` | Indicates whether there should be piece animations | `boolean` | `true` |
-| `readonly` | `readonly` | Indicates whether user can make moves on the board | `boolean` | `false` |
-| `showLastMoveHint` | `show-last-move-hint` | Show an arrow of the last move on the board | `boolean` | `true` |
-| `showLegalMovesHint` | `show-legal-moves-hint` | Shows legal moves when selecting a piece | `boolean` | `true` |
-| `showCoordinates` | `show-coordinates` | Shows or not the ranks and files coordinates | `boolean` | `true` |
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
 
 ## Contact
 
