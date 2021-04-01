@@ -1,5 +1,6 @@
 import {BoardUtils, Figure, Match, Move, Piece, Square} from "@neochess/core";
 import {NeochessBoardTheme} from "./neochess-board-theme";
+import {NeochessBoardPieceset} from "./neochess-board-pieceset";
 
 const template = document.createElement('template');
 template.innerHTML = `
@@ -473,6 +474,7 @@ export class NeochessBoardElement extends HTMLElement {
 
     private _match: Match;
     private _theme: NeochessBoardTheme = null;
+    private _pieceSet: NeochessBoardPieceset = null;
     private _squareElements: Array<HTMLElement>;
     private _moveData?: { fromSquare?: Square, toSquare?: Square, grabElement?: HTMLElement, grabXOffset?: number, grabYOffset?: number } = null;
     private _highlightData?: { fromSquare?: Square, toSquare?: Square, element?: Element };
@@ -659,20 +661,6 @@ export class NeochessBoardElement extends HTMLElement {
                 }
                 styleText += '}';
             }
-            if (theme.pieceSet) {
-                styleText += '.piece-white-pawn { background-image: url(' + theme.pieceSet.whitePawnImageUrl + '); }';
-                styleText += '.piece-white-knight { background-image: url(' + theme.pieceSet.whiteKnightImageUrl + '); }';
-                styleText += '.piece-white-bishop { background-image: url(' + theme.pieceSet.whiteBishopImageUrl + '); }';
-                styleText += '.piece-white-rook { background-image: url(' + theme.pieceSet.whiteRookImageUrl + '); }';
-                styleText += '.piece-white-queen { background-image: url(' + theme.pieceSet.whiteQueenImageUrl + '); }';
-                styleText += '.piece-white-king { background-image: url(' + theme.pieceSet.whiteKingImageUrl + '); }';
-                styleText += '.piece-black-pawn { background-image: url(' + theme.pieceSet.blackPawnImageUrl + '); }';
-                styleText += '.piece-black-knight { background-image: url(' + theme.pieceSet.blackKnightImageUrl + '); }';
-                styleText += '.piece-black-bishop { background-image: url(' + theme.pieceSet.blackBishopImageUrl + '); }';
-                styleText += '.piece-black-rook { background-image: url(' + theme.pieceSet.blackRookImageUrl + '); }';
-                styleText += '.piece-black-queen { background-image: url(' + theme.pieceSet.blackQueenImageUrl + '); }';
-                styleText += '.piece-black-king { background-image: url(' + theme.pieceSet.blackKingImageUrl + '); }';
-            }
             if (theme.highlightArrowsColor || theme.highlightArrowsOpacity || theme.highlightArrowsBorderColor || theme.highlightArrowsBorderWidth) {
                 styleText += '.arrow-highlighted {';
                 if (theme.highlightArrowsColor) {
@@ -699,6 +687,37 @@ export class NeochessBoardElement extends HTMLElement {
             this.shadowRoot.appendChild(styleElement);
         }
         this._theme = theme;
+    }
+
+    public get pieceSet(): NeochessBoardPieceset {
+        return this._pieceSet;
+    }
+
+    public set pieceSet(pieceSet: NeochessBoardPieceset|null) {
+        const pieceSetElement = this.shadowRoot.getElementById('pieceSet');
+        if (pieceSetElement) {
+            pieceSetElement.remove();
+        }
+        if (pieceSet) {
+            let styleText = '';
+            styleText += '.piece-white-pawn { background-image: url(' + pieceSet.whitePawnImageUrl + '); }';
+            styleText += '.piece-white-knight { background-image: url(' + pieceSet.whiteKnightImageUrl + '); }';
+            styleText += '.piece-white-bishop { background-image: url(' + pieceSet.whiteBishopImageUrl + '); }';
+            styleText += '.piece-white-rook { background-image: url(' + pieceSet.whiteRookImageUrl + '); }';
+            styleText += '.piece-white-queen { background-image: url(' + pieceSet.whiteQueenImageUrl + '); }';
+            styleText += '.piece-white-king { background-image: url(' + pieceSet.whiteKingImageUrl + '); }';
+            styleText += '.piece-black-pawn { background-image: url(' + pieceSet.blackPawnImageUrl + '); }';
+            styleText += '.piece-black-knight { background-image: url(' + pieceSet.blackKnightImageUrl + '); }';
+            styleText += '.piece-black-bishop { background-image: url(' + pieceSet.blackBishopImageUrl + '); }';
+            styleText += '.piece-black-rook { background-image: url(' + pieceSet.blackRookImageUrl + '); }';
+            styleText += '.piece-black-queen { background-image: url(' + pieceSet.blackQueenImageUrl + '); }';
+            styleText += '.piece-black-king { background-image: url(' + pieceSet.blackKingImageUrl + '); }';
+            const styleElement = document.createElement('style');
+            styleElement.setAttribute('id', 'pieceSet');
+            styleElement.appendChild(document.createTextNode(styleText));
+            this.shadowRoot.appendChild(styleElement);
+        }
+        this._pieceSet = pieceSet;
     }
 
     private onPositionChange() {
