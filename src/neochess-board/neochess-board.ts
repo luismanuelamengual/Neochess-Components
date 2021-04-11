@@ -933,11 +933,6 @@ export class NeochessBoardElement extends HTMLElement {
                 boardOverlay.appendChild(this.createLine({
                     fromSquare: lastMove.getFromSquare(),
                     toSquare: lastMove.getToSquare(),
-                    arrowOriginOffset: 1,
-                    arrowDestinationOffset: 2,
-                    arrowWidth: 2,
-                    arrowHeadHeight: 4,
-                    arrowHeadWidth: 6,
                     classes: ['arrow-last-move']
                 }));
             }
@@ -996,11 +991,6 @@ export class NeochessBoardElement extends HTMLElement {
         const line = this.createLine({
             fromSquare,
             toSquare,
-            arrowOriginOffset: 4,
-            arrowDestinationOffset: 0,
-            arrowWidth: 2.8,
-            arrowHeadHeight: 4,
-            arrowHeadWidth: 6,
             classes: ['arrow-highlighted']
         })
         this.shadowRoot.querySelector('.board-highlight-overlay').appendChild(line);
@@ -1014,11 +1004,11 @@ export class NeochessBoardElement extends HTMLElement {
     private createLine(options: {fromSquare: Square, toSquare: Square, arrowWidth?: number, arrowHeadWidth?: number, arrowHeadHeight?: number, arrowOriginOffset?: number, arrowDestinationOffset?: number, classes?: Array<string>}): Element {
         const fromSquare = options.fromSquare;
         const toSquare = options.toSquare;
-        const arrowOriginOffset = options.arrowOriginOffset ?? 4;
+        const arrowOriginOffset = options.arrowOriginOffset ?? 1;
         const arrowDestinationOffset = options.arrowDestinationOffset ?? 0;
-        const arrowWidth = options.arrowWidth ?? 2.5;
-        const arrowHeadHeight = options.arrowHeadHeight ?? arrowWidth * 1.3;
-        const arrowHeadWidth = options.arrowHeadWidth ?? arrowWidth * 2;
+        const arrowWidth = options.arrowWidth ?? 2.2;
+        const arrowHeadHeight = options.arrowHeadHeight ?? arrowWidth * 1.8;
+        const arrowHeadWidth = options.arrowHeadWidth ?? arrowWidth * 2.6;
         const fromSquareRect = this.getSquareRect(fromSquare);
         const toSquareRect = this.getSquareRect(toSquare);
         const arrowAngle = 180 - (Math.atan2(toSquareRect.x - fromSquareRect.x, toSquareRect.y - fromSquareRect.y) * 180 / Math.PI);
