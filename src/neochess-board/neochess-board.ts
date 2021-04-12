@@ -906,7 +906,7 @@ export class NeochessBoardElement extends HTMLElement {
                 this._moveData.grabElement.style.left = '';
                 this._moveData.grabElement.style.top = '';
             }
-            if (this._moveData.fromSquare >= 0 && this._moveData.toSquare >= 0) {
+            if (this._moveData.fromSquare >= 0 && this._moveData.toSquare >= 0 && this._moveData.fromSquare != this._moveData.toSquare) {
                 if (!this._match.makeMove(new Move(this._moveData.fromSquare, this._moveData.toSquare))) {
                     this.playSound('illegal');
                 }
