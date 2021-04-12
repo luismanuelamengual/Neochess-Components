@@ -1,4 +1,4 @@
-import {BoardUtils, Figure, Match, Move, Piece, Side, Square} from "@neochess/core";
+import {BoardUtils, Figure, Match, MatchState, Move, Piece, Side, Square} from "@neochess/core";
 import {NeochessBoardTheme} from "./neochess-board-theme";
 import {NeochessBoardPieceset} from "./neochess-board-pieceset";
 
@@ -496,6 +496,8 @@ export class NeochessBoardElement extends HTMLElement {
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onPositionChange = this.onPositionChange.bind(this);
         this.onMoveMade = this.onMoveMade.bind(this);
+        this.onStartMatch = this.onStartMatch.bind(this);
+        this.onStateChange = this.onStateChange.bind(this);
     }
 
     public connectedCallback() {
@@ -510,6 +512,8 @@ export class NeochessBoardElement extends HTMLElement {
         }
         this._match.addEventListener('positionChange', this.onPositionChange);
         this._match.addEventListener('moveMade', this.onMoveMade);
+        this._match.addEventListener('matchStart', this.onStartMatch);
+        this._match.addEventListener('stateChange', this.onStateChange);
         this.updatePosition();
         this.showLastMoveArrow();
     }
@@ -517,6 +521,8 @@ export class NeochessBoardElement extends HTMLElement {
     public disconnectedCallback() {
         this._match.removeEventListener('positionChange', this.onPositionChange);
         this._match.removeEventListener('moveMade', this.onMoveMade);
+        this._match.removeEventListener('matchStart', this.onStartMatch);
+        this._match.removeEventListener('stateChange', this.onStateChange);
     }
 
     public get match(): Match {
@@ -770,6 +776,16 @@ export class NeochessBoardElement extends HTMLElement {
                     this.playSound('moveOpponent');
                 }
             }
+        }
+    }
+
+    private onStartMatch() {
+        this.playSound('gameStart');
+    }
+
+    private onStateChange(state: MatchState) {
+        if (state != MatchState.ONGOING) {
+            this.playSound('gameEnd');
         }
     }
 
