@@ -1,4 +1,4 @@
-import {BoardUtils, Figure, Match, Move, Piece, Square} from "@neochess/core";
+import {BoardUtils, Figure, Match, Move, Piece, Side, Square} from "@neochess/core";
 import {NeochessBoardTheme} from "./neochess-board-theme";
 import {NeochessBoardPieceset} from "./neochess-board-pieceset";
 
@@ -436,6 +436,15 @@ template.innerHTML = `
             transition: none !important;
         }
     </style>
+    <audio id="moveSelf"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/move-self.webm"></audio>
+    <audio id="moveOpponent"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/move-opponent.webm"></audio>
+    <audio id="moveCheck"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/move-check.webm"></audio>
+    <audio id="capture"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/capture.webm"></audio>
+    <audio id="castle"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/castle.webm"></audio>
+    <audio id="promote"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/promote.webm"></audio>
+    <audio id="gameStart"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/game-start.webm"></audio>
+    <audio id="gameEnd"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/game-end.webm"></audio>
+    <audio id="illegal"><source src="https://luismanuelamengual.github.io/neochess/assets/sounds/illegal.webm"></audio>
     <div class="board-container">
         <div class="board">
             <div class="board-content">
@@ -486,6 +495,7 @@ export class NeochessBoardElement extends HTMLElement {
         this.onDrag = this.onDrag.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onPositionChange = this.onPositionChange.bind(this);
+        this.onMoveMade = this.onMoveMade.bind(this);
     }
 
     public connectedCallback() {
@@ -499,12 +509,14 @@ export class NeochessBoardElement extends HTMLElement {
             this.shadowRoot.querySelector('.board').addEventListener('mousedown', this.onDragStart);
         }
         this._match.addEventListener('positionChange', this.onPositionChange);
+        this._match.addEventListener('moveMade', this.onMoveMade);
         this.updatePosition();
         this.showLastMoveArrow();
     }
 
     public disconnectedCallback() {
         this._match.removeEventListener('positionChange', this.onPositionChange);
+        this._match.removeEventListener('moveMade', this.onMoveMade);
     }
 
     public get match(): Match {
@@ -571,6 +583,14 @@ export class NeochessBoardElement extends HTMLElement {
 
     public set showCoordinates(showCoordinates: boolean) {
         this.setAttribute('show-coordinates', String(showCoordinates));
+    }
+
+    public get soundsEnabled(): boolean {
+        return this.getAttribute('sounds-enabled') != 'false';
+    }
+
+    public set soundsEnabled(soundsEnabled: boolean) {
+        this.setAttribute('sounds-enabled', String(soundsEnabled));
     }
 
     public get theme(): NeochessBoardTheme {
@@ -726,6 +746,38 @@ export class NeochessBoardElement extends HTMLElement {
         this.clearHighlightedArrows();
         this.clearLegalMoves();
         this.showLastMoveArrow();
+    }
+
+    private onMoveMade(move: Move, onCurrentPosition: boolean) {
+        if (onCurrentPosition) {
+            const san = move.getSAN();
+            const promotion = san.indexOf('=') >= 0;
+            const capture = san.indexOf('x') >= 0;
+            const check = san.indexOf('+') >= 0 || san.indexOf('#') >= 0;
+            const castle = san.indexOf('-') >= 0;
+            if (promotion) {
+                this.playSound('promote');
+            } else if (castle) {
+                this.playSound('castle');
+            } else if (capture) {
+                this.playSound('capture');
+            } else if (check) {
+                this.playSound('moveCheck');
+            } else {
+                if (this._match.getSideToMove() == Side.BLACK) {
+                    this.playSound('moveSelf');
+                } else {
+                    this.playSound('moveOpponent');
+                }
+            }
+        }
+    }
+
+    private playSound(soundId: string) {
+        if (this.soundsEnabled) {
+            const soundElement = this.shadowRoot.getElementById(soundId) as HTMLAudioElement;
+            soundElement.play();
+        }
     }
 
     private onDragStart(event: MouseEvent|TouchEvent) {
