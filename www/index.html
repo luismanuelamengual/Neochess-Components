@@ -2,44 +2,11 @@
 <html>
     <head>
         <title>Neochess</title>
-        <script type="module" src="/build/neochess-components.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
         <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
-        <style>
-            body {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 15px;
-            }
-
-            .control-panel {
-                display: inline-block;
-                margin-bottom: 15px;
-            }
-
-            .control-panel-right {
-                float: right;
-            }
-
-            button {
-                display: inline-block;
-                width: 40px;
-                height: 28px;
-                box-sizing: border-box;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .container {
-                width: 100%;
-                max-width: 700px;
-                margin: 0 auto;
-            }
-
-            neochess-board {
-                width: 100%;
-            }
-        </style>
+        <script type="module" src="/build/neochess-components.js"></script>
+        <script type="module" src="index.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <link rel="stylesheet" href="index.css">
     </head>
     <body>
         <div class="container">
@@ -56,33 +23,4 @@
             <neochess-board></neochess-board>
         </div>
     </body>
-    <script>
-        function getBoard() {
-            return document.querySelector('neochess-board');
-        }
-
-        function startNew() {
-            getBoard().match.startNew();
-        }
-
-        function goToPrevious() {
-            getBoard().match.goToPreviousPosition();
-        }
-
-        function goToNext() {
-            getBoard().match.goToNextPosition();
-        }
-
-        function goToFirst() {
-            getBoard().match.goToStartPosition();
-        }
-
-        function goToLast() {
-            getBoard().match.goToCurrentPosition();
-        }
-
-        function toggleFlip() {
-            getBoard().flipped = !getBoard().flipped;
-        }
-    </script>
 </html>

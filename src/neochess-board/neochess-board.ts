@@ -599,6 +599,22 @@ export class NeochessBoardElement extends HTMLElement {
         this.setAttribute('sounds-enabled', String(soundsEnabled));
     }
 
+    public get whiteInteractionEnabled(): boolean {
+        return this.getAttribute('white-interaction-enabled') != 'false';
+    }
+
+    public set whiteInteractionEnabled(whiteInteractionEnabled: boolean) {
+        this.setAttribute('white-interaction-enabled', String(whiteInteractionEnabled));
+    }
+
+    public get blackInteractionEnabled(): boolean {
+        return this.getAttribute('black-interaction-enabled') != 'false';
+    }
+
+    public set blackInteractionEnabled(blackInteractionEnabled: boolean) {
+        this.setAttribute('black-interaction-enabled', String(blackInteractionEnabled));
+    }
+
     public get theme(): NeochessBoardTheme {
         return this._theme;
     }
@@ -822,42 +838,44 @@ export class NeochessBoardElement extends HTMLElement {
             } else {
                 this.clearHighlightedSquares();
                 this.clearHighlightedArrows();
-                if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
-                    const squareElement = event.target as HTMLElement;
-                    if (squareElement.classList.contains('square-destination-hint')) {
-                        const fromSquare = this._squareElements.indexOf(this.shadowRoot.querySelector('.square-origin'));
-                        const toSquare = this._squareElements.indexOf(squareElement);
-                        this.clearLegalMoves();
-                        const move = new Move(fromSquare, toSquare);
-                        this._match.makeMove(move);
+                if (this._match.getState() == MatchState.ONGOING && ((this._match.getSideToMove() == Side.WHITE && this.whiteInteractionEnabled) || (this._match.getSideToMove() == Side.BLACK && this.blackInteractionEnabled))) {
+                    if (event.target instanceof HTMLDivElement && event.target.classList.contains('square')) {
+                        const squareElement = event.target as HTMLElement;
+                        if (squareElement.classList.contains('square-destination-hint')) {
+                            const fromSquare = this._squareElements.indexOf(this.shadowRoot.querySelector('.square-origin'));
+                            const toSquare = this._squareElements.indexOf(squareElement);
+                            this.clearLegalMoves();
+                            const move = new Move(fromSquare, toSquare);
+                            this._match.makeMove(move);
+                        } else {
+                            this.clearLegalMoves();
+                            const square = this._squareElements.indexOf(squareElement);
+                            const piece = this._match.getPiece(square);
+                            if (piece >= 0 && BoardUtils.getSide(piece) == this._match.getSideToMove()) {
+                                const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
+                                const movingPieceElement: HTMLElement = this.shadowRoot.querySelector('.piece.' + movingPieceSquareClass);
+                                movingPieceElement.classList.add('piece-dragging');
+                                const clientX = ('changedTouches' in event)? event.changedTouches[0].clientX : event.clientX;
+                                const clientY = ('changedTouches' in event)? event.changedTouches[0].clientY : event.clientY;
+                                this._moveData = {
+                                    fromSquare: square,
+                                    grabElement: movingPieceElement,
+                                    grabXOffset: (clientX - movingPieceElement.offsetLeft),
+                                    grabYOffset: (clientY - movingPieceElement.offsetTop)
+                                };
+                                if ('changedTouches' in event) {
+                                    this.shadowRoot.addEventListener('touchmove', this.onDrag);
+                                    this.shadowRoot.addEventListener('touchend', this.onDragEnd);
+                                } else {
+                                    this.shadowRoot.addEventListener('mousemove', this.onDrag);
+                                    this.shadowRoot.addEventListener('mouseup', this.onDragEnd);
+                                }
+                                this.showLegalMoves(square);
+                            }
+                        }
                     } else {
                         this.clearLegalMoves();
-                        const square = this._squareElements.indexOf(squareElement);
-                        const piece = this._match.getPiece(square);
-                        if (piece >= 0 && BoardUtils.getSide(piece) == this._match.getSideToMove()) {
-                            const movingPieceSquareClass = NeochessBoardElement.SQUARE_CLASSES[square];
-                            const movingPieceElement: HTMLElement = this.shadowRoot.querySelector('.piece.' + movingPieceSquareClass);
-                            movingPieceElement.classList.add('piece-dragging');
-                            const clientX = ('changedTouches' in event)? event.changedTouches[0].clientX : event.clientX;
-                            const clientY = ('changedTouches' in event)? event.changedTouches[0].clientY : event.clientY;
-                            this._moveData = {
-                                fromSquare: square,
-                                grabElement: movingPieceElement,
-                                grabXOffset: (clientX - movingPieceElement.offsetLeft),
-                                grabYOffset: (clientY - movingPieceElement.offsetTop)
-                            };
-                            if ('changedTouches' in event) {
-                                this.shadowRoot.addEventListener('touchmove', this.onDrag);
-                                this.shadowRoot.addEventListener('touchend', this.onDragEnd);
-                            } else {
-                                this.shadowRoot.addEventListener('mousemove', this.onDrag);
-                                this.shadowRoot.addEventListener('mouseup', this.onDragEnd);
-                            }
-                            this.showLegalMoves(square);
-                        }
                     }
-                } else {
-                    this.clearLegalMoves();
                 }
             }
         }
