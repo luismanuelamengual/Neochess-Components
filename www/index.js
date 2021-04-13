@@ -1,4 +1,4 @@
-import {BoardUtils, Move, Side} from "@neochess/core";
+import {BoardUtils, Match, Move, Side} from "@neochess/core";
 
 window.startNew = function(options) {
     if (!options) {
@@ -11,7 +11,7 @@ window.startNew = function(options) {
         options.blackPlayer = matchOptions.blackPlayer === 'human' ? 'computer' : 'human';
     }
     matchOptions = options;
-    board.match.startNew();
+    match.startNew();
     board.whiteInteractionEnabled = options.whitePlayer === 'human';
     board.blackInteractionEnabled = options.blackPlayer === 'human';
     board.flipped = (options.whitePlayer === 'computer' && options.blackPlayer === 'human');
@@ -28,19 +28,19 @@ window.startNew = function(options) {
 }
 
 window.goToPrevious = function() {
-    board.match.goToPreviousPosition();
+    match.goToPreviousPosition();
 }
 
 window.goToNext = function() {
-    board.match.goToNextPosition();
+    match.goToNextPosition();
 }
 
 window.goToFirst = function() {
-    board.match.goToStartPosition();
+    match.goToStartPosition();
 }
 
 window.goToLast = function() {
-    board.match.goToCurrentPosition();
+    match.goToCurrentPosition();
 }
 
 window.toggleFlip = function() {
@@ -66,10 +66,12 @@ function checkForEngineMove() {
 }
 
 let matchOptions = {};
-const board = document.querySelector('neochess-board');
-board.match.addEventListener('moveMade', (move) => {
+const match = new Match();
+match.addEventListener('moveMade', (move) => {
     checkForEngineMove();
 });
+const board = document.querySelector('neochess-board');
+board.match = match;
 const engine = typeof STOCKFISH === "function" ? STOCKFISH() : new Worker('stockfish.js');
 engine.loaded = false;
 engine.ready = false;
@@ -86,11 +88,11 @@ engine.onmessage = (event) => {
         engine.ready = true;
         checkForEngineMove();
     } else {
-        var match = message.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?/);
-        if(match) {
-            const fromSquare = BoardUtils.getSquareFromString(match[1]);
-            const toSquare = BoardUtils.getSquareFromString(match[2]);
-            board.match.makeMove(new Move(fromSquare, toSquare), true);
+        var matchData = message.match(/^bestmove ([a-h][1-8])([a-h][1-8])([qrbn])?/);
+        if(matchData) {
+            const fromSquare = BoardUtils.getSquareFromString(matchData[1]);
+            const toSquare = BoardUtils.getSquareFromString(matchData[2]);
+            match.makeMove(new Move(fromSquare, toSquare), true);
         }
     }
     console.log(message);
