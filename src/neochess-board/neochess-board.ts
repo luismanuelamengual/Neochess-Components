@@ -510,19 +510,27 @@ export class NeochessBoardElement extends HTMLElement {
             this.shadowRoot.querySelector('.board').addEventListener('touchstart', this.onDragStart);
             this.shadowRoot.querySelector('.board').addEventListener('mousedown', this.onDragStart);
         }
-        this._match.addEventListener('positionChange', this.onPositionChange);
-        this._match.addEventListener('moveMade', this.onMoveMade);
-        this._match.addEventListener('matchStart', this.onStartMatch);
-        this._match.addEventListener('stateChange', this.onStateChange);
+        this.registerMatch(this._match);
         this.updatePosition();
         this.showLastMoveArrow();
     }
 
     public disconnectedCallback() {
-        this._match.removeEventListener('positionChange', this.onPositionChange);
-        this._match.removeEventListener('moveMade', this.onMoveMade);
-        this._match.removeEventListener('matchStart', this.onStartMatch);
-        this._match.removeEventListener('stateChange', this.onStateChange);
+        this.unregisterMatch(this._match);
+    }
+
+    private registerMatch (match: Match) {
+        match.addEventListener('positionChange', this.onPositionChange);
+        match.addEventListener('moveMade', this.onMoveMade);
+        match.addEventListener('matchStart', this.onStartMatch);
+        match.addEventListener('stateChange', this.onStateChange);
+    }
+
+    private unregisterMatch (match: Match) {
+        match.removeEventListener('positionChange', this.onPositionChange);
+        match.removeEventListener('moveMade', this.onMoveMade);
+        match.removeEventListener('matchStart', this.onStartMatch);
+        match.removeEventListener('stateChange', this.onStateChange);
     }
 
     public get match(): Match {
@@ -532,17 +540,11 @@ export class NeochessBoardElement extends HTMLElement {
     public set match(match: Match|null) {
         if (match != this._match) {
             if (this._match) {
-                this._match.removeEventListener('positionChange', this.onPositionChange);
-                this._match.removeEventListener('moveMade', this.onMoveMade);
-                this._match.removeEventListener('matchStart', this.onStartMatch);
-                this._match.removeEventListener('stateChange', this.onStateChange);
+                this.unregisterMatch(this._match);
             }
             this._match = match;
             if (this._match) {
-                this._match.addEventListener('positionChange', this.onPositionChange);
-                this._match.addEventListener('moveMade', this.onMoveMade);
-                this._match.addEventListener('matchStart', this.onStartMatch);
-                this._match.addEventListener('stateChange', this.onStateChange);
+                this.registerMatch(this._match);
             }
             this.updatePosition();
             this.showLastMoveArrow();
