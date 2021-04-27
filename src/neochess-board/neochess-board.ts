@@ -70,8 +70,7 @@ template.innerHTML = `
             height: 100%;
             top: 0;
             left: 0;
-            background-color: palegoldenrod;
-            opacity: 0.7;
+            background-color: rgba(238,232,170,0.7);
         }
 
         .square-destination::before {
@@ -79,11 +78,10 @@ template.innerHTML = `
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            border-width: 4px;
-            border-style: solid;
-            border-color: orange;
+            bottom: 0;
+            right: 0;
+            border: 4px solid orange;
+            border-radius: 10px;
             z-index: 120;
         }
 
@@ -119,8 +117,9 @@ template.innerHTML = `
             height: 100%;
             top: 0;
             left: 0;
-            background-color: gold;
-            opacity: 0.8;
+            border: 4px solid rgb(252, 215, 1);
+            border-radius: 10px;
+            background-color: rgba(252, 215, 1, 0.1);
         }
 
         .square-a1 { left: 0; top: 87.5%; }
@@ -328,8 +327,7 @@ template.innerHTML = `
         }
 
         .arrow-last-move {
-            fill: darkorange;
-            fill-opacity: 0.7;
+            fill: rgba(255,140,0,0.7);
         }
 
         :host([show-last-move-hint="false"]) .arrow-last-move {
@@ -421,10 +419,7 @@ template.innerHTML = `
         }
 
         .arrow-highlighted {
-            fill: khaki;
-            fill-opacity: 0.7;
-            stroke-width: 0.3;
-            stroke: darkkhaki;
+            fill: rgba(255,215,0,0.8);
         }
 
         .piece-dragging {
@@ -643,7 +638,7 @@ export class NeochessBoardElement extends HTMLElement {
                     styleText += 'padding: ' + theme.boardPadding + 'px;';
                 }
                 styleText += '}';
-                if (theme.boardColor && !theme.lightSquareColor) {
+                if (theme.boardColor && !theme.lightSquaresColor) {
                     styleText += '.coordinate:nth-of-type(odd), :host([flipped="true"]) .coordinate:nth-of-type(even) { fill: ' + theme.boardColor + '; }';
                 }
             }
@@ -655,78 +650,57 @@ export class NeochessBoardElement extends HTMLElement {
                     styleText += '.coordinate { fill: white; }';
                 }
             } else {
-                if (theme.lightSquareColor) {
-                    styleText += '.square-light { background-color: ' + theme.lightSquareColor + '}';
+                if (theme.lightSquaresColor) {
+                    styleText += '.square-light { background-color: ' + theme.lightSquaresColor + '}';
                     if (!theme.coordinatesColor) {
-                        styleText += '.coordinate:nth-of-type(odd), :host([flipped="true"]) .coordinate:nth-of-type(even) { fill: ' + theme.lightSquareColor + '; }';
+                        styleText += '.coordinate:nth-of-type(odd), :host([flipped="true"]) .coordinate:nth-of-type(even) { fill: ' + theme.lightSquaresColor + '; }';
                     }
                 }
-                if (theme.darkSquareColor) {
-                    styleText += '.square-dark { background-color: ' + theme.darkSquareColor + '}';
+                if (theme.darkSquaresColor) {
+                    styleText += '.square-dark { background-color: ' + theme.darkSquaresColor + '}';
                     if (!theme.coordinatesColor) {
-                        styleText += '.coordinate:nth-of-type(even), :host([flipped="true"]) .coordinate:nth-of-type(odd) { fill: ' + theme.darkSquareColor + '; }';
+                        styleText += '.coordinate:nth-of-type(even), :host([flipped="true"]) .coordinate:nth-of-type(odd) { fill: ' + theme.darkSquaresColor + '; }';
                     }
                 }
             }
             if (theme.coordinatesColor) {
                 styleText += '.coordinate { fill: ' + theme.coordinatesColor + '; }';
             }
-            if (theme.selectedSquareColor || theme.selectedSquareOpacity) {
+            if (theme.selectedSquareColor) {
                 styleText += '.square-origin::after {';
                 if (theme.selectedSquareColor) {
                     styleText += 'background-color: ' + theme.selectedSquareColor + ';';
                 }
-                if (theme.selectedSquareOpacity) {
-                    styleText += 'opacity: ' + theme.selectedSquareOpacity + ';';
+                styleText += '}';
+            }
+            if (theme.destinationSquareBorderColor) {
+                styleText += '.square-destination::before {';
+                if (theme.destinationSquareBorderColor) {
+                    styleText += 'border-color: ' + theme.destinationSquareBorderColor + ';';
                 }
                 styleText += '}';
             }
-            if (theme.lastMoveArrowColor || theme.lastMoveArrowOpacity) {
+            if (theme.lastMoveArrowColor) {
                 styleText += '.arrow-last-move {';
                 if (theme.lastMoveArrowColor) {
                     styleText += 'fill: ' + theme.lastMoveArrowColor + ';';
                 }
-                if (theme.lastMoveArrowOpacity) {
-                    styleText += 'fill-opacity: ' + theme.lastMoveArrowOpacity + ';';
-                }
                 styleText += '}';
             }
-            if (theme.destinationSquareColor || theme.destinationSquareOpacity) {
-                styleText += '.square-destination::before {';
-                if (theme.destinationSquareColor) {
-                    styleText += 'border-color: ' + theme.destinationSquareColor + ';';
-                }
-                if (theme.destinationSquareOpacity) {
-                    styleText += 'opacity: ' + theme.destinationSquareOpacity + ';';
-                }
-                styleText += '}';
-            }
-            if (theme.highlightedSquareColor || theme.highlightedSquareOpacity) {
+            if (theme.highlightSquaresBorderColor || theme.highlightSquaresColor) {
                 styleText += '.square-highlighted::after {';
-                if (theme.highlightedSquareColor) {
-                    styleText += 'background-color: ' + theme.highlightedSquareColor + ';';
+                if (theme.highlightSquaresColor) {
+                    styleText += 'background-color: ' + theme.highlightSquaresColor + ';';
                 }
-                if (theme.highlightedSquareOpacity) {
-                    styleText += 'opacity: ' + theme.highlightedSquareOpacity + ';';
+                if (theme.highlightSquaresBorderColor) {
+                    styleText += 'border-color: ' + theme.highlightSquaresBorderColor + ';';
                 }
                 styleText += '}';
             }
-            if (theme.highlightArrowsColor || theme.highlightArrowsOpacity || theme.highlightArrowsBorderColor || theme.highlightArrowsBorderWidth) {
+            if (theme.highlightArrowsColor) {
                 styleText += '.arrow-highlighted {';
                 if (theme.highlightArrowsColor) {
                     styleText += 'fill: ' + theme.highlightArrowsColor + ';';
-                    if (!theme.highlightArrowsBorderColor) {
-                        styleText += 'stroke: ' + theme.highlightArrowsColor + ';';
-                    }
-                }
-                if (theme.highlightArrowsOpacity) {
-                    styleText += 'fill-opacity: ' + theme.highlightArrowsOpacity + ';';
-                }
-                if (theme.highlightArrowsBorderColor) {
-                    styleText += 'stroke: ' + theme.highlightArrowsBorderColor + ';';
-                }
-                if (theme.highlightArrowsBorderWidth) {
-                    styleText += 'stroke-width: ' + theme.highlightArrowsBorderWidth + ';';
                 }
                 styleText += '}';
             }

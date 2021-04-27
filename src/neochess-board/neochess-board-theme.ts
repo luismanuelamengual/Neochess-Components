@@ -2,19 +2,13 @@ export interface NeochessBoardTheme {
     boardImageUrl?: string;
     boardColor?: string;
     boardPadding?: number;
-    lightSquareColor?: string;
-    darkSquareColor?: string;
+    lightSquaresColor?: string;
+    darkSquaresColor?: string;
     coordinatesColor?: string;
     selectedSquareColor?: string;
-    selectedSquareOpacity?: number;
+    destinationSquareBorderColor?: string;
     lastMoveArrowColor?: string;
-    lastMoveArrowOpacity?: number;
-    destinationSquareColor?: string;
-    destinationSquareOpacity?: number;
-    highlightedSquareColor?: string;
-    highlightedSquareOpacity?: number;
+    highlightSquaresBorderColor?: string;
+    highlightSquaresColor?: string;
     highlightArrowsColor?: string;
-    highlightArrowsOpacity?: number;
-    highlightArrowsBorderColor?: string;
-    highlightArrowsBorderWidth?: number;
 }
